@@ -1,0 +1,13 @@
+# Intellij project files
+*.iml
+*.ipr
+*.iws
+.idea/
+
+.classpath
+.project
+.settings/
+*.sql
+target/
+logs/
+
