@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.avaje.agentloader.AgentLoader;
 import org.avaje.ebeantest.LoggedSql;
+import org.example.domain.MyBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
