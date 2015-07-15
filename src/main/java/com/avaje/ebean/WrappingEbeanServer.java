@@ -24,7 +24,7 @@ public class WrappingEbeanServer implements EbeanServer {
   protected EbeanServer delegate;
 
   /**
-   * Construct with a EbeanServer to delete to.
+   * Construct with a EbeanServer to delegate to.
    *
    * This delegate will be used on all method calls that are not overwritten.
    */

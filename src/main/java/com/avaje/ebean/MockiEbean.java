@@ -18,7 +18,7 @@ import java.util.concurrent.Callable;
  *  EbeanServer mock = ...; // create a mock or test double etc
  *
  *  MockiEbean.runWithMock(mock, new Runnable() {
- *    @Override
+ *
  *    public void run() {
  *      ...
  *      // test code in here runs with mock EbeanServer
