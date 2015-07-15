@@ -9,7 +9,7 @@
     </appender>
 
     <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>log/ebean.log</File>
+        <File>logs/ebean.log</File>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>TRACE</level>
         </filter>

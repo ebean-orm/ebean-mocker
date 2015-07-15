@@ -1,47 +1,65 @@
 package com.avaje.ebean;
 
 
+import java.util.concurrent.Callable;
+
 /**
  * This is a test helper class that can be used to swap out the default EbeanServer in the Ebean
  * singleton with a mock implementation.
  * <p>
  * This enables a developer to write a test using a tool like Mockito to mock the EbeanServer
  * interface and make this the default server of the Ebean singleton.
- * 
+ * <p>
+ * <p>
+ *
+ * </p>
+ * <pre>{@code
+ *
+ *  EbeanServer mock = ...; // create a mock or test double etc
+ *
+ *  MockiEbean.runWithMock(mock, new Runnable() {
+ *    @Override
+ *    public void run() {
+ *      ...
+ *      // test code in here runs with mock EbeanServer
+ *    }
+ *  });
+ *
+ * }</pre>
  * <p>
  * An example using Mockito to mock the getBeanId() method on EbeanServer.
- * 
- * <pre>
- * &#064;Test
+ * <p>
+ * <pre>{@code
+ *
+ * @Test
  * public void testWithMockito() {
- * 
+ *
  *   EbeanServer defaultServer = Ebean.getServer(null);
- *   assertTrue(&quot;is a real EbeanServer&quot;, defaultServer instanceof DefaultServer);
- * 
+ *   assertTrue("is a real EbeanServer", defaultServer instanceof DefaultServer);
+ *
  *   Long magicBeanId = Long.valueOf(47L);
- * 
+ *
  *   EbeanServer mock = Mockito.mock(EbeanServer.class);
  *   when(mock.getBeanId(null)).thenReturn(magicBeanId);
- * 
+ *
  *   MockiEbean mockiEbean = MockiEbean.start(mock);
  *   try {
- * 
+ *
  *     // So using the Ebean singleton returns the mock instance
  *     EbeanServer server = Ebean.getServer(null);
  *     Object beanId = server.getBeanId(null);
- * 
+ *
  *     assertEquals(magicBeanId, beanId);
- * 
+ *
  *   } finally {
  *     mockiEbean.restoreOriginal();
  *   }
- * 
+ *
  *   EbeanServer restoredServer = Ebean.getServer(null);
- *   assertTrue(&quot;is a real EbeanServer&quot;, restoredServer instanceof DefaultServer);
+ *   assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
  * }
- * 
- * </pre>
- * 
+ *
+ * }</pre>
  */
 public class MockiEbean {
 
@@ -52,12 +70,10 @@ public class MockiEbean {
    * <p>
    * The default EbeanSever is the instance returned by {@link Ebean#getServer(String)} when the
    * server name is null.
-   * 
-   * @param mock
-   *          the mock instance that becomes the default EbeanServer
-   * 
+   *
+   * @param mock the mock instance that becomes the default EbeanServer
    * @return The MockiEbean with a {@link #restoreOriginal()} method that can be used to restore the
-   *         original EbeanServer implementation.
+   * original EbeanServer implementation.
    */
   public static MockiEbean start(EbeanServer mock) {
 
@@ -65,6 +81,29 @@ public class MockiEbean {
     EbeanServer original = Ebean.mock("$mock", mock, true);
 
     return new MockiEbean(mock, original);
+  }
+
+  /**
+   * Run the test runnable using the mock EbeanServer and restoring the original EbeanServer afterward.
+   *
+   * @param mock the mock instance that becomes the default EbeanServer
+   * @param test typically some test code as a runnable
+   */
+  public static void runWithMock(EbeanServer mock, Runnable test) {
+
+    start(mock).run(test);
+  }
+
+
+  /**
+   * Run the test runnable using the mock EbeanServer and restoring the original EbeanServer afterward.
+   *
+   * @param mock the mock instance that becomes the default EbeanServer
+   * @param test typically some test code as a callable
+   */
+  public static <V> V runWithMock(EbeanServer mock, Callable<V> test) throws Exception {
+
+    return start(mock).run(test);
   }
 
   protected final EbeanServer original;
@@ -94,6 +133,28 @@ public class MockiEbean {
    */
   public EbeanServer getMock() {
     return mock;
+  }
+
+  /**
+   * Run the test runnable restoring the original EbeanServer afterwards.
+   */
+  public void run(Runnable testRunnable) {
+    try {
+      testRunnable.run();
+    } finally {
+      restoreOriginal();
+    }
+  }
+
+  /**
+   * Run the test callable restoring the original EbeanServer afterwards.
+   */
+  public <V> V run(Callable<V> testCallable) throws Exception {
+    try {
+      return testCallable.call();
+    } finally {
+      restoreOriginal();
+    }
   }
 
   /**
