@@ -26,7 +26,7 @@
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>1.9.5</version>
+      <version>1.10.19</version>
     </dependency>
 
     <!--
@@ -60,20 +60,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.avaje</groupId>
-      <artifactId>avaje-agentloader</artifactId>
-      <version>[1,2)</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.avaje.ebeanorm</groupId>
-      <artifactId>avaje-ebeanorm-agent</artifactId>
-      <version>[4,5)</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.11</version>
@@ -81,9 +67,30 @@
     </dependency>
 
     <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.1.0</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <version>1.4.178</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.avaje</groupId>
+      <artifactId>avaje-agentloader</artifactId>
+      <version>[2,3)</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.avaje.ebeanorm</groupId>
+      <artifactId>avaje-ebeanorm-agent</artifactId>
+      <version>[4,5)</version>
       <scope>test</scope>
     </dependency>
 
@@ -101,13 +108,12 @@
         </configuration>
       </plugin>
 
-      <!-- Enhance the meta beans -->
+      <!-- Enhance the test beans -->
       <plugin>
         <groupId>org.avaje.ebeanorm</groupId>
         <artifactId>avaje-ebeanorm-mavenenhancer</artifactId>
         <version>4.1.2</version>
         <executions>
-          <!--   Not going to enhance Model bean -->
           <execution>
             <id>test</id>
             <phase>process-test-classes</phase>

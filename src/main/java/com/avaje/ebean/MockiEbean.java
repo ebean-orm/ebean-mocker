@@ -80,6 +80,10 @@ public class MockiEbean {
     // using $mock as the server name
     EbeanServer original = Ebean.mock("$mock", mock, true);
 
+    if (mock instanceof DelegateAwareEbeanServer) {
+      ((DelegateAwareEbeanServer)mock).withDelegateIfRequired(original);
+    }
+
     return new MockiEbean(mock, original);
   }
 
