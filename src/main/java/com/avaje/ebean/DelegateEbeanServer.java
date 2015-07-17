@@ -20,7 +20,6 @@ import com.avaje.ebeaninternal.api.SpiQuery;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -39,14 +38,27 @@ import java.util.Set;
  * as a test database.
  * </p>
  */
-public class DelegateEbeanServer extends BeanCapture implements EbeanServer, DelegateAwareEbeanServer {
+public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServer, DelegateMethodNames {
 
   /**
    * The list of methods calls made to this server.
    */
-  public List<MethodCall> methodCalls = new ArrayList<MethodCall>();
+  public MethodCalls methodCalls = new MethodCalls();
 
+  /**
+   * The beans sent to the save(), delete() methods etc.
+   */
+  public BeanCapture capturedBeans = new BeanCapture();
+
+  /**
+   * Various find methods that have specific test responses.
+   */
   protected WhenFind whenFind = new WhenFind();
+
+  /**
+   * Test double replacements for 'Finders' which are static fields on entity beans.
+   */
+  protected WithStaticFinders withStaticFinders = new WithStaticFinders();
 
   /**
    * The underlying EbeanServer we delegate to.
@@ -76,18 +88,33 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
   protected InterceptFindSqlQuery findSqlQuery;
 
   /**
-   * If set to true the 'bulk update' calls are NOT proxied through to the underlying delegate.
+   * If set to true the 'bulk update' calls are passed through to the underlying delegate.
    */
   protected boolean persistBulkUpdates;
 
+  /**
+   * If set to true the 'delete' calls are passed through to the underlying delegate.
+   */
   protected boolean persistDeletes;
 
+  /**
+   * If set to true the 'insert' calls are passed through to the underlying delegate.
+   */
   protected boolean persistInserts;
 
+  /**
+   * If set to true the 'save' calls are passed through to the underlying delegate.
+   */
   protected boolean persistSaves;
 
+  /**
+   * If set to true the 'update' calls are passed through to the underlying delegate.
+   */
   protected boolean persistUpdates;
 
+  /**
+   * Construct with defaults.
+   */
   public DelegateEbeanServer() {
 
   }
@@ -108,10 +135,46 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
     return this;
   }
 
+  @Override
+  public void beforeRun() {
+    withStaticFinders.beforeRun();
+  }
+
+  @Override
+  public void afterRun() {
+    withStaticFinders.afterRun();
+  }
 
   public WhenFind whenFind() {
     return whenFind;
   }
+
+  /**
+   * Used to specify a test double to replace a static 'finder' field on the given beanType.
+   * <pre>{@code
+   *
+   *   DelegateEbeanServer mock = new DelegateEbeanServer();
+   *   mock.withFinder(Customer.class).as(new TDCustomerFinder());
+   *
+   *   // Note: TDCustomerFinder not set onto Customer until runWithMock()
+   *
+   *   MockiEbean.runWithMock(mock, new Runnable() {
+   *
+   *     public void run() {
+   *       ...
+   *       // Customer.find now is our test double TDCustomerFinder
+   *       Customer found = Customer.find.byUniqueName("foo");
+   *     }
+   *   });
+   *
+   *   // Note: original Customer.find implementation is restored by MockiEbean
+   *
+   * }</pre>
+   */
+  public <T> WithStaticFinder<T> withFinder(Class<T> beanType) {
+    return withStaticFinders.withFinder(beanType);
+  }
+
 
   /**
    * Set the underlying delegate to proxy requests to.
@@ -608,8 +671,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void save(Object bean) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("bean", bean));
-    addSaved(bean);
+    methodCalls.add(MethodCall.of(SAVE).with("bean", bean));
+    capturedBeans.addSaved(bean);
     if (persistSaves) {
       save.save(bean, null);
     }
@@ -617,23 +680,23 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public int save(Iterator<?> iterator) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("iterator", iterator));
+    methodCalls.add(MethodCall.of(SAVE).with("iterator", iterator));
     // hmmm, can't really iterate and add to savedBeans here
     return !persistSaves ? 0 : save.save(iterator, null);
   }
 
   @Override
   public int save(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("beans", beans));
-    addSavedAll(beans);
+    methodCalls.add(MethodCall.of(SAVE).with("beans", beans));
+    capturedBeans.addSavedAll(beans);
     return !persistSaves ? 0 : save.save(beans, null);
   }
 
 
   @Override
   public void save(Object bean, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("bean", bean, "transaction", transaction));
-    addSaved(bean);
+    methodCalls.add(MethodCall.of(SAVE).with("bean", bean, "transaction", transaction));
+    capturedBeans.addSaved(bean);
     if (persistSaves) {
       save.save(bean, transaction);
     }
@@ -641,15 +704,15 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public int save(Iterator<?> iterator, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("iterator", iterator, "transaction", transaction));
+    methodCalls.add(MethodCall.of(SAVE).with("iterator", iterator, "transaction", transaction));
     // hmmm, can't really iterator and add to savedBeans
     return !persistSaves ? 0 : save.save(iterator, transaction);
   }
 
   @Override
   public int save(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("save").with("beans", beans, "transaction", transaction));
-    addSavedAll(beans);
+    methodCalls.add(MethodCall.of(SAVE).with("beans", beans, "transaction", transaction));
+    capturedBeans.addSavedAll(beans);
     return !persistSaves ? 0 : save.save(beans, transaction);
   }
 
@@ -688,8 +751,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void update(Object bean) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("update").with("bean", bean));
-    addUpdated(bean);
+    methodCalls.add(MethodCall.of(UPDATE).with("bean", bean));
+    capturedBeans.addUpdated(bean);
     if (persistUpdates) {
       save.update(bean, null);
     }
@@ -697,8 +760,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void update(Object bean, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("update").with("bean", bean, "transaction", transaction));
-    addUpdated(bean);
+    methodCalls.add(MethodCall.of(UPDATE).with("bean", bean, "transaction", transaction));
+    capturedBeans.addUpdated(bean);
     if (persistUpdates) {
       save.update(bean, transaction);
     }
@@ -706,8 +769,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("update").with("bean", bean, "transaction", transaction, "deleteMissingChildren", deleteMissingChildren));
-    addUpdated(bean);
+    methodCalls.add(MethodCall.of(UPDATE).with("bean", bean, "transaction", transaction, "deleteMissingChildren", deleteMissingChildren));
+    capturedBeans.addUpdated(bean);
     if (persistUpdates) {
       save.update(bean, transaction, deleteMissingChildren);
     }
@@ -715,8 +778,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void update(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("update").with("beans", beans));
-    addUpdatedAll(beans);
+    methodCalls.add(MethodCall.of(UPDATE).with("beans", beans));
+    capturedBeans.addUpdatedAll(beans);
     if (persistUpdates) {
       save.update(beans, null);
     }
@@ -724,8 +787,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void update(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("update").with("beans", beans, "transaction", transaction));
-    addUpdatedAll(beans);
+    methodCalls.add(MethodCall.of(UPDATE).with("beans", beans, "transaction", transaction));
+    capturedBeans.addUpdatedAll(beans);
     if (persistUpdates) {
       save.update(beans, transaction);
     }
@@ -735,8 +798,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void insert(Object bean) {
-    methodCalls.add(MethodCall.of("insert").with("bean", bean));
-    addInserted(bean);
+    methodCalls.add(MethodCall.of(INSERT).with("bean", bean));
+    capturedBeans.addInserted(bean);
     if (persistInserts) {
       save.insert(bean, null);
     }
@@ -744,8 +807,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void insert(Object bean, Transaction transaction) {
-    methodCalls.add(MethodCall.of("insert").with("bean", bean, "transaction", transaction));
-    addInserted(bean);
+    methodCalls.add(MethodCall.of(INSERT).with("bean", bean, "transaction", transaction));
+    capturedBeans.addInserted(bean);
     if (persistInserts) {
       save.insert(bean, transaction);
     }
@@ -753,8 +816,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void insert(Collection<?> beans) {
-    methodCalls.add(MethodCall.of("insert").with("beans", beans));
-    addInsertedAll(beans);
+    methodCalls.add(MethodCall.of(INSERT).with("beans", beans));
+    capturedBeans.addInsertedAll(beans);
     if (persistInserts) {
       save.insert(beans, null);
     }
@@ -762,8 +825,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void insert(Collection<?> beans, Transaction transaction) {
-    methodCalls.add(MethodCall.of("insert").with("beans", beans, "transaction", transaction));
-    addInsertedAll(beans);
+    methodCalls.add(MethodCall.of(INSERT).with("beans", beans, "transaction", transaction));
+    capturedBeans.addInsertedAll(beans);
     if (persistInserts) {
       save.insert(beans, transaction);
     }
@@ -776,7 +839,7 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
   @Override
   public void delete(Object bean) throws OptimisticLockException {
     methodCalls.add(MethodCall.of("bean").with("bean", bean));
-    addDeleted(bean);
+    capturedBeans.addDeleted(bean);
     if (persistDeletes) {
       delete.delete(bean, null);
     }
@@ -784,39 +847,39 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public int delete(Iterator<?> iterator) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("delete").with("iterator", iterator));
+    methodCalls.add(MethodCall.of(DELETE).with("iterator", iterator));
     // hmmm, can't really iterate and add to deletedBeans here
     return !persistDeletes ? 0 : delete.delete(iterator, null);
   }
 
   @Override
   public int delete(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("delete").with("beans", beans));
-    addDeletedAll(beans);
+    methodCalls.add(MethodCall.of(DELETE).with("beans", beans));
+    capturedBeans.addDeletedAll(beans);
     return !persistDeletes ? 0 : delete.delete(beans);
   }
 
   @Override
   public int delete(Class<?> beanType, Object id) {
-    MethodCall deleteById = MethodCall.of("delete").with("beanType", beanType, "id", id);
+    MethodCall deleteById = MethodCall.of(DELETE).with("beanType", beanType, "id", id);
     methodCalls.add(deleteById);
-    addDeleted(deleteById);
+    capturedBeans.addDeleted(deleteById);
     return !persistDeletes ? 0 : delete.delete(beanType, id, null);
   }
 
   @Override
   public int delete(Class<?> beanType, Object id, Transaction transaction) {
-    MethodCall deleteById = MethodCall.of("delete").with("beanType", beanType, "id", id, "transaction", transaction);
+    MethodCall deleteById = MethodCall.of(DELETE).with("beanType", beanType, "id", id, "transaction", transaction);
     methodCalls.add(deleteById);
-    addDeleted(deleteById);
+    capturedBeans.addDeleted(deleteById);
     return !persistDeletes ? 0 : delete.delete(beanType, id, transaction);
   }
 
   @Override
   public void delete(Class<?> beanType, Collection<?> ids) {
-    MethodCall deleteByIds = MethodCall.of("delete").with("beanType", beanType, "ids", ids);
+    MethodCall deleteByIds = MethodCall.of(DELETE).with("beanType", beanType, "ids", ids);
     methodCalls.add(deleteByIds);
-    addDeleted(deleteByIds);
+    capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
       delete.delete(beanType, ids, null);
     }
@@ -824,9 +887,9 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void delete(Class<?> beanType, Collection<?> ids, Transaction transaction) {
-    MethodCall deleteByIds = MethodCall.of("delete").with("beanType", beanType, "ids", ids, "transaction", transaction);
+    MethodCall deleteByIds = MethodCall.of(DELETE).with("beanType", beanType, "ids", ids, "transaction", transaction);
     methodCalls.add(deleteByIds);
-    addDeleted(deleteByIds);
+    capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
       delete.delete(beanType, ids, transaction);
     }
@@ -834,8 +897,8 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public void delete(Object bean, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("delete").with("bean", bean, "transaction", transaction));
-    addDeleted(bean);
+    methodCalls.add(MethodCall.of(DELETE).with("bean", bean, "transaction", transaction));
+    capturedBeans.addDeleted(bean);
     if (persistDeletes) {
       delete.delete(bean, transaction);
     }
@@ -843,7 +906,7 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
 
   @Override
   public int delete(Iterator<?> iterator, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of("delete").with("iterator", iterator, "transaction", transaction));
+    methodCalls.add(MethodCall.of(DELETE).with("iterator", iterator, "transaction", transaction));
     return !persistDeletes ? 0 : delete.delete(iterator, transaction);
   }
 
@@ -911,4 +974,5 @@ public class DelegateEbeanServer extends BeanCapture implements EbeanServer, Del
       bulkUpdate.externalModification(tableName, inserted, updated, deleted);
     }
   }
+
 }

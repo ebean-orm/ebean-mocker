@@ -98,7 +98,6 @@ public class MockiEbean {
     start(mock).run(test);
   }
 
-
   /**
    * Run the test runnable using the mock EbeanServer and restoring the original EbeanServer afterward.
    *
@@ -110,8 +109,14 @@ public class MockiEbean {
     return start(mock).run(test);
   }
 
+  /**
+   * The 'original' default EbeanServer that the mock is temporarily replacing.
+   */
   protected final EbeanServer original;
 
+  /**
+   * The 'mock' EbeanServer that is temporarily replacing the 'original' during the 'run'.
+   */
   protected final EbeanServer mock;
 
   /**
@@ -144,20 +149,48 @@ public class MockiEbean {
    */
   public void run(Runnable testRunnable) {
     try {
+      beforeRun();
       testRunnable.run();
     } finally {
+      afterRun();
       restoreOriginal();
     }
   }
+
 
   /**
    * Run the test callable restoring the original EbeanServer afterwards.
    */
   public <V> V run(Callable<V> testCallable) throws Exception {
     try {
+      beforeRun();
       return testCallable.call();
     } finally {
+      afterRun();
       restoreOriginal();
+    }
+  }
+
+
+  /**
+   * Typically only used internally.
+   *
+   * Usually used to set static Finder test doubles.
+   */
+  public void beforeRun() {
+    if (mock instanceof DelegateAwareEbeanServer) {
+      ((DelegateAwareEbeanServer)mock).beforeRun();
+    }
+  }
+
+  /**
+   * Typically only used internally.
+   *
+   * Usually used to restore static Finder original implementations.
+   */
+  public void afterRun() {
+    if (mock instanceof DelegateAwareEbeanServer) {
+      ((DelegateAwareEbeanServer)mock).afterRun();
     }
   }
 

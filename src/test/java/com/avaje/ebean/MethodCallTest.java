@@ -46,7 +46,7 @@ public class MethodCallTest {
     MethodCall methodCall = MethodCall.of("test1").with("name", "Jim", "age", 43L, "status", CascadeType.ALL);
 
     assertThat(methodCall.name).isEqualTo("test1");
-    assertThat(methodCall.args).hasSize(2);
+    assertThat(methodCall.args).hasSize(3);
     assertThat(methodCall.args)
         .containsEntry("name", "Jim")
         .containsEntry("age", 43L)

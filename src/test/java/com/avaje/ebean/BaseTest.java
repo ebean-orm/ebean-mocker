@@ -4,10 +4,7 @@ import org.avaje.agentloader.AgentLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by rob on 16/07/15.
- */
-public class BaseTest {
+public abstract class BaseTest {
 
   protected static Logger logger = LoggerFactory.getLogger(BaseTest.class);
 

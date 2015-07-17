@@ -6,30 +6,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Customer extends Model {
+public class Product extends Model {
 
-  public static final CustomerFinder find = new CustomerFinder();
+  public static final ProductFinder FIND = new ProductFinder();
 
-  @Id
+  @Id 
   Long id;
-
+  
   String name;
-
-  public Customer() {
-  }
-
-  public Customer(String name) {
-    this.name = name;
-  }
-
-  public Customer(Long id, String name) {
-    this.id = id;
-    this.name = name;
-  }
-
-  public String toString() {
-    return "<Customer id:"+id+" name:"+name+">";
-  }
 
   public Long getId() {
     return id;
@@ -46,4 +30,5 @@ public class Customer extends Model {
   public void setName(String name) {
     this.name = name;
   }
+  
 }

@@ -8,6 +8,8 @@ import com.avaje.ebean.Model;
 @Entity
 public class MyBean extends Model {
 
+  public static final MyBeanFinder OTHER = new MyBeanFinder();
+
   @Id 
   Long id;
   

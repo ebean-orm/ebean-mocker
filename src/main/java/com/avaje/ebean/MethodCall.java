@@ -4,7 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Created by rob on 16/07/15.
+ * Holds the method name and arguments.
+ * <p/>
+ * Used to collect the invoked methods for asserting.
  */
 public class MethodCall {
 
@@ -15,6 +17,11 @@ public class MethodCall {
   public MethodCall(String name) {
     this.name = name;
   }
+
+  public String toString() {
+    return name+":"+args;
+  }
+
 
   /**
    * Add the single argument.
