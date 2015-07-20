@@ -1,6 +1,5 @@
 package com.avaje.ebean;
 
-import org.assertj.core.api.Condition;
 import org.example.domain.Customer;
 import org.junit.Test;
 
