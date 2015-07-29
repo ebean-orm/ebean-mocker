@@ -243,11 +243,6 @@ server.endTransaction();
   }
 
   @Test
-  public void testFindVisit() throws Exception {
-    server.findVisit(null, null, null);
-  }
-
-  @Test
   public void testFindList() throws Exception {
     server.findList((Query) null, null);
     server.findList((SqlQuery) null, null);
@@ -351,7 +346,6 @@ server.endTransaction();
 
   }
 
-
   @Test
   public void testGetServerCacheManager() throws Exception {
     assertThat(server.getServerCacheManager()).isNotNull();
@@ -366,11 +360,6 @@ server.endTransaction();
   public void testRunCacheWarming() throws Exception {
     server.runCacheWarming();
     server.runCacheWarming(Customer.class);
-  }
-
-  @Test
-  public void testCreateJsonContext() throws Exception {
-    assertThat(server.createJsonContext()).isNotNull();
   }
 
   @Test

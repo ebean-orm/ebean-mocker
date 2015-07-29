@@ -4,9 +4,6 @@ import com.avaje.ebean.Model;
 
 import java.util.List;
 
-/**
- * Created by rob on 17/07/15.
- */
 public class CustomerFinder extends Model.Finder<Long,Customer> {
 
   public CustomerFinder() {

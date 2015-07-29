@@ -10,7 +10,6 @@ import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -268,11 +267,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> void findVisit(Query<T> query, QueryResultVisitor<T> visitor, Transaction transaction) {
-
-  }
-
-  @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
     return Mockito.mock(List.class);
   }
@@ -333,17 +327,17 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
+    return Mockito.mock(List.class);
+  }
+
+  @Override
   public void save(Object bean) throws OptimisticLockException {
 
   }
 
   @Override
-  public int save(Iterator<?> it) throws OptimisticLockException {
-    return 0;
-  }
-
-  @Override
-  public int save(Collection<?> beans) throws OptimisticLockException {
+  public int saveAll(Collection<?> beans) throws OptimisticLockException {
     return 0;
   }
 
@@ -353,12 +347,7 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public int delete(Iterator<?> it) throws OptimisticLockException {
-    return 0;
-  }
-
-  @Override
-  public int delete(Collection<?> c) throws OptimisticLockException {
+  public int deleteAll(Collection<?> c) throws OptimisticLockException {
     return 0;
   }
 
@@ -373,12 +362,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void delete(Class<?> beanType, Collection<?> ids) {
+  public void deleteAll(Class<?> beanType, Collection<?> ids) {
 
   }
 
   @Override
-  public void delete(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+  public void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
 
   }
 
@@ -418,12 +407,7 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public int save(Iterator<?> it, Transaction transaction) throws OptimisticLockException {
-    return 0;
-  }
-
-  @Override
-  public int save(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+  public int saveAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
     return 0;
   }
 
@@ -448,12 +432,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void update(Collection<?> beans) throws OptimisticLockException {
+  public void updateAll(Collection<?> beans) throws OptimisticLockException {
 
   }
 
   @Override
-  public void update(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+  public void updateAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
 
   }
 
@@ -468,12 +452,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void insert(Collection<?> beans) {
+  public void insertAll(Collection<?> beans) {
 
   }
 
   @Override
-  public void insert(Collection<?> beans, Transaction t) {
+  public void insertAll(Collection<?> beans, Transaction t) {
 
   }
 
@@ -510,11 +494,6 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public void delete(Object bean, Transaction t) throws OptimisticLockException {
 
-  }
-
-  @Override
-  public int delete(Iterator<?> it, Transaction t) throws OptimisticLockException {
-    return 0;
   }
 
   @Override
@@ -556,11 +535,6 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public void runCacheWarming(Class<?> beanType) {
 
-  }
-
-  @Override
-  public JsonContext createJsonContext() {
-    return Mockito.mock(JsonContext.class);
   }
 
   @Override

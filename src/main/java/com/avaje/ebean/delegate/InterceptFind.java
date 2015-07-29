@@ -8,15 +8,15 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.QueryEachConsumer;
 import com.avaje.ebean.QueryEachWhileConsumer;
 import com.avaje.ebean.QueryIterator;
-import com.avaje.ebean.QueryResultVisitor;
 import com.avaje.ebean.Transaction;
+import com.avaje.ebean.Version;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 /**
- * Created by rob on 15/07/15.
+ * Provides an adaption layer for find methods.
  */
 public interface InterceptFind {
 
@@ -38,8 +38,6 @@ public interface InterceptFind {
 
   <T> void findEachWhile(Query<T> query, QueryEachWhileConsumer<T> consumer, Transaction transaction);
 
-  <T> void findVisit(Query<T> query, QueryResultVisitor<T> visitor, Transaction transaction);
-
   <T> List<T> findList(Query<T> query, Transaction transaction);
 
   <T> FutureRowCount<T> findFutureRowCount(Query<T> query, Transaction transaction);
@@ -53,4 +51,6 @@ public interface InterceptFind {
   <T> Set<T> findSet(Query<T> query, Transaction transaction);
 
   <T> Map<?, T> findMap(Query<T> query, Transaction transaction);
+
+  <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction);
 }

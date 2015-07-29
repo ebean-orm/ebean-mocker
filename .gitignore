@@ -10,4 +10,5 @@
 *.sql
 target/
 logs/
+log/
 

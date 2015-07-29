@@ -37,7 +37,7 @@ public class MockiEbean_Delegate_saveCaptureTest extends BaseTest {
         baz.save();
 
         Ebean.save(buz);
-        Ebean.getServer(null).save(boz);
+        Ebean.getDefaultServer().save(boz);
       }
     });
 

@@ -9,8 +9,8 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.QueryEachConsumer;
 import com.avaje.ebean.QueryEachWhileConsumer;
 import com.avaje.ebean.QueryIterator;
-import com.avaje.ebean.QueryResultVisitor;
 import com.avaje.ebean.Transaction;
+import com.avaje.ebean.Version;
 import com.avaje.ebeaninternal.api.SpiQuery;
 
 import java.util.List;
@@ -82,11 +82,6 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> void findVisit(Query<T> query, QueryResultVisitor<T> visitor, Transaction transaction) {
-    delegate.findVisit(query, visitor, transaction);
-  }
-
-  @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
 
     SpiQuery q = (SpiQuery)query;
@@ -125,5 +120,8 @@ public class DelegateFind implements InterceptFind {
     return delegate.findMap(query, transaction);
   }
 
-
+  @Override
+  public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
+    return delegate.findVersions(query, transaction);
+  }
 }

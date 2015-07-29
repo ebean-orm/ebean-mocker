@@ -28,20 +28,14 @@ public class DelegateSave implements InterceptSave {
     return delegate.nextId(beanType);
   }
 
-
   @Override
   public void save(Object bean, Transaction transaction) throws OptimisticLockException {
     delegate.save(bean, transaction);
   }
 
   @Override
-  public int save(Iterator<?> it, Transaction transaction) throws OptimisticLockException {
-    return delegate.save(it, transaction);
-  }
-
-  @Override
-  public int save(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    return delegate.save(beans, transaction);
+  public int saveAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    return delegate.saveAll(beans, transaction);
   }
 
   @Override
@@ -55,8 +49,8 @@ public class DelegateSave implements InterceptSave {
   }
 
   @Override
-  public void update(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    delegate.update(beans, transaction);
+  public void updateAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    delegate.updateAll(beans, transaction);
   }
 
   @Override
@@ -65,8 +59,8 @@ public class DelegateSave implements InterceptSave {
   }
 
   @Override
-  public void insert(Collection<?> beans, Transaction t) {
-    delegate.insert(beans, t);
+  public void insertAll(Collection<?> beans, Transaction t) {
+    delegate.insertAll(beans, t);
   }
 
   @Override

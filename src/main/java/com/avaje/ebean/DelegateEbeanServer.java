@@ -255,12 +255,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public JsonContext createJsonContext() {
-    methodCalls.add(MethodCall.of("createJsonContext"));
-    return delegate.createJsonContext();
-  }
-
-  @Override
   public JsonContext json() {
     methodCalls.add(MethodCall.of("json"));
     return delegate.json();
@@ -579,12 +573,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> void findVisit(Query<T> query, QueryResultVisitor<T> visitor, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findVisit").with("query", query, "visitor", visitor, "transaction", transaction));
-    find.findVisit(query, visitor, transaction);
-  }
-
-  @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findList").with("query", query, "transaction", transaction));
     return find.findList(query, transaction);
@@ -626,6 +614,11 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return find.findMap(query, transaction);
   }
 
+  @Override
+  public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findVersions").with("query", query, "transaction", transaction));
+    return find.findVersions(query, transaction);
+  }
 
   // -- find SqlQuery ------------------------
 
@@ -679,17 +672,10 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public int save(Iterator<?> iterator) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(SAVE).with("iterator", iterator));
-    // hmmm, can't really iterate and add to savedBeans here
-    return !persistSaves ? 0 : save.save(iterator, null);
-  }
-
-  @Override
-  public int save(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(SAVE).with("beans", beans));
+  public int saveAll(Collection<?> beans) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(SAVE_ALL).with("beans", beans));
     capturedBeans.addSavedAll(beans);
-    return !persistSaves ? 0 : save.save(beans, null);
+    return !persistSaves ? 0 : save.saveAll(beans, null);
   }
 
 
@@ -703,17 +689,10 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public int save(Iterator<?> iterator, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(SAVE).with("iterator", iterator, "transaction", transaction));
-    // hmmm, can't really iterator and add to savedBeans
-    return !persistSaves ? 0 : save.save(iterator, transaction);
-  }
-
-  @Override
-  public int save(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(SAVE).with("beans", beans, "transaction", transaction));
+  public int saveAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(SAVE_ALL).with("beans", beans, "transaction", transaction));
     capturedBeans.addSavedAll(beans);
-    return !persistSaves ? 0 : save.save(beans, transaction);
+    return !persistSaves ? 0 : save.saveAll(beans, transaction);
   }
 
 
@@ -777,24 +756,22 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void update(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(UPDATE).with("beans", beans));
+  public void updateAll(Collection<?> beans) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(UPDATE_ALL).with("beans", beans));
     capturedBeans.addUpdatedAll(beans);
     if (persistUpdates) {
-      save.update(beans, null);
+      save.updateAll(beans, null);
     }
   }
 
   @Override
-  public void update(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(UPDATE).with("beans", beans, "transaction", transaction));
+  public void updateAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(UPDATE_ALL).with("beans", beans, "transaction", transaction));
     capturedBeans.addUpdatedAll(beans);
     if (persistUpdates) {
-      save.update(beans, transaction);
+      save.updateAll(beans, transaction);
     }
   }
-
-
 
   @Override
   public void insert(Object bean) {
@@ -815,20 +792,20 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void insert(Collection<?> beans) {
-    methodCalls.add(MethodCall.of(INSERT).with("beans", beans));
+  public void insertAll(Collection<?> beans) {
+    methodCalls.add(MethodCall.of(INSERT_ALL).with("beans", beans));
     capturedBeans.addInsertedAll(beans);
     if (persistInserts) {
-      save.insert(beans, null);
+      save.insertAll(beans, null);
     }
   }
 
   @Override
-  public void insert(Collection<?> beans, Transaction transaction) {
-    methodCalls.add(MethodCall.of(INSERT).with("beans", beans, "transaction", transaction));
+  public void insertAll(Collection<?> beans, Transaction transaction) {
+    methodCalls.add(MethodCall.of(INSERT_ALL).with("beans", beans, "transaction", transaction));
     capturedBeans.addInsertedAll(beans);
     if (persistInserts) {
-      save.insert(beans, transaction);
+      save.insertAll(beans, transaction);
     }
   }
 
@@ -846,17 +823,10 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public int delete(Iterator<?> iterator) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(DELETE).with("iterator", iterator));
-    // hmmm, can't really iterate and add to deletedBeans here
-    return !persistDeletes ? 0 : delete.delete(iterator, null);
-  }
-
-  @Override
-  public int delete(Collection<?> beans) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(DELETE).with("beans", beans));
+  public int deleteAll(Collection<?> beans) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_ALL).with("beans", beans));
     capturedBeans.addDeletedAll(beans);
-    return !persistDeletes ? 0 : delete.delete(beans);
+    return !persistDeletes ? 0 : delete.deleteAll(beans);
   }
 
   @Override
@@ -876,22 +846,22 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void delete(Class<?> beanType, Collection<?> ids) {
-    MethodCall deleteByIds = MethodCall.of(DELETE).with("beanType", beanType, "ids", ids);
+  public void deleteAll(Class<?> beanType, Collection<?> ids) {
+    MethodCall deleteByIds = MethodCall.of(DELETE_ALL).with("beanType", beanType, "ids", ids);
     methodCalls.add(deleteByIds);
     capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
-      delete.delete(beanType, ids, null);
+      delete.deleteAll(beanType, ids, null);
     }
   }
 
   @Override
-  public void delete(Class<?> beanType, Collection<?> ids, Transaction transaction) {
-    MethodCall deleteByIds = MethodCall.of(DELETE).with("beanType", beanType, "ids", ids, "transaction", transaction);
+  public void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+    MethodCall deleteByIds = MethodCall.of(DELETE_ALL).with("beanType", beanType, "ids", ids, "transaction", transaction);
     methodCalls.add(deleteByIds);
     capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
-      delete.delete(beanType, ids, transaction);
+      delete.deleteAll(beanType, ids, transaction);
     }
   }
 
@@ -902,12 +872,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     if (persistDeletes) {
       delete.delete(bean, transaction);
     }
-  }
-
-  @Override
-  public int delete(Iterator<?> iterator, Transaction transaction) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(DELETE).with("iterator", iterator, "transaction", transaction));
-    return !persistDeletes ? 0 : delete.delete(iterator, transaction);
   }
 
   @Override

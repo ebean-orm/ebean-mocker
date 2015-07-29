@@ -4,10 +4,9 @@ import com.avaje.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * Created by rob on 15/07/15.
+ * Provides an adaption layer for intercepting save methods.
  */
 public interface InterceptSave {
 
@@ -15,19 +14,17 @@ public interface InterceptSave {
 
   void save(Object bean, Transaction transaction) throws OptimisticLockException;
 
-  int save(Iterator<?> it, Transaction transaction) throws OptimisticLockException;
-
-  int save(Collection<?> beans, Transaction transaction) throws OptimisticLockException;
+  int saveAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException;
 
   void update(Object bean, Transaction t) throws OptimisticLockException;
 
   void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException;
 
-  void update(Collection<?> beans, Transaction transaction) throws OptimisticLockException;
+  void updateAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException;
 
   void insert(Object bean, Transaction t);
 
-  void insert(Collection<?> beans, Transaction t);
+  void insertAll(Collection<?> beans, Transaction t);
 
   void saveManyToManyAssociations(Object ownerBean, String propertyName);
 

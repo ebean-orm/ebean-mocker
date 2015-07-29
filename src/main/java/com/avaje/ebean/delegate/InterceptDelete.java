@@ -4,22 +4,19 @@ import com.avaje.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * Created by rob on 15/07/15.
+ * Provides an adaption for for all deletes.
  */
 public interface InterceptDelete {
 
-  int delete(Collection<?> c) throws OptimisticLockException;
-
   int delete(Class<?> beanType, Object id, Transaction transaction);
-
-  void delete(Class<?> beanType, Collection<?> ids, Transaction transaction);
 
   void delete(Object bean, Transaction t) throws OptimisticLockException;
 
-  int delete(Iterator<?> it, Transaction t) throws OptimisticLockException;
+  int deleteAll(Collection<?> c) throws OptimisticLockException;
+
+  void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction);
 
   int deleteManyToManyAssociations(Object ownerBean, String propertyName);
 

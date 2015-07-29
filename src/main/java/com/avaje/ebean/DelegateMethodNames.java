@@ -1,9 +1,17 @@
 package com.avaje.ebean;
 
 /**
- * Created by rob on 17/07/15.
+ * Save invoked method names.
  */
 public interface DelegateMethodNames {
+
+  String SAVE_ALL = "saveAll";
+
+  String INSERT_ALL = "insertAll";
+
+  String UPDATE_ALL = "updateAll";
+
+  String DELETE_ALL = "deleteAll";
 
   String SAVE = "save";
 
