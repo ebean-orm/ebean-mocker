@@ -9,7 +9,7 @@
 
   <groupId>org.avaje.ebeanorm</groupId>
   <artifactId>avaje-ebeanorm-mocker</artifactId>
-  <version>6.5.1-SNAPSHOT</version>
+  <version>6.5.1</version>
   <name>avaje-ebeanorm-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -18,7 +18,7 @@
     <connection>scm:git:https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</connection>
     <developerConnection>scm:git:https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</developerConnection>
     <url>https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</url>
-    <tag>HEAD</tag>
+    <tag>avaje-ebeanorm-mocker-6.5.1</tag>
   </scm>
 
   <dependencies>
