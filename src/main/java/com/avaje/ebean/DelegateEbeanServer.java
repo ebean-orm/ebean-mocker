@@ -14,6 +14,7 @@ import com.avaje.ebean.delegate.InterceptFind;
 import com.avaje.ebean.delegate.InterceptFindSqlQuery;
 import com.avaje.ebean.delegate.InterceptSave;
 import com.avaje.ebean.meta.MetaInfoManager;
+import com.avaje.ebean.plugin.SpiServer;
 import com.avaje.ebean.text.csv.CsvReader;
 import com.avaje.ebean.text.json.JsonContext;
 import com.avaje.ebeaninternal.api.SpiQuery;
@@ -21,7 +22,6 @@ import com.avaje.ebeaninternal.api.SpiQuery;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -216,6 +216,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     persistUpdates = persisting;
     persistSaves = persisting;
     return this;
+  }
+
+  @Override
+  public SpiServer getPluginApi() {
+    methodCalls.add(MethodCall.of("getPluginApi"));
+    return delegate.getPluginApi();
   }
 
   /**
@@ -827,6 +833,19 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     methodCalls.add(MethodCall.of(DELETE_ALL).with("beans", beans));
     capturedBeans.addDeletedAll(beans);
     return !persistDeletes ? 0 : delete.deleteAll(beans);
+  }
+
+  @Override
+  public int deleteAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_ALL).with("beans", beans));
+    capturedBeans.addDeletedAll(beans);
+    return !persistDeletes ? 0 : delete.deleteAll(beans, transaction);
+  }
+
+  @Override
+  public <T> int delete(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of(DELETE).with("query", query));
+    return !persistDeletes ? 0 : delete.delete(query, transaction);
   }
 
   @Override

@@ -2,6 +2,7 @@ package com.avaje.ebean;
 
 import com.avaje.ebean.cache.ServerCacheManager;
 import com.avaje.ebean.meta.MetaInfoManager;
+import com.avaje.ebean.plugin.SpiServer;
 import com.avaje.ebean.text.csv.CsvReader;
 import com.avaje.ebean.text.json.JsonContext;
 
@@ -25,6 +26,11 @@ public class TDEbeanServer implements EbeanServer {
   @Override
   public void shutdown(boolean shutdownDataSource, boolean deregisterDriver) {
 
+  }
+
+  @Override
+  public SpiServer getPluginApi() {
+    return null;
   }
 
   @Override
@@ -326,6 +332,16 @@ public class TDEbeanServer implements EbeanServer {
   @Override
   public int deleteAll(Collection<?> c) throws OptimisticLockException {
     deletedBeans.addAll(c);
+    return 0;
+  }
+
+  @Override
+  public <T> int delete(Query<T> query, Transaction transaction) {
+    return 0;
+  }
+
+  @Override
+  public int deleteAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
     return 0;
   }
 

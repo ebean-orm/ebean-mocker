@@ -1,5 +1,6 @@
 package com.avaje.ebean.delegate;
 
+import com.avaje.ebean.Query;
 import com.avaje.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
@@ -15,6 +16,10 @@ public interface InterceptDelete {
   void delete(Object bean, Transaction t) throws OptimisticLockException;
 
   int deleteAll(Collection<?> c) throws OptimisticLockException;
+
+  int deleteAll(Collection<?> c, Transaction transaction) throws OptimisticLockException;
+
+  int delete(Query<?> query, Transaction transaction) throws OptimisticLockException;
 
   void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction);
 

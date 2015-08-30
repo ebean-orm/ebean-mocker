@@ -1,14 +1,14 @@
 package com.avaje.ebean.delegate;
 
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Query;
 import com.avaje.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * Created by rob on 15/07/15.
+ * Simple delegating implementation of InterceptDelete.
  */
 public class DelegateDelete implements InterceptDelete {
 
@@ -26,6 +26,16 @@ public class DelegateDelete implements InterceptDelete {
   @Override
   public int deleteAll(Collection<?> c) throws OptimisticLockException {
     return delegate.deleteAll(c);
+  }
+
+  @Override
+  public int deleteAll(Collection<?> c, Transaction transaction) throws OptimisticLockException {
+    return delegate.deleteAll(c, transaction);
+  }
+
+  @Override
+  public int delete(Query<?> query, Transaction transaction) throws OptimisticLockException {
+    return delegate.delete(query, transaction);
   }
 
   @Override
