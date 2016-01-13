@@ -6,12 +6,14 @@ import com.avaje.ebean.delegate.DelegateBulkUpdate;
 import com.avaje.ebean.delegate.DelegateDelete;
 import com.avaje.ebean.delegate.DelegateFind;
 import com.avaje.ebean.delegate.DelegateFindSqlQuery;
+import com.avaje.ebean.delegate.DelegatePublish;
 import com.avaje.ebean.delegate.DelegateQuery;
 import com.avaje.ebean.delegate.DelegateSave;
 import com.avaje.ebean.delegate.InterceptBulkUpdate;
 import com.avaje.ebean.delegate.InterceptDelete;
 import com.avaje.ebean.delegate.InterceptFind;
 import com.avaje.ebean.delegate.InterceptFindSqlQuery;
+import com.avaje.ebean.delegate.InterceptPublish;
 import com.avaje.ebean.delegate.InterceptSave;
 import com.avaje.ebean.meta.MetaInfoManager;
 import com.avaje.ebean.plugin.SpiServer;
@@ -85,6 +87,8 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
 
   protected InterceptFind find;
 
+  protected InterceptPublish publish;
+
   protected InterceptFindSqlQuery findSqlQuery;
 
   /**
@@ -113,6 +117,11 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   protected boolean persistUpdates;
 
   /**
+   * If set to true the publish/draft calls are passed through to the underlying delegate.
+   */
+  protected boolean persistPublish;
+
+  /**
    * Construct with defaults.
    */
   public DelegateEbeanServer() {
@@ -132,6 +141,7 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     this.bulkUpdate = new DelegateBulkUpdate(delegate);
     this.find = new DelegateFind(delegate);
     this.findSqlQuery = new DelegateFindSqlQuery(delegate);
+    this.publish = new DelegatePublish(delegate);
     return this;
   }
 
@@ -224,6 +234,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return delegate.getPluginApi();
   }
 
+  @Override
+  public AutoTune getAutoTune() {
+    methodCalls.add(MethodCall.of("getAutoTune"));
+    return delegate.getAutoTune();
+  }
+
   /**
    * Return the BackgroundExecutor.
    *
@@ -264,12 +280,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   public JsonContext json() {
     methodCalls.add(MethodCall.of("json"));
     return delegate.json();
-  }
-
-  @Override
-  public AdminAutofetch getAdminAutofetch() {
-    methodCalls.add(MethodCall.of("getAdminAutofetch"));
-    return delegate.getAdminAutofetch();
   }
 
   @Override
@@ -485,6 +495,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public <T> Set<String> validateQuery(Query<T> query) {
+    methodCalls.add(MethodCall.of("validateQuery").with("query", query));
+    return delegateQuery.validateQuery(query);
+  }
+
+  @Override
   public <T> Query<T> find(Class<T> beanType) {
     methodCalls.add(MethodCall.of("find").with("beanType", beanType));
     return delegateQuery.find(beanType);
@@ -606,6 +622,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
     methodCalls.add(MethodCall.of("findPagedList").with("query", query, "transaction", transaction).with("pageIndex", pageIndex, "pageSize", pageSize));
     return find.findPagedList(query, transaction, pageIndex, pageSize);
+  }
+
+  @Override
+  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findPagedList").with("query", query, "transaction", transaction));
+    return find.findPagedList(query, transaction);
   }
 
   @Override
@@ -820,12 +842,13 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
 
 
   @Override
-  public void delete(Object bean) throws OptimisticLockException {
+  public boolean delete(Object bean) throws OptimisticLockException {
     methodCalls.add(MethodCall.of("bean").with("bean", bean));
     capturedBeans.addDeleted(bean);
     if (persistDeletes) {
-      delete.delete(bean, null);
+      return delete.delete(bean, null);
     }
+    return true;
   }
 
   @Override
@@ -840,6 +863,34 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     methodCalls.add(MethodCall.of(DELETE_ALL).with("beans", beans));
     capturedBeans.addDeletedAll(beans);
     return !persistDeletes ? 0 : delete.deleteAll(beans, transaction);
+  }
+
+  @Override
+  public boolean deletePermanent(Object bean) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_PERMANENT).with("bean", bean));
+    capturedBeans.addDeletePermanent(bean);
+    return !persistDeletes ? true : delete.deletePermanent(bean);
+  }
+
+  @Override
+  public boolean deletePermanent(Object bean, Transaction transaction) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_PERMANENT).with("bean", bean));
+    capturedBeans.addDeletePermanent(bean);
+    return !persistDeletes ? true : delete.deletePermanent(bean, transaction);
+  }
+
+  @Override
+  public int deleteAllPermanent(Collection<?> beans) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_ALL_PERMANENT).with("beans", beans));
+    capturedBeans.addDeletedAllPermanent(beans);
+    return !persistDeletes ? 0 : delete.deleteAllPermanent(beans);
+  }
+
+  @Override
+  public int deleteAllPermanent(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(DELETE_ALL_PERMANENT).with("beans", beans));
+    capturedBeans.addDeletedAllPermanent(beans);
+    return !persistDeletes ? 0 : delete.deleteAllPermanent(beans, transaction);
   }
 
   @Override
@@ -885,12 +936,13 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void delete(Object bean, Transaction transaction) throws OptimisticLockException {
+  public boolean delete(Object bean, Transaction transaction) throws OptimisticLockException {
     methodCalls.add(MethodCall.of(DELETE).with("bean", bean, "transaction", transaction));
     capturedBeans.addDeleted(bean);
     if (persistDeletes) {
-      delete.delete(bean, transaction);
+      return delete.delete(bean, transaction);
     }
+    return true;
   }
 
   @Override
@@ -905,6 +957,57 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return !persistDeletes ? 0 : delete.deleteManyToManyAssociations(ownerBean, propertyName, transaction);
   }
 
+
+  // -- publish and restore ---------------------------
+
+
+  @Override
+  public <T> T publish(Class<T> beanType, Object id, Transaction transaction) {
+    methodCalls.add(MethodCall.of(PUBLISH).with("beanType", beanType).with("id", id));
+    return !persistPublish ? null : publish.publish(beanType, id, transaction);
+  }
+
+  @Override
+  public <T> T publish(Class<T> beanType, Object id) {
+    methodCalls.add(MethodCall.of(PUBLISH).with("beanType", beanType).with("id", id));
+    return !persistPublish ? null : publish.publish(beanType, id);
+  }
+
+  @Override
+  public <T> List<T> publish(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of(PUBLISH).with("query", query));
+    return !persistPublish ? null : publish.publish(query, transaction);
+  }
+
+  @Override
+  public <T> List<T> publish(Query<T> query) {
+    methodCalls.add(MethodCall.of(PUBLISH).with("query", query));
+    return !persistPublish ? null : publish.publish(query);
+  }
+
+  @Override
+  public <T> T draftRestore(Class<T> beanType, Object id, Transaction transaction) {
+    methodCalls.add(MethodCall.of(DRAFT_RESTORE).with("beanType", beanType).with("id", id));
+    return !persistPublish ? null : publish.draftRestore(beanType, id, transaction);
+  }
+
+  @Override
+  public <T> T draftRestore(Class<T> beanType, Object id) {
+    methodCalls.add(MethodCall.of(DRAFT_RESTORE).with("beanType", beanType).with("id", id));
+    return !persistPublish ? null : publish.draftRestore(beanType, id);
+  }
+
+  @Override
+  public <T> List<T> draftRestore(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of(DRAFT_RESTORE).with("query", query));
+    return !persistPublish ? null : publish.draftRestore(query, transaction);
+  }
+
+  @Override
+  public <T> List<T> draftRestore(Query<T> query) {
+    methodCalls.add(MethodCall.of(DRAFT_RESTORE).with("query", query));
+    return !persistPublish ? null : publish.draftRestore(query);
+  }
 
 
   // -- bulkUpdate bulkUpdates ------------------------

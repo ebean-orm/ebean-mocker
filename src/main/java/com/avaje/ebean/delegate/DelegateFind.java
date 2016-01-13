@@ -111,6 +111,11 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
+  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
+    return delegate.findPagedList(query, transaction);
+  }
+
+  @Override
   public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
     return delegate.findSet(query, transaction);
   }

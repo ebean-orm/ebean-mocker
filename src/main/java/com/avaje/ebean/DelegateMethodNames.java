@@ -13,6 +13,14 @@ public interface DelegateMethodNames {
 
   String DELETE_ALL = "deleteAll";
 
+  String DELETE_PERMANENT = "deletePermanent";
+
+  String DELETE_ALL_PERMANENT = "deleteAllPermanent";
+
+  String PUBLISH = "publish";
+
+  String DRAFT_RESTORE = "draftRestore";
+
   String SAVE = "save";
 
   String INSERT = "insert";

@@ -5,6 +5,8 @@ import com.avaje.ebean.Filter;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.SqlQuery;
 
+import java.util.Set;
+
 /**
  * Wraps an underlying EbeanServer.
  * <p>
@@ -61,9 +63,10 @@ public class DelegateQuery {
   }
 
   public <T> T getReference(Class<T> beanType, Object id) {
-    //FIXME
     return delegate.getReference(beanType, id);
   }
 
-
+  public <T> Set<String> validateQuery(Query<T> query) {
+    return delegate.validateQuery(query);
+  }
 }

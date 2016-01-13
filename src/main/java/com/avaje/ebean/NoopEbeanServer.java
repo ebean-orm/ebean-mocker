@@ -78,8 +78,8 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public AdminAutofetch getAdminAutofetch() {
-    return Mockito.mock(AdminAutofetch.class);
+  public AutoTune getAutoTune() {
+    return null;
   }
 
   @Override
@@ -303,6 +303,11 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
+    return Mockito.mock(PagedList.class);
+  }
+
+  @Override
   public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
     return Mockito.mock(Set.class);
   }
@@ -338,6 +343,11 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> Set<String> validateQuery(Query<T> query) {
+    return Collections.EMPTY_SET;
+  }
+
+  @Override
   public void save(Object bean) throws OptimisticLockException {
 
   }
@@ -348,8 +358,13 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void delete(Object bean) throws OptimisticLockException {
+  public boolean delete(Object bean) throws OptimisticLockException {
+    return false;
+  }
 
+  @Override
+  public boolean delete(Object bean, Transaction t) throws OptimisticLockException {
+    return false;
   }
 
   @Override
@@ -388,6 +403,26 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public int deleteAllPermanent(Collection<?> beans, Transaction transaction) throws OptimisticLockException {
+    return 0;
+  }
+
+  @Override
+  public boolean deletePermanent(Object bean) throws OptimisticLockException {
+    return false;
+  }
+
+  @Override
+  public boolean deletePermanent(Object bean, Transaction transaction) throws OptimisticLockException {
+    return false;
+  }
+
+  @Override
+  public int deleteAllPermanent(Collection<?> beans) throws OptimisticLockException {
+    return 0;
+  }
+
+  @Override
   public int execute(SqlUpdate sqlUpdate) {
     return 0;
   }
@@ -410,6 +445,46 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public void externalModification(String tableName, boolean inserted, boolean updated, boolean deleted) {
 
+  }
+
+  @Override
+  public <T> T publish(Class<T> beanType, Object id, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> T publish(Class<T> beanType, Object id) {
+    return null;
+  }
+
+  @Override
+  public <T> List<T> publish(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> List<T> publish(Query<T> query) {
+    return null;
+  }
+
+  @Override
+  public <T> T draftRestore(Class<T> beanType, Object id, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> T draftRestore(Class<T> beanType, Object id) {
+    return null;
+  }
+
+  @Override
+  public <T> List<T> draftRestore(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> List<T> draftRestore(Query<T> query) {
+    return null;
   }
 
   @Override
@@ -504,11 +579,6 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public void saveAssociation(Object ownerBean, String propertyName, Transaction t) {
-
-  }
-
-  @Override
-  public void delete(Object bean, Transaction t) throws OptimisticLockException {
 
   }
 

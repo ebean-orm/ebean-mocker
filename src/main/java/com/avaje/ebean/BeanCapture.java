@@ -37,6 +37,11 @@ public class BeanCapture {
    */
   public List<Object> delete = new ArrayList<Object>();
 
+  /**
+   * Captured beans sent to deletePermanent() methods.
+   */
+  public List<Object> deletePermanent = new ArrayList<Object>();
+
 
   protected void addSaved(Object bean) {
     if (captureBeans) {
@@ -86,4 +91,15 @@ public class BeanCapture {
     }
   }
 
+  protected void addDeletePermanent(Object bean) {
+    if (captureBeans) {
+      deletePermanent.add(bean);
+    }
+  }
+
+  public void addDeletedAllPermanent(Collection<?> beans) {
+    if (captureBeans) {
+      deletePermanent.addAll(beans);
+    }
+  }
 }

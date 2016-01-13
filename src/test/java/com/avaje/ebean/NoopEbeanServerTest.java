@@ -6,9 +6,6 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
-/**
- * Created by rob on 16/07/15.
- */
 public class NoopEbeanServerTest {
 
   NoopEbeanServer server = new NoopEbeanServer();
@@ -59,11 +56,6 @@ public class NoopEbeanServerTest {
   @Test
   public void testShutdown() throws Exception {
     server.shutdown(false, false);
-  }
-
-  @Test
-  public void testGetAdminAutofetch() throws Exception {
-    server.getAdminAutofetch();
   }
 
   @Test

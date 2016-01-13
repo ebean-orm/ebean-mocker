@@ -48,9 +48,12 @@ public interface InterceptFind {
 
   <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize);
 
+  <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction);
+
   <T> Set<T> findSet(Query<T> query, Transaction transaction);
 
   <T> Map<?, T> findMap(Query<T> query, Transaction transaction);
 
   <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction);
+
 }

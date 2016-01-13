@@ -49,8 +49,8 @@ public class DelegateDelete implements InterceptDelete {
   }
 
   @Override
-  public void delete(Object bean, Transaction t) throws OptimisticLockException {
-    delegate.delete(bean, t);
+  public boolean delete(Object bean, Transaction t) throws OptimisticLockException {
+    return delegate.delete(bean, t);
   }
 
   @Override
@@ -63,4 +63,23 @@ public class DelegateDelete implements InterceptDelete {
     return delegate.deleteManyToManyAssociations(ownerBean, propertyName, t);
   }
 
+  @Override
+  public boolean deletePermanent(Object bean) {
+    return delegate.deletePermanent(bean);
+  }
+
+  @Override
+  public boolean deletePermanent(Object bean, Transaction transaction) {
+    return delegate.deletePermanent(bean, transaction);
+  }
+
+  @Override
+  public int deleteAllPermanent(Collection<?> beans) {
+    return delegate.deleteAllPermanent(beans);
+  }
+
+  @Override
+  public int deleteAllPermanent(Collection<?> beans, Transaction transaction) {
+    return delegate.deleteAllPermanent(beans, transaction);
+  }
 }
