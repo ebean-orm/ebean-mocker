@@ -29,6 +29,11 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public DocumentStore docStore() {
+    return null;
+  }
+
+  @Override
   public SpiServer getPluginApi() {
     return null;
   }

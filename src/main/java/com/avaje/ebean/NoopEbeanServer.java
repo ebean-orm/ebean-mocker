@@ -5,6 +5,7 @@ import com.avaje.ebean.meta.MetaInfoManager;
 import com.avaje.ebean.plugin.SpiServer;
 import com.avaje.ebean.text.csv.CsvReader;
 import com.avaje.ebean.text.json.JsonContext;
+import com.avaje.ebeanservice.docstore.none.NoneDocStore;
 import org.mockito.Mockito;
 
 import javax.persistence.OptimisticLockException;
@@ -70,6 +71,11 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public void shutdown(boolean shutdownDataSource, boolean deregisterDriver) {
 
+  }
+
+  @Override
+  public DocumentStore docStore() {
+    return new NoneDocStore();
   }
 
   @Override

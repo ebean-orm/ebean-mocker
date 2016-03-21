@@ -240,6 +240,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return delegate.getAutoTune();
   }
 
+  @Override
+  public DocumentStore docStore() {
+    methodCalls.add(MethodCall.of("docStore"));
+    return delegate.docStore();
+  }
+
   /**
    * Return the BackgroundExecutor.
    *
