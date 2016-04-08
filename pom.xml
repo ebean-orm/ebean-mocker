@@ -9,7 +9,7 @@
 
   <groupId>org.avaje.ebeanorm</groupId>
   <artifactId>avaje-ebeanorm-mocker</artifactId>
-  <version>7.2.2-SNAPSHOT</version>
+  <version>7.6.1-SNAPSHOT</version>
   <name>avaje-ebeanorm-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -40,7 +40,7 @@
     <dependency>
       <groupId>org.avaje.ebeanorm</groupId>
       <artifactId>avaje-ebeanorm</artifactId>
-      <version>7.2.1</version>
+      <version>7.6.1</version>
       <scope>provided</scope>
     </dependency>
 

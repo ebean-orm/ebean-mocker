@@ -319,6 +319,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public Object setBeanId(Object bean, Object id) {
+    methodCalls.add(MethodCall.of("setBeanId").with("bean", bean).with("id", id));
+    return delegate.setBeanId(bean, id);
+  }
+
+  @Override
   public Map<String, ValuePair> diff(Object a, Object b) {
     methodCalls.add(MethodCall.of("diff").with("a", a, "b", b));
     return delegate.diff(a, b);

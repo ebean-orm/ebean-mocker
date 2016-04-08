@@ -43,6 +43,11 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public Object setBeanId(Object bean, Object id) {
+    return beanId;
+  }
+
+  @Override
   public Object nextId(Class<?> beanType) {
     return nextId;
   }

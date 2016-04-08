@@ -69,6 +69,11 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public Object setBeanId(Object bean, Object id) {
+    return id;
+  }
+
+  @Override
   public Map<String, ValuePair> diff(Object a, Object b) {
     return null;
   }
