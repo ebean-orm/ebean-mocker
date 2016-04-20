@@ -349,12 +349,6 @@ server.endTransaction();
   }
 
   @Test
-  public void testRunCacheWarming() throws Exception {
-    server.runCacheWarming();
-    server.runCacheWarming(Customer.class);
-  }
-
-  @Test
   public void testJson() throws Exception {
     assertThat(server.json()).isNotNull();
   }

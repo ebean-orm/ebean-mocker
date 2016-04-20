@@ -271,18 +271,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void runCacheWarming() {
-    methodCalls.add(MethodCall.of("runCacheWarming"));
-    delegate.runCacheWarming();
-  }
-
-  @Override
-  public void runCacheWarming(Class<?> beanType) {
-    methodCalls.add(MethodCall.of("runCacheWarming").with("beanType", beanType));
-    delegate.runCacheWarming(beanType);
-  }
-
-  @Override
   public JsonContext json() {
     methodCalls.add(MethodCall.of("json"));
     return delegate.json();

@@ -613,7 +613,6 @@ public class NoopEbeanServer implements EbeanServer {
 
   }
 
-
   @Override
   public ServerCacheManager getServerCacheManager() {
     return Mockito.mock(ServerCacheManager.class);
@@ -622,16 +621,6 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public BackgroundExecutor getBackgroundExecutor() {
     return Mockito.mock(BackgroundExecutor.class);
-  }
-
-  @Override
-  public void runCacheWarming() {
-
-  }
-
-  @Override
-  public void runCacheWarming(Class<?> beanType) {
-
   }
 
   @Override

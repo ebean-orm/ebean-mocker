@@ -613,16 +613,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void runCacheWarming() {
-
-  }
-
-  @Override
-  public void runCacheWarming(Class<?> beanType) {
-
-  }
-
-  @Override
   public JsonContext json() {
     return null;
   }
