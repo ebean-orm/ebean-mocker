@@ -916,23 +916,63 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void deleteAll(Class<?> beanType, Collection<?> ids) {
+  public int deletePermanent(Class<?> beanType, Object id) {
+    MethodCall deleteById = MethodCall.of(DELETE_PERMANENT).with("beanType", beanType, "id", id);
+    methodCalls.add(deleteById);
+    capturedBeans.addDeleted(deleteById);
+    return !persistDeletes ? 0 : delete.deletePermanent(beanType, id);
+  }
+
+  @Override
+  public int deletePermanent(Class<?> beanType, Object id, Transaction transaction) {
+    MethodCall deleteById = MethodCall.of(DELETE_PERMANENT).with("beanType", beanType, "id", id, "transaction", transaction);
+    methodCalls.add(deleteById);
+    capturedBeans.addDeleted(deleteById);
+    return !persistDeletes ? 0 : delete.deletePermanent(beanType, id, transaction);
+  }
+
+  @Override
+  public int deleteAll(Class<?> beanType, Collection<?> ids) {
     MethodCall deleteByIds = MethodCall.of(DELETE_ALL).with("beanType", beanType, "ids", ids);
     methodCalls.add(deleteByIds);
     capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
-      delete.deleteAll(beanType, ids, null);
+      return delete.deleteAll(beanType, ids, null);
     }
+    return 0;
   }
 
   @Override
-  public void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+  public int deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
     MethodCall deleteByIds = MethodCall.of(DELETE_ALL).with("beanType", beanType, "ids", ids, "transaction", transaction);
     methodCalls.add(deleteByIds);
     capturedBeans.addDeleted(deleteByIds);
     if (persistDeletes) {
-      delete.deleteAll(beanType, ids, transaction);
+      return delete.deleteAll(beanType, ids, transaction);
     }
+    return 0;
+  }
+
+  @Override
+  public int deleteAllPermanent(Class<?> beanType, Collection<?> ids) {
+    MethodCall deleteByIds = MethodCall.of(DELETE_ALL_PERMANENT).with("beanType", beanType, "ids", ids);
+    methodCalls.add(deleteByIds);
+    capturedBeans.addDeleted(deleteByIds);
+    if (persistDeletes) {
+      return delete.deleteAllPermanent(beanType, ids);
+    }
+    return 0;
+  }
+
+  @Override
+  public int deleteAllPermanent(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+    MethodCall deleteByIds = MethodCall.of(DELETE_ALL_PERMANENT).with("beanType", beanType, "ids", ids, "transaction", transaction);
+    methodCalls.add(deleteByIds);
+    capturedBeans.addDeleted(deleteByIds);
+    if (persistDeletes) {
+      return delete.deleteAllPermanent(beanType, ids, transaction);
+    }
+    return 0;
   }
 
   @Override

@@ -377,13 +377,23 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void deleteAll(Class<?> beanType, Collection<?> ids) {
-
+  public int deletePermanent(Class<?> beanType, Object id) {
+    return 0;
   }
 
   @Override
-  public void deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+  public int deletePermanent(Class<?> beanType, Object id, Transaction transaction) {
+    return 0;
+  }
 
+  @Override
+  public int deleteAll(Class<?> beanType, Collection<?> ids) {
+    return 0;
+  }
+
+  @Override
+  public int deleteAll(Class<?> beanType, Collection<?> ids, Transaction transaction) {
+    return 0;
   }
 
   @Override
@@ -403,6 +413,16 @@ public class TDEbeanServer implements EbeanServer {
 
   @Override
   public int deleteAllPermanent(Collection<?> beans) throws OptimisticLockException {
+    return 0;
+  }
+
+  @Override
+  public int deleteAllPermanent(Class<?> beanType, Collection<?> ids) {
+    return 0;
+  }
+
+  @Override
+  public int deleteAllPermanent(Class<?> beanType, Collection<?> ids, Transaction transaction) {
     return 0;
   }
 
