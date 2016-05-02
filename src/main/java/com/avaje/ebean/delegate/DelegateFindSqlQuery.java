@@ -1,14 +1,13 @@
 package com.avaje.ebean.delegate;
 
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.SqlFutureList;
+import com.avaje.ebean.QueryEachConsumer;
+import com.avaje.ebean.QueryEachWhileConsumer;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.Transaction;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -35,22 +34,17 @@ public class DelegateFindSqlQuery implements InterceptFindSqlQuery {
   }
 
   @Override
-  public Set<SqlRow> findSet(SqlQuery query, Transaction transaction) {
-    return delegate.findSet(query, transaction);
-  }
-
-  @Override
-  public Map<?, SqlRow> findMap(SqlQuery query, Transaction transaction) {
-    return delegate.findMap(query, transaction);
-  }
-
-  @Override
   public SqlRow findUnique(SqlQuery query, Transaction transaction) {
     return delegate.findUnique(query, transaction);
   }
 
   @Override
-  public SqlFutureList findFutureList(SqlQuery query, Transaction transaction) {
-    return delegate.findFutureList(query, transaction);
+  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> consumer, Transaction transaction) {
+    delegate.findEach(sqlQuery, consumer, transaction);
+  }
+
+  @Override
+  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> consumer, Transaction transaction) {
+    delegate.findEachWhile(sqlQuery, consumer, transaction);
   }
 }

@@ -8,7 +8,7 @@ import static org.mockito.Mockito.verify;
 
 public class NoopEbeanServerTest {
 
-  NoopEbeanServer server = new NoopEbeanServer();
+  private NoopEbeanServer server = new NoopEbeanServer();
 
   @Test
   public void testCreateEntityBean() throws Exception {
@@ -226,12 +226,12 @@ server.endTransaction();
 
   @Test
   public void testFindEach() throws Exception {
-    server.findEach(null, null, null);
+    server.findEach((Query<?>)null, null, null);
   }
 
   @Test
   public void testFindEachWhile() throws Exception {
-    server.findEachWhile(null, null, null);
+    server.findEachWhile((Query<?>)null, null, null);
   }
 
   @Test
@@ -253,7 +253,6 @@ server.endTransaction();
   @Test
   public void testFindFutureList() throws Exception {
     server.findFutureList((Query) null, null);
-    server.findFutureList((SqlQuery) null, null);
   }
 
   @Test
@@ -264,13 +263,11 @@ server.endTransaction();
   @Test
   public void testFindSet() throws Exception {
     server.findSet((Query) null, null);
-    server.findSet((SqlQuery) null, null);
   }
 
   @Test
   public void testFindMap() throws Exception {
     server.findMap((Query) null, null);
-    server.findMap((SqlQuery) null, null);
   }
 
   @Test

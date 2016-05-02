@@ -274,11 +274,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public SqlFutureList findFutureList(SqlQuery query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
   public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
     return null;
   }
@@ -309,18 +304,18 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public Set<SqlRow> findSet(SqlQuery query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public Map<?, SqlRow> findMap(SqlQuery query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
   public SqlRow findUnique(SqlQuery query, Transaction transaction) {
     return null;
+  }
+
+  @Override
+  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> queryEachConsumer, Transaction transaction) {
+
+  }
+
+  @Override
+  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> queryEachWhileConsumer, Transaction transaction) {
+
   }
 
   @Override

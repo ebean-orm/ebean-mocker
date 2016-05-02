@@ -304,11 +304,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public SqlFutureList findFutureList(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(SqlFutureList.class);
-  }
-
-  @Override
   public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
     return Mockito.mock(PagedList.class);
   }
@@ -334,18 +329,18 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public Set<SqlRow> findSet(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(Set.class);
-  }
-
-  @Override
-  public Map<?, SqlRow> findMap(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(Map.class);
-  }
-
-  @Override
   public SqlRow findUnique(SqlQuery query, Transaction transaction) {
     return Mockito.mock(SqlRow.class);
+  }
+
+  @Override
+  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> queryEachConsumer, Transaction transaction) {
+
+  }
+
+  @Override
+  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> queryEachWhileConsumer, Transaction transaction) {
+
   }
 
   @Override

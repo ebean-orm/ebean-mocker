@@ -651,27 +651,9 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   // -- find SqlQuery ------------------------
 
   @Override
-  public SqlFutureList findFutureList(SqlQuery sqlQuery, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findFutureList").with("sqlQuery", sqlQuery, "transaction", transaction));
-    return findSqlQuery.findFutureList(sqlQuery, transaction);
-  }
-
-  @Override
   public List<SqlRow> findList(SqlQuery sqlQuery, Transaction transaction) {
     methodCalls.add(MethodCall.of("findList").with("sqlQuery", sqlQuery, "transaction", transaction));
     return findSqlQuery.findList(sqlQuery, transaction);
-  }
-
-  @Override
-  public Set<SqlRow> findSet(SqlQuery sqlQuery, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findSet").with("sqlQuery", sqlQuery, "transaction", transaction));
-    return findSqlQuery.findSet(sqlQuery, transaction);
-  }
-
-  @Override
-  public Map<?, SqlRow> findMap(SqlQuery sqlQuery, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findMap").with("sqlQuery", sqlQuery, "transaction", transaction));
-    return findSqlQuery.findMap(sqlQuery, transaction);
   }
 
   @Override
@@ -680,6 +662,17 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return findSqlQuery.findUnique(sqlQuery, transaction);
   }
 
+  @Override
+  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> consumer, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findEach").with("sqlQuery", sqlQuery, "consumer", consumer, "transaction", transaction));
+    findSqlQuery.findEach(sqlQuery, consumer, transaction);
+  }
+
+  @Override
+  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> consumer, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findEachWhile").with("sqlQuery", sqlQuery, "consumer", consumer, "transaction", transaction));
+    findSqlQuery.findEachWhile(sqlQuery, consumer, transaction);
+  }
 
   // -- save ------------------------
 
