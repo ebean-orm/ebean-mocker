@@ -5,10 +5,9 @@ import com.avaje.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * Created by rob on 15/07/15.
+ * Delegate based InterceptSave implementation.
  */
 public class DelegateSave implements InterceptSave {
 
@@ -62,26 +61,5 @@ public class DelegateSave implements InterceptSave {
   public void insertAll(Collection<?> beans, Transaction t) {
     delegate.insertAll(beans, t);
   }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName) {
-    delegate.saveManyToManyAssociations(ownerBean, propertyName);
-  }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-    delegate.saveManyToManyAssociations(ownerBean, propertyName, t);
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName) {
-    delegate.saveAssociation(ownerBean, propertyName);
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName, Transaction t) {
-    delegate.saveAssociation(ownerBean, propertyName, t);
-  }
-
 
 }

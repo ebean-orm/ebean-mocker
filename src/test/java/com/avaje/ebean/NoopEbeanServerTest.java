@@ -90,14 +90,8 @@ public class NoopEbeanServerTest {
   }
 
   @Test
-  public void testCreateNamedQuery() throws Exception {
-    assertThat(server.createNamedQuery(null, null)).isNotNull();
-  }
-
-  @Test
   public void testCreateQuery() throws Exception {
     assertThat(server.createQuery(null)).isNotNull();
-    assertThat(server.createQuery(null, null)).isNotNull();
   }
 
   @Test
@@ -116,11 +110,6 @@ public class NoopEbeanServerTest {
   }
 
   @Test
-  public void testCreateNamedUpdate() throws Exception {
-    assertThat(server.createNamedUpdate(null, null)).isNotNull();
-  }
-
-  @Test
   public void testCreateUpdate() throws Exception {
     assertThat(server.createUpdate(null, null)).isNotNull();
   }
@@ -132,11 +121,6 @@ public class NoopEbeanServerTest {
   }
 
   @Test
-  public void testCreateNamedSqlQuery() throws Exception {
-    assertThat(server.createNamedSqlQuery(null)).isNotNull();
-  }
-
-  @Test
   public void testCreateSqlUpdate() throws Exception {
     assertThat(server.createSqlUpdate(null)).isNotNull();
   }
@@ -144,11 +128,6 @@ public class NoopEbeanServerTest {
   @Test
   public void testCreateCallableSql() throws Exception {
     assertThat(server.createCallableSql(null)).isNotNull();
-  }
-
-  @Test
-  public void testCreateNamedSqlUpdate() throws Exception {
-    assertThat(server.createNamedSqlUpdate(null)).isNotNull();
   }
 
   @Test
@@ -220,11 +199,6 @@ server.endTransaction();
   }
 
   @Test
-  public void testFindIterate() throws Exception {
-    server.findIterate(null, null);
-  }
-
-  @Test
   public void testFindEach() throws Exception {
     server.findEach((Query<?>)null, null, null);
   }
@@ -253,11 +227,6 @@ server.endTransaction();
   @Test
   public void testFindFutureList() throws Exception {
     server.findFutureList((Query) null, null);
-  }
-
-  @Test
-  public void testFindPagedList() throws Exception {
-    server.findPagedList(null, null, 1, 1);
   }
 
   @Test

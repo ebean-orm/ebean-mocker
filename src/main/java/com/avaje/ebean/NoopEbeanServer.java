@@ -124,16 +124,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
-    return Mockito.mock(Query.class);
-  }
-
-  @Override
-  public <T> Query<T> createQuery(Class<T> beanType, String query) {
-    return Mockito.mock(Query.class);
-  }
-
-  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
@@ -154,22 +144,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> Update<T> createNamedUpdate(Class<T> beanType, String namedUpdate) {
-    return Mockito.mock(Update.class);
-  }
-
-  @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
     return Mockito.mock(Update.class);
   }
 
   @Override
   public SqlQuery createSqlQuery(String sql) {
-    return Mockito.mock(SqlQuery.class);
-  }
-
-  @Override
-  public SqlQuery createNamedSqlQuery(String namedQuery) {
     return Mockito.mock(SqlQuery.class);
   }
 
@@ -181,11 +161,6 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public CallableSql createCallableSql(String callableSql) {
     return Mockito.mock(CallableSql.class);
-  }
-
-  @Override
-  public SqlUpdate createNamedSqlUpdate(String namedQuery) {
-    return Mockito.mock(SqlUpdate.class);
   }
 
   @Override
@@ -269,11 +244,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    return Mockito.mock(QueryIterator.class);
-  }
-
-  @Override
   public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
 
   }
@@ -301,11 +271,6 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
     return Mockito.mock(FutureList.class);
-  }
-
-  @Override
-  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
-    return Mockito.mock(PagedList.class);
   }
 
   @Override
@@ -380,6 +345,16 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public <T> int delete(Query<T> query, Transaction transaction) {
+    return 0;
+  }
+
+  @Override
+  public <T> UpdateQuery<T> update(Class<T> beanType) {
+    return null;
+  }
+
+  @Override
+  public <T> int update(Query<T> query, Transaction transaction) {
     return 0;
   }
 
@@ -575,36 +550,6 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public void insertAll(Collection<?> beans, Transaction t) {
-
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName) {
-    return 0;
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-    return 0;
-  }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName) {
-
-  }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName) {
-
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName, Transaction t) {
 
   }
 

@@ -31,10 +31,6 @@ public interface InterceptDelete {
 
   int deleteAllPermanent(Class<?> beanType, Collection<?> ids, Transaction transaction);
 
-  int deleteManyToManyAssociations(Object ownerBean, String propertyName);
-
-  int deleteManyToManyAssociations(Object ownerBean, String propertyName, Transaction t);
-
   boolean deletePermanent(Object bean);
 
   boolean deletePermanent(Object bean, Transaction transaction);

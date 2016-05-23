@@ -26,11 +26,4 @@ public interface InterceptSave {
 
   void insertAll(Collection<?> beans, Transaction t);
 
-  void saveManyToManyAssociations(Object ownerBean, String propertyName);
-
-  void saveManyToManyAssociations(Object ownerBean, String propertyName, Transaction t);
-
-  void saveAssociation(Object ownerBean, String propertyName);
-
-  void saveAssociation(Object ownerBean, String propertyName, Transaction t);
 }

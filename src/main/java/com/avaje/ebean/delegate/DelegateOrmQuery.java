@@ -17,11 +17,11 @@ public class DelegateOrmQuery<T> extends DefaultOrmQuery<T> {
 
   public static <T> DelegateOrmQuery<T> copy(DefaultOrmQuery<T> source, EbeanServer delegateServer) {
 
-    return new DelegateOrmQuery<>(source.getBeanDescriptor(), delegateServer, source.getExpressionFactory(), source.getQuery());
+    return new DelegateOrmQuery<>(source.getBeanDescriptor(), delegateServer, source.getExpressionFactory());
   }
 
-  public DelegateOrmQuery(BeanDescriptor<T> beanType, EbeanServer server, ExpressionFactory expressionFactory, String query) {
-    super(beanType, server, expressionFactory, query);
+  public DelegateOrmQuery(BeanDescriptor<T> beanType, EbeanServer server, ExpressionFactory expressionFactory) {
+    super(beanType, server, expressionFactory);
   }
 
 }

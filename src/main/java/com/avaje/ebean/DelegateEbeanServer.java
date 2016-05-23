@@ -352,12 +352,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   // -- create updates ------------------------
 
   @Override
-  public <T> Update<T> createNamedUpdate(Class<T> beanType, String namedUpdate) {
-    methodCalls.add(MethodCall.of("createNamedUpdate").with("beanType", beanType, "namedUpdate", namedUpdate));
-    return delegate.createNamedUpdate(beanType, namedUpdate);
-  }
-
-  @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
     methodCalls.add(MethodCall.of("createUpdate").with("beanType", beanType, "ormUpdate", ormUpdate));
     return delegate.createUpdate(beanType, ormUpdate);
@@ -374,13 +368,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     methodCalls.add(MethodCall.of("createCallableSql").with("callableSql", callableSql));
     return delegate.createCallableSql(callableSql);
   }
-
-  @Override
-  public SqlUpdate createNamedSqlUpdate(String namedQuery) {
-    methodCalls.add(MethodCall.of("createNamedSqlUpdate").with("namedQuery", namedQuery));
-    return delegate.createNamedSqlUpdate(namedQuery);
-  }
-
 
   // -- transaction ------------------------
 
@@ -477,18 +464,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
-    methodCalls.add(MethodCall.of("createNamedQuery").with("beanType", beanType, "namedQuery", namedQuery));
-    return delegateQuery.createNamedQuery(beanType, namedQuery);
-  }
-
-  @Override
-  public <T> Query<T> createQuery(Class<T> beanType, String query) {
-    methodCalls.add(MethodCall.of("createQuery").with("beanType", beanType, "query", query));
-    return delegateQuery.createQuery(beanType, query);
-  }
-
-  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     methodCalls.add(MethodCall.of("createQuery").with("beanType", beanType));
     return delegateQuery.createQuery(beanType);
@@ -510,12 +485,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   public SqlQuery createSqlQuery(String sql) {
     methodCalls.add(MethodCall.of("createSqlQuery").with("sql", sql));
     return delegateQuery.createSqlQuery(sql);
-  }
-
-  @Override
-  public SqlQuery createNamedSqlQuery(String namedQuery) {
-    methodCalls.add(MethodCall.of("createNamedSqlQuery").with("namedQuery", namedQuery));
-    return delegateQuery.createNamedSqlQuery(namedQuery);
   }
 
   // -- refresh ------------------------
@@ -577,12 +546,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findIterate").with("query", query, "transaction", transaction));
-    return find.findIterate(query, transaction);
-  }
-
-  @Override
   public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEach").with("query", query, "consumer", consumer, "transaction", transaction));
     find.findEach(query, consumer, transaction);
@@ -616,12 +579,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findFutureList").with("query", query, "transaction", transaction));
     return find.findFutureList(query, transaction);
-  }
-
-  @Override
-  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
-    methodCalls.add(MethodCall.of("findPagedList").with("query", query, "transaction", transaction).with("pageIndex", pageIndex, "pageSize", pageSize));
-    return find.findPagedList(query, transaction, pageIndex, pageSize);
   }
 
   @Override
@@ -716,37 +673,19 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     return !persistSaves ? 0 : save.saveAll(beans, transaction);
   }
 
-
   @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName) {
-    methodCalls.add(MethodCall.of("saveManyToManyAssociations").with("ownerBean", ownerBean, "propertyName", propertyName));
-    if (persistSaves) {
-      save.saveManyToManyAssociations(ownerBean, propertyName);
-    }
+  public <T> UpdateQuery<T> update(Class<T> beanType) {
+    methodCalls.add(MethodCall.of(UPDATE).with("beanType", beanType));
+    return delegate.update(beanType);
   }
 
   @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName, Transaction transaction) {
-    methodCalls.add(MethodCall.of("saveManyToManyAssociations").with("ownerBean", ownerBean, "propertyName", propertyName, "transaction", transaction));
-    if (persistSaves) {
-      save.saveManyToManyAssociations(ownerBean, propertyName, transaction);
+  public <T> int update(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of(UPDATE).with("query", query).with("transaction", transaction));
+    if (persistUpdates) {
+      return delegate.update(query, transaction);
     }
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName) {
-    methodCalls.add(MethodCall.of("saveAssociation").with("ownerBean", ownerBean, "propertyName", propertyName));
-    if (persistSaves) {
-      save.saveAssociation(ownerBean, propertyName);
-    }
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName, Transaction transaction) {
-    methodCalls.add(MethodCall.of("saveAssociation").with("ownerBean", ownerBean, "propertyName", propertyName, "transaction", transaction));
-    if (persistSaves) {
-      save.saveAssociation(ownerBean, propertyName, transaction);
-    }
+    return 0;
   }
 
   @Override
@@ -976,18 +915,6 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
       return delete.delete(bean, transaction);
     }
     return true;
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName) {
-    methodCalls.add(MethodCall.of("deleteManyToManyAssociations").with("ownerBean", ownerBean, "propertyName", propertyName));
-    return !persistDeletes ? 0 : delete.deleteManyToManyAssociations(ownerBean, propertyName);
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName, Transaction transaction) {
-    methodCalls.add(MethodCall.of("deleteManyToManyAssociations").with("ownerBean", ownerBean, "propertyName", propertyName, "transaction", transaction));
-    return !persistDeletes ? 0 : delete.deleteManyToManyAssociations(ownerBean, propertyName, transaction);
   }
 
 

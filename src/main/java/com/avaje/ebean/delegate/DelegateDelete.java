@@ -64,16 +64,6 @@ public class DelegateDelete implements InterceptDelete {
   }
 
   @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName) {
-    return delegate.deleteManyToManyAssociations(ownerBean, propertyName);
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-    return delegate.deleteManyToManyAssociations(ownerBean, propertyName, t);
-  }
-
-  @Override
   public boolean deletePermanent(Object bean) {
     return delegate.deletePermanent(bean);
   }

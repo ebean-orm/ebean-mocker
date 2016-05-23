@@ -34,14 +34,6 @@ public class DelegateQuery {
     return DelegateOrmQuery.copy(sourceQuery, owner);
   }
 
-  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
-    return delegateToThisServer(delegate.createNamedQuery(beanType, namedQuery));
-  }
-
-  public <T> Query<T> createQuery(Class<T> beanType, String query) {
-    return delegateToThisServer(delegate.createQuery(beanType, query));
-  }
-
   public <T> Query<T> createQuery(Class<T> beanType) {
     return delegateToThisServer(delegate.createQuery(beanType));
   }
@@ -56,10 +48,6 @@ public class DelegateQuery {
 
   public SqlQuery createSqlQuery(String sql) {
     return delegate.createSqlQuery(sql);
-  }
-
-  public SqlQuery createNamedSqlQuery(String namedQuery) {
-    return delegate.createNamedSqlQuery(namedQuery);
   }
 
   public <T> T getReference(Class<T> beanType, Object id) {

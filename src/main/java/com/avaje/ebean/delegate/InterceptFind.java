@@ -7,7 +7,6 @@ import com.avaje.ebean.PagedList;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.QueryEachConsumer;
 import com.avaje.ebean.QueryEachWhileConsumer;
-import com.avaje.ebean.QueryIterator;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.Version;
 
@@ -32,8 +31,6 @@ public interface InterceptFind {
 
   <T> List<Object> findIds(Query<T> query, Transaction transaction);
 
-  <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction);
-
   <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction);
 
   <T> void findEachWhile(Query<T> query, QueryEachWhileConsumer<T> consumer, Transaction transaction);
@@ -45,8 +42,6 @@ public interface InterceptFind {
   <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction);
 
   <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction);
-
-  <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize);
 
   <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction);
 

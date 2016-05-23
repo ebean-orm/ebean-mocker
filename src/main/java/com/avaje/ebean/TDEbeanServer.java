@@ -89,16 +89,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
-    return null;
-  }
-
-  @Override
-  public <T> Query<T> createQuery(Class<T> beanType, String query) {
-    return null;
-  }
-
-  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return null;
   }
@@ -124,11 +114,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> Update<T> createNamedUpdate(Class<T> beanType, String namedUpdate) {
-    return null;
-  }
-
-  @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
     return null;
   }
@@ -139,22 +124,12 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public SqlQuery createNamedSqlQuery(String namedQuery) {
-    return null;
-  }
-
-  @Override
   public SqlUpdate createSqlUpdate(String sql) {
     return null;
   }
 
   @Override
   public CallableSql createCallableSql(String callableSql) {
-    return null;
-  }
-
-  @Override
-  public SqlUpdate createNamedSqlUpdate(String namedQuery) {
     return null;
   }
 
@@ -239,11 +214,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
   public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
 
   }
@@ -270,11 +240,6 @@ public class TDEbeanServer implements EbeanServer {
 
   @Override
   public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction, int pageIndex, int pageSize) {
     return null;
   }
 
@@ -508,6 +473,16 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> UpdateQuery<T> update(Class<T> beanType) {
+    return null;
+  }
+
+  @Override
+  public <T> int update(Query<T> query, Transaction transaction) {
+    return 0;
+  }
+
+  @Override
   public void update(Object bean) throws OptimisticLockException {
 
   }
@@ -549,36 +524,6 @@ public class TDEbeanServer implements EbeanServer {
 
   @Override
   public void insertAll(Collection<?> beans, Transaction t) {
-
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName) {
-    return 0;
-  }
-
-  @Override
-  public int deleteManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-    return 0;
-  }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName) {
-
-  }
-
-  @Override
-  public void saveManyToManyAssociations(Object ownerBean, String propertyName, Transaction t) {
-
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName) {
-
-  }
-
-  @Override
-  public void saveAssociation(Object ownerBean, String propertyName, Transaction t) {
 
   }
 
