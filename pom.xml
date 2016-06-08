@@ -9,7 +9,7 @@
 
   <groupId>org.avaje.ebeanorm</groupId>
   <artifactId>avaje-ebeanorm-mocker</artifactId>
-  <version>7.12.2-SNAPSHOT</version>
+  <version>7.13.1-SNAPSHOT</version>
   <name>avaje-ebeanorm-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -27,10 +27,15 @@
 
   <dependencies>
 
+    <!--
+    Provided scope so expecting mockito dependency to be
+    explicitly specified in your project pom
+    -->
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
       <version>1.10.19</version>
+      <scope>provided</scope>
     </dependency>
 
     <!--
@@ -40,7 +45,7 @@
     <dependency>
       <groupId>org.avaje.ebeanorm</groupId>
       <artifactId>avaje-ebeanorm</artifactId>
-      <version>7.12.1</version>
+      <version>7.13.1</version>
       <scope>provided</scope>
     </dependency>
 
