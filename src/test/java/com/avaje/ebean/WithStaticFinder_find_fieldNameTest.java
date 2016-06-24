@@ -24,7 +24,7 @@ public class WithStaticFinder_find_fieldNameTest {
     WithStaticFinder staticFinder = new WithStaticFinder(Customer.class);
     staticFinder.as(testDouble);
 
-    Model.Find original = staticFinder.original;
+    Object original = staticFinder.original;
     assertThat(Customer.find).isSameAs(original);
 
     staticFinder.useTestDouble();
@@ -40,6 +40,22 @@ public class WithStaticFinder_find_fieldNameTest {
     assertThat(Customer.find).isSameAs(original);
     assertThat(Customer.find).isNotSameAs(testDouble);
 
+  }
+
+  @Test
+  public void testUseStatic() {
+
+    TDCustomerFinder testDouble = new TDCustomerFinder();
+    assertThat(Customer.find).isNotSameAs(testDouble);
+
+    WithStaticFinder<Customer> with = WithStaticFinder.use(Customer.class, testDouble);
+    assertThat(Customer.find).isSameAs(testDouble);
+
+    Customer byId = Customer.find.byId(42L);
+    assertThat(byId).isSameAs(dummyFoo);
+
+    with.restoreOriginal();
+    assertThat(Customer.find).isNotSameAs(testDouble);
   }
 
   Customer dummyFoo = new Customer();

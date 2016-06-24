@@ -18,7 +18,7 @@ public class WithStaticFinder_FIND_fieldNameTest {
     WithStaticFinder staticFinder = new WithStaticFinder(Product.class);
     staticFinder.as(testDouble);
 
-    Model.Find original = staticFinder.original;
+    Object original = staticFinder.original;
     assertThat(Product.FIND).isSameAs(original);
 
     staticFinder.useTestDouble();
