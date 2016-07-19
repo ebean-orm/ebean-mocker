@@ -57,4 +57,12 @@ public class DelegateQuery {
   public <T> Set<String> validateQuery(Query<T> query) {
     return delegate.validateQuery(query);
   }
+
+  public <T> Query<T> createQuery(Class<T> beanType, String eql) {
+    return delegate.createQuery(beanType, eql);
+  }
+
+  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
+    return delegate.createNamedQuery(beanType, namedQuery);
+  }
 }

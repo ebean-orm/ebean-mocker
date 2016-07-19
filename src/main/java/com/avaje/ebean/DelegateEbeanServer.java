@@ -464,6 +464,18 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
+    methodCalls.add(MethodCall.of("createNamedQuery").with("beanType", beanType).with("namedQuery", namedQuery));
+    return delegateQuery.createNamedQuery(beanType, namedQuery);
+  }
+
+  @Override
+  public <T> Query<T> createQuery(Class<T> beanType, String eql) {
+    methodCalls.add(MethodCall.of("createQuery").with("beanType", beanType).with("eql", eql));
+    return delegateQuery.createQuery(beanType, eql);
+  }
+
+  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     methodCalls.add(MethodCall.of("createQuery").with("beanType", beanType));
     return delegateQuery.createQuery(beanType);

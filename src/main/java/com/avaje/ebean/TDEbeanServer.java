@@ -89,6 +89,16 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
+    return null;
+  }
+
+  @Override
+  public <T> Query<T> createQuery(Class<T> beanType, String eql) {
+    return null;
+  }
+
+  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return null;
   }

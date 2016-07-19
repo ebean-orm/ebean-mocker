@@ -124,6 +124,16 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
+    return Mockito.mock(Query.class);
+  }
+
+  @Override
+  public <T> Query<T> createQuery(Class<T> beanType, String eql) {
+    return Mockito.mock(Query.class);
+  }
+
+  @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
