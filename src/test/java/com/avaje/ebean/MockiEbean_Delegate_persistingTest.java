@@ -56,7 +56,7 @@ public class MockiEbean_Delegate_persistingTest extends BaseTest {
     List<String> sqlLogs = LoggedSql.stop();
 
     for (int i = 0; i < 3; i++) {
-      assertThat(sqlLogs.get(i)).contains("insert into customer (id, name) values (?,?)");
+      assertThat(sqlLogs.get(i)).contains("insert into customer (name) values (?)");
     }
 
     assertThat(sqlLogs.get(3)).contains("select t0.id c0, t0.name c1 from customer t0 where t0.id = ?");
