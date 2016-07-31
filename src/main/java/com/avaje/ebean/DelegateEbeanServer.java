@@ -546,9 +546,15 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public <T> int findCount(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findCount").with("query", query, "transaction", transaction));
+    return find.findCount(query, transaction);
+  }
+
+  @Override
   public <T> int findRowCount(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findRowCount").with("query", query, "transaction", transaction));
-    return find.findRowCount(query, transaction);
+    return find.findCount(query, transaction);
   }
 
   @Override
@@ -576,9 +582,15 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findFutureCount").with("query", query, "transaction", transaction));
+    return find.findFutureCount(query, transaction);
+  }
+
+  @Override
   public <T> FutureRowCount<T> findFutureRowCount(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findFutureRowCount").with("query", query, "transaction", transaction));
-    return find.findFutureRowCount(query, transaction);
+    return find.findFutureCount(query, transaction);
   }
 
   @Override

@@ -27,7 +27,7 @@ public interface InterceptFind {
 
   <T> T find(Class<T> beanType, Object id, Transaction transaction);
 
-  <T> int findRowCount(Query<T> query, Transaction transaction);
+  <T> int findCount(Query<T> query, Transaction transaction);
 
   <T> List<Object> findIds(Query<T> query, Transaction transaction);
 
@@ -37,7 +37,7 @@ public interface InterceptFind {
 
   <T> List<T> findList(Query<T> query, Transaction transaction);
 
-  <T> FutureRowCount<T> findFutureRowCount(Query<T> query, Transaction transaction);
+  <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction);
 
   <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction);
 

@@ -56,8 +56,8 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> int findRowCount(Query<T> query, Transaction transaction) {
-    return delegate.findRowCount(query, transaction);
+  public <T> int findCount(Query<T> query, Transaction transaction) {
+    return delegate.findCount(query, transaction);
   }
 
   @Override
@@ -84,8 +84,8 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> FutureRowCount<T> findFutureRowCount(Query<T> query, Transaction transaction) {
-    return delegate.findFutureRowCount(query, transaction);
+  public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
+    return delegate.findFutureCount(query, transaction);
   }
 
   @Override

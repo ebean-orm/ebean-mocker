@@ -214,6 +214,11 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> int findCount(Query<T> query, Transaction transaction) {
+    return 0;
+  }
+
+  @Override
   public <T> int findRowCount(Query<T> query, Transaction transaction) {
     return 0;
   }
@@ -235,6 +240,11 @@ public class TDEbeanServer implements EbeanServer {
 
   @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
     return null;
   }
 
