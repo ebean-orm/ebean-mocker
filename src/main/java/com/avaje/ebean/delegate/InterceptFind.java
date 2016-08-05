@@ -7,6 +7,7 @@ import com.avaje.ebean.PagedList;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.QueryEachConsumer;
 import com.avaje.ebean.QueryEachWhileConsumer;
+import com.avaje.ebean.QueryIterator;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.Version;
 
@@ -29,7 +30,7 @@ public interface InterceptFind {
 
   <T> int findCount(Query<T> query, Transaction transaction);
 
-  <T> List<Object> findIds(Query<T> query, Transaction transaction);
+  <A> List<A> findIds(Query<?> query, Transaction transaction);
 
   <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction);
 
@@ -47,8 +48,11 @@ public interface InterceptFind {
 
   <T> Set<T> findSet(Query<T> query, Transaction transaction);
 
-  <T> Map<?, T> findMap(Query<T> query, Transaction transaction);
+  <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction);
 
   <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction);
 
+  <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction);
+
+  <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction);
 }

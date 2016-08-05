@@ -8,6 +8,7 @@ import com.avaje.ebean.PagedList;
 import com.avaje.ebean.Query;
 import com.avaje.ebean.QueryEachConsumer;
 import com.avaje.ebean.QueryEachWhileConsumer;
+import com.avaje.ebean.QueryIterator;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.Version;
 import com.avaje.ebeaninternal.api.SpiQuery;
@@ -61,8 +62,18 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> List<Object> findIds(Query<T> query, Transaction transaction) {
+  public <A> List<A> findIds(Query<?> query, Transaction transaction) {
     return delegate.findIds(query, transaction);
+  }
+
+  @Override
+  public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
+    return delegate.findSingleAttributeList(query, transaction);
+  }
+
+  @Override
+  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
+    return delegate.findIterate(query, transaction);
   }
 
   @Override
@@ -109,7 +120,7 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> Map<?, T> findMap(Query<T> query, Transaction transaction) {
+  public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
     return delegate.findMap(query, transaction);
   }
 

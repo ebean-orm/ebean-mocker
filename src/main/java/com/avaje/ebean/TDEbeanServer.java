@@ -224,7 +224,17 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> List<Object> findIds(Query<T> query, Transaction transaction) {
+  public <A> List<A> findIds(Query<?> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
     return null;
   }
 
@@ -274,7 +284,7 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> Map<?, T> findMap(Query<T> query, Transaction transaction) {
+  public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
     return null;
   }
 

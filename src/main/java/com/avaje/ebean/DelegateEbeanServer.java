@@ -558,9 +558,20 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> List<Object> findIds(Query<T> query, Transaction transaction) {
+  public <A> List<A> findIds(Query<?> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findIds").with("query", query, "transaction", transaction));
     return find.findIds(query, transaction);
+  }
+
+  @Override
+  public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findSingleAttributeList").with("query", query, "transaction", transaction));
+    return find.findSingleAttributeList(query, transaction);  }
+
+  @Override
+  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findIterate").with("query", query, "transaction", transaction));
+    return find.findIterate(query, transaction);
   }
 
   @Override
@@ -618,7 +629,7 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> Map<?, T> findMap(Query<T> query, Transaction transaction) {
+  public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findMap").with("query", query, "transaction", transaction));
     return find.findMap(query, transaction);
   }
