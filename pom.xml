@@ -19,9 +19,9 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</connection>
-    <developerConnection>scm:git:https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</developerConnection>
-    <url>https://github.com/ebean-orm/avaje-ebeanorm-mocker.git</url>
+    <connection>scm:git:https://github.com/ebean-orm/ebean-mocker.git</connection>
+    <developerConnection>scm:git:https://github.com/ebean-orm/ebean-mocker.git</developerConnection>
+    <url>https://github.com/ebean-orm/ebean-mocker.git</url>
     <tag>HEAD</tag>
   </scm>
 
