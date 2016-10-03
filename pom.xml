@@ -9,7 +9,7 @@
 
   <groupId>org.avaje.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>8.2.2-SNAPSHOT</version>
+  <version>8.4.1-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -45,7 +45,7 @@
     <dependency>
       <groupId>org.avaje.ebean</groupId>
       <artifactId>ebean</artifactId>
-      <version>8.2.1</version>
+      <version>8.4.1</version>
       <scope>provided</scope>
     </dependency>
 

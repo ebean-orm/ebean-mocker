@@ -189,8 +189,8 @@ server.endTransaction();
   }
 
   @Test
-  public void testFindRowCount() throws Exception {
-    server.findRowCount(null, null);
+  public void testFindCount() throws Exception {
+    server.findCount(null, null);
   }
 
   @Test
@@ -215,8 +215,8 @@ server.endTransaction();
   }
 
   @Test
-  public void testFindFutureRowCount() throws Exception {
-    server.findFutureRowCount(null, null);
+  public void testFindFutureCount() throws Exception {
+    server.findFutureCount(null, null);
   }
 
   @Test
