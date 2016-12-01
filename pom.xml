@@ -9,7 +9,7 @@
 
   <groupId>org.avaje.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>9.3.1</version>
+  <version>9.3.2-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -20,7 +20,7 @@
 
   <scm>
     <developerConnection>scm:git:git@github.com:ebean-orm/ebean-mocker.git</developerConnection>
-    <tag>ebean-mocker-9.3.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
