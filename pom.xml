@@ -3,13 +3,13 @@
 
   <parent>
     <groupId>org.avaje</groupId>
-    <artifactId>oss-parent</artifactId>
-    <version>1.1</version>
+    <artifactId>java8-parent</artifactId>
+    <version>1.3</version>
   </parent>
 
   <groupId>org.avaje.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>8.4.2-SNAPSHOT</version>
+  <version>9.3.1-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -19,9 +19,7 @@
   </properties>
 
   <scm>
-    <connection>scm:git:https://github.com/ebean-orm/ebean-mocker.git</connection>
-    <developerConnection>scm:git:https://github.com/ebean-orm/ebean-mocker.git</developerConnection>
-    <url>https://github.com/ebean-orm/ebean-mocker.git</url>
+    <developerConnection>scm:git:git@github.com:ebean-orm/ebean-mocker.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
@@ -45,7 +43,7 @@
     <dependency>
       <groupId>org.avaje.ebean</groupId>
       <artifactId>ebean</artifactId>
-      <version>8.4.1</version>
+      <version>9.3.1</version>
       <scope>provided</scope>
     </dependency>
 

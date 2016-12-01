@@ -6,8 +6,6 @@ import com.avaje.ebean.FutureList;
 import com.avaje.ebean.FutureRowCount;
 import com.avaje.ebean.PagedList;
 import com.avaje.ebean.Query;
-import com.avaje.ebean.QueryEachConsumer;
-import com.avaje.ebean.QueryEachWhileConsumer;
 import com.avaje.ebean.QueryIterator;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.Version;
@@ -16,6 +14,8 @@ import com.avaje.ebeaninternal.api.SpiQuery;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -77,12 +77,12 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
     delegate.findEach(query, consumer, transaction);
   }
 
   @Override
-  public <T> void findEachWhile(Query<T> query, QueryEachWhileConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
     delegate.findEachWhile(query, consumer, transaction);
   }
 

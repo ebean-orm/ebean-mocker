@@ -27,6 +27,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -552,13 +554,13 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <A> List<A> findIds(Query<?> query, Transaction transaction) {
+  public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findIds").with("query", query, "transaction", transaction));
     return find.findIds(query, transaction);
   }
 
   @Override
-  public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
+  public <A,T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findSingleAttributeList").with("query", query, "transaction", transaction));
     return find.findSingleAttributeList(query, transaction);  }
 
@@ -569,13 +571,13 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEach").with("query", query, "consumer", consumer, "transaction", transaction));
     find.findEach(query, consumer, transaction);
   }
 
   @Override
-  public <T> void findEachWhile(Query<T> query, QueryEachWhileConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEachWhile").with("query", query, "consumer", consumer, "transaction", transaction));
     find.findEachWhile(query, consumer, transaction);
   }
@@ -643,13 +645,13 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> consumer, Transaction transaction) {
+  public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEach").with("sqlQuery", sqlQuery, "consumer", consumer, "transaction", transaction));
     findSqlQuery.findEach(sqlQuery, consumer, transaction);
   }
 
   @Override
-  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> consumer, Transaction transaction) {
+  public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEachWhile").with("sqlQuery", sqlQuery, "consumer", consumer, "transaction", transaction));
     findSqlQuery.findEachWhile(sqlQuery, consumer, transaction);
   }

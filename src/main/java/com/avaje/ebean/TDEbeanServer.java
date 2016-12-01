@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Test double for EbeanServer.
@@ -219,12 +221,12 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <A> List<A> findIds(Query<?> query, Transaction transaction) {
+  public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
     return null;
   }
 
   @Override
-  public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
+  public <A,T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
     return null;
   }
 
@@ -234,12 +236,12 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> void findEach(Query<T> query, QueryEachConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
 
   }
 
   @Override
-  public <T> void findEachWhile(Query<T> query, QueryEachWhileConsumer<T> consumer, Transaction transaction) {
+  public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
 
   }
 
@@ -294,12 +296,12 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> queryEachConsumer, Transaction transaction) {
+  public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> queryEachConsumer, Transaction transaction) {
 
   }
 
   @Override
-  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> queryEachWhileConsumer, Transaction transaction) {
+  public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> queryEachWhileConsumer, Transaction transaction) {
 
   }
 

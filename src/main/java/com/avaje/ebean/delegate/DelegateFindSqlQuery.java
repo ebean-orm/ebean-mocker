@@ -1,13 +1,13 @@
 package com.avaje.ebean.delegate;
 
 import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.QueryEachConsumer;
-import com.avaje.ebean.QueryEachWhileConsumer;
 import com.avaje.ebean.SqlQuery;
 import com.avaje.ebean.SqlRow;
 import com.avaje.ebean.Transaction;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -39,12 +39,12 @@ public class DelegateFindSqlQuery implements InterceptFindSqlQuery {
   }
 
   @Override
-  public void findEach(SqlQuery sqlQuery, QueryEachConsumer<SqlRow> consumer, Transaction transaction) {
+  public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> consumer, Transaction transaction) {
     delegate.findEach(sqlQuery, consumer, transaction);
   }
 
   @Override
-  public void findEachWhile(SqlQuery sqlQuery, QueryEachWhileConsumer<SqlRow> consumer, Transaction transaction) {
+  public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> consumer, Transaction transaction) {
     delegate.findEachWhile(sqlQuery, consumer, transaction);
   }
 }
