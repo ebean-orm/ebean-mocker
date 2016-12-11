@@ -3,14 +3,14 @@ package org.example;
 import java.util.List;
 
 import org.avaje.agentloader.AgentLoader;
-import org.avaje.ebeantest.LoggedSql;
+import io.ebeantest.LoggedSql;
 import org.example.domain.MyBean;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.avaje.ebean.Ebean;
+import io.ebean.Ebean;
 
 public class LoggedSqlTest {
 

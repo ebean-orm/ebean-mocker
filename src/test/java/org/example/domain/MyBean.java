@@ -3,7 +3,7 @@ package org.example.domain;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.avaje.ebean.Model;
+import io.ebean.Model;
 
 @Entity
 public class MyBean extends Model {

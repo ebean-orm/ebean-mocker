@@ -8,10 +8,10 @@ import static org.mockito.Mockito.when;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.MockiEbean;
-import com.avaje.ebeaninternal.server.core.DefaultServer;
+import io.ebean.Ebean;
+import io.ebean.EbeanServer;
+import io.ebean.MockiEbean;
+import io.ebeaninternal.server.core.DefaultServer;
 
 public class EbeanServerMockTest {
 

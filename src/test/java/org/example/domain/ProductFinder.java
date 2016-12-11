@@ -1,9 +1,9 @@
 package org.example.domain;
 
-import com.avaje.ebean.Model;
+import io.ebean.Finder;
 
 
-public class ProductFinder extends Model.Finder<Long,Product> {
+public class ProductFinder extends Finder<Long,Product> {
 
   public ProductFinder() {
     super(Product.class);

@@ -1,11 +1,9 @@
 package org.example.domain;
 
-import com.avaje.ebean.Model;
-
-import java.util.List;
+import io.ebean.Finder;
 
 
-public class MyBeanFinder extends Model.Finder<Long,MyBean> {
+public class MyBeanFinder extends Finder<Long,MyBean> {
 
   public MyBeanFinder() {
     super(MyBean.class);
