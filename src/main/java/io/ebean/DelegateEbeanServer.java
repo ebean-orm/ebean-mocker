@@ -440,6 +440,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
+  public void flush() {
+    methodCalls.add(MethodCall.of("flush"));
+    delegate.flush();
+  }
+
+  @Override
   public void commitTransaction() {
     methodCalls.add(MethodCall.of("commitTransaction"));
     delegate.commitTransaction();

@@ -9,7 +9,7 @@
 
   <groupId>io.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>10.1.2-SNAPSHOT</version>
+  <version>10.2.1-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean</artifactId>
-      <version>10.1.1</version>
+      <version>10.2.1</version>
       <scope>provided</scope>
     </dependency>
 

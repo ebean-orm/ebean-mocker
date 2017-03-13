@@ -216,6 +216,11 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public void flush() {
+
+  }
+
+  @Override
   public void commitTransaction() {
 
   }

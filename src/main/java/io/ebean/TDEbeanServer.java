@@ -186,6 +186,11 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public void flush() {
+
+  }
+
+  @Override
   public void commitTransaction() {
 
   }
@@ -226,12 +231,12 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
+  public <A, T> List<A> findIds(Query<T> query, Transaction transaction) {
     return null;
   }
 
   @Override
-  public <A,T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
+  public <A, T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
     return null;
   }
 

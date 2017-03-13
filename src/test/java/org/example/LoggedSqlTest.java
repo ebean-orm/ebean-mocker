@@ -38,7 +38,7 @@ public class LoggedSqlTest {
     
     List<String> loggedSql = LoggedSql.stop();
     Assert.assertEquals(1, loggedSql.size());
-    Assert.assertTrue(loggedSql.get(0).contains("select t0.id c0, t0.name c1 from my_bean t0 where t0.id = ?"));
+    Assert.assertTrue(loggedSql.get(0).contains("select t0.id, t0.name from my_bean t0 where t0.id = ?"));
   }
   
 }
