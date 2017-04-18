@@ -36,7 +36,7 @@ public class MockiEbeanTest {
       public void run() {
         Object value = Ebean.getServer(null).getBeanId(null);
 
-        assertEquals(magicBeanId, value);
+        assertEquals(value, magicBeanId);
       }
     });
 
@@ -59,7 +59,7 @@ public class MockiEbeanTest {
         public void run() {
           Object value = Ebean.getServer(null).getBeanId(null);
 
-          assertEquals(magicBeanId, value);
+          assertEquals(value, magicBeanId);
           throw new IllegalStateException();
         }
       });

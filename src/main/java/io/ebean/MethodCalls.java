@@ -8,9 +8,7 @@ import java.util.List;
  */
 public class MethodCalls {
 
-
-
-  List<MethodCall> list = new ArrayList<MethodCall>();
+  List<MethodCall> list = new ArrayList<>();
 
   public void add(MethodCall call) {
     list.add(call);
@@ -42,7 +40,7 @@ public class MethodCalls {
 
   protected List<MethodCall> matches(String methodName) {
 
-    List<MethodCall> matches = new ArrayList<MethodCall>();
+    List<MethodCall> matches = new ArrayList<>();
     for (MethodCall call : list) {
       if (isMatch(call, methodName)) {
         matches.add(call);
@@ -51,7 +49,7 @@ public class MethodCalls {
     return matches;
   }
 
-  protected boolean isMatch(MethodCall call, String methodName) {
+  protected static boolean isMatch(MethodCall call, String methodName) {
     return call.name.equals(methodName);
   }
 }

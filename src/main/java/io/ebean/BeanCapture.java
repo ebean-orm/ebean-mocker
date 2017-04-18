@@ -17,17 +17,17 @@ public class BeanCapture {
   /**
    * The captured beans sent to the save() methods.
    */
-  public List<Object> save = new ArrayList<Object>();
+  public List<Object> save = new ArrayList<>();
 
   /**
    * The captured beans sent to the insert() methods.
    */
-  public List<Object> insert = new ArrayList<Object>();
+  public List<Object> insert = new ArrayList<>();
 
   /**
    * The captured beans sent to the update() methods.
    */
-  public List<Object> update = new ArrayList<Object>();
+  public List<Object> update = new ArrayList<>();
 
   /**
    * The captured beans sent to the delete() methods.
@@ -35,12 +35,12 @@ public class BeanCapture {
    * Note that these can include MethodCall objects for the cases when
    * delete by id is called.
    */
-  public List<Object> delete = new ArrayList<Object>();
+  public List<Object> delete = new ArrayList<>();
 
   /**
    * Captured beans sent to deletePermanent() methods.
    */
-  public List<Object> deletePermanent = new ArrayList<Object>();
+  public List<Object> deletePermanent = new ArrayList<>();
 
 
   protected void addSaved(Object bean) {

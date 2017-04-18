@@ -9,13 +9,13 @@ import java.util.List;
  */
 public class WithStaticFinders {
 
-  protected List<WithStaticFinder<?>> staticFinderReplacement = new ArrayList<WithStaticFinder<?>>();
+  protected List<WithStaticFinder<?>> staticFinderReplacement = new ArrayList<>();
 
   /**
    * Create and return a WithStaticFinder. Expects a static 'finder' field on the beanType class.
    */
   public <T> WithStaticFinder<T> withFinder(Class<T> beanType) {
-    WithStaticFinder withFinder = new WithStaticFinder<T>(beanType);
+    WithStaticFinder<T> withFinder = new WithStaticFinder<>(beanType);
     staticFinderReplacement.add(withFinder);
     return withFinder;
   }

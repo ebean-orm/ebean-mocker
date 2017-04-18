@@ -10,9 +10,9 @@ import java.util.Map;
  */
 public class WhenFind {
 
-  List<WhenBeanReturn<?>> byId = new ArrayList();
+  List<WhenBeanReturn<?>> byId = new ArrayList<>();
 
-  Map<Class<?>,WhenBeanReturn<?>> byUnique = new HashMap<Class<?>,WhenBeanReturn<?>>();
+  Map<Class<?>, WhenBeanReturn<?>> byUnique = new HashMap<>();
 
   public <T> WhenBeanReturn<T> byId(Class<T> beanType) {
 
@@ -21,14 +21,14 @@ public class WhenFind {
 
   public <T> WhenBeanReturn<T> byId(Class<T> beanType, Object id) {
 
-    WhenBeanReturn<T> ret = new WhenBeanReturn<T>(beanType, id);
+    WhenBeanReturn<T> ret = new WhenBeanReturn<>(beanType, id);
     byId.add(ret);
     return ret;
   }
 
   public <T> WhenBeanReturn<T> byUnique(Class<T> beanType) {
 
-    WhenBeanReturn<T> ret = new WhenBeanReturn<T>(beanType);
+    WhenBeanReturn<T> ret = new WhenBeanReturn<>(beanType);
     byUnique.put(beanType, ret);
     return ret;
   }
