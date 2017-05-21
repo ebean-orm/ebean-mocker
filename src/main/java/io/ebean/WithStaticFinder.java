@@ -2,6 +2,8 @@ package io.ebean;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
 /**
  * Used to replace a "Finder" that is located as a static field (typically on an Model entity bean).
@@ -11,7 +13,7 @@ import java.lang.reflect.Modifier;
  */
 public class WithStaticFinder<T> {
 
-  Class<T> beanType;
+  final Class<T> beanType;
 
   String fieldName;
 
@@ -41,7 +43,7 @@ public class WithStaticFinder<T> {
    * <p/>
    * Note that the test double instance is not set until <code>useTestDouble()</code> is called.
    */
-  public WithStaticFinder as(Object testDouble) throws FinderFieldNotFoundException {
+  public WithStaticFinder<T> as(Object testDouble) throws FinderFieldNotFoundException {
 
     try {
       this.testDouble = testDouble;
@@ -50,7 +52,16 @@ public class WithStaticFinder<T> {
       this.field.setAccessible(true);
       try {
         Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
+
+        /**
+         * If the project using this library has a SecurityManager set up, permission may be denied.
+         * Therefor, running this as a privileged action.
+         */
+        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+            modifiersField.setAccessible(true);
+            return null;
+        });
+
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
       } catch (NoSuchFieldException e) {
         throw new RuntimeException(e);

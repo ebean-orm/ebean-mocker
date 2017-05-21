@@ -12,14 +12,14 @@ public class MethodCall {
 
   String name;
 
-  Map<String,Object> args = new LinkedHashMap<String, Object>();
+  Map<String, Object> args = new LinkedHashMap<>();
 
   public MethodCall(String name) {
     this.name = name;
   }
 
   public String toString() {
-    return name+":"+args;
+    return name + ':' + args;
   }
 
 

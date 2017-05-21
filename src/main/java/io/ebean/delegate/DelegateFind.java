@@ -88,9 +88,6 @@ public class DelegateFind implements InterceptFind {
 
   @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
-
-    SpiQuery q = (SpiQuery)query;
-    q.getBeanType();
     return delegate.findList(query, transaction);
   }
 

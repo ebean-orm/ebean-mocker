@@ -21,7 +21,7 @@ import ch.qos.logback.core.UnsynchronizedAppenderBase;
  */
 public class LoggedSql {
 
-  private static BasicAppender basicAppender = new BasicAppender();
+  private static final BasicAppender basicAppender = new BasicAppender();
 
   static {
 
@@ -52,7 +52,7 @@ public class LoggedSql {
 
   private static class BasicAppender extends UnsynchronizedAppenderBase<ILoggingEvent> {
 
-    List<String> messages = new ArrayList<String>();
+    List<String> messages = new ArrayList<>();
 
     @Override
     protected void append(ILoggingEvent eventObject) {

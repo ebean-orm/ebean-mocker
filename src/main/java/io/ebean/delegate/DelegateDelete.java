@@ -90,6 +90,6 @@ public class DelegateDelete implements InterceptDelete {
 
   @Override
   public int deleteAllPermanent(Class<?> beanType, Collection<?> ids, Transaction transaction) {
-    return deleteAllPermanent(beanType, ids, transaction);
+    return delegate.deleteAllPermanent(beanType, ids, transaction);
   }
 }
