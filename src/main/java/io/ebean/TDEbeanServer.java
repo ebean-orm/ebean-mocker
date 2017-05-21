@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -296,12 +297,26 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> T findOne(Query<T> query, Transaction transaction) {
+    return null;
+  }
+  @Override
+  public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
   public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
     return null;
   }
 
   @Override
   public SqlRow findUnique(SqlQuery query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public SqlRow findOne(SqlQuery query, Transaction transaction) {
     return null;
   }
 

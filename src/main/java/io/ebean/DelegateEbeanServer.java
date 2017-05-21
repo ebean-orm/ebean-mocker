@@ -26,6 +26,7 @@ import javax.persistence.PersistenceException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -551,12 +552,27 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
 
   @Override
   public <T> T findUnique(Query<T> query, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findUnique").with("query", query, "transaction", transaction));
+    return findOne(query, transaction);
+  }
+
+  @Override
+  public <T> T findOne(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findOne").with("query", query, "transaction", transaction));
     WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
     if (match != null) {
       return (T)match.val();
     }
     return find.findUnique(query, transaction);
+  }
+
+  @Override
+  public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findOneOrEmpty").with("query", query, "transaction", transaction));
+    WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
+    if (match != null) {
+      return Optional.ofNullable((T)match.val());
+    }
+    return Optional.ofNullable(find.findUnique(query, transaction));
   }
 
   @Override
@@ -652,7 +668,12 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
 
   @Override
   public SqlRow findUnique(SqlQuery sqlQuery, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findUnique").with("sqlQuery", sqlQuery, "transaction", transaction));
+    return findOne(sqlQuery, transaction);
+  }
+
+  @Override
+  public SqlRow findOne(SqlQuery sqlQuery, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findOne").with("sqlQuery", sqlQuery, "transaction", transaction));
     return findSqlQuery.findUnique(sqlQuery, transaction);
   }
 

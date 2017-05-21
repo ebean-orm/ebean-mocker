@@ -14,6 +14,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -58,6 +59,16 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public <T> T findUnique(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> T findOne(Query<T> query, Transaction transaction) {
+    return null;
+  }
+
+  @Override
+  public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
     return null;
   }
 
@@ -327,6 +338,11 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public SqlRow findUnique(SqlQuery query, Transaction transaction) {
+    return Mockito.mock(SqlRow.class);
+  }
+
+  @Override
+  public SqlRow findOne(SqlQuery query, Transaction transaction) {
     return Mockito.mock(SqlRow.class);
   }
 
