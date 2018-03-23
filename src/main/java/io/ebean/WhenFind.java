@@ -33,21 +33,23 @@ public class WhenFind {
     return ret;
   }
 
-  protected WhenBeanReturn findMatchByUnique(Class<?> beanType) {
-    return byUnique.get(beanType);
+  @SuppressWarnings("unchecked")
+  protected <T> WhenBeanReturn<T> findMatchByUnique(Class<T> beanType) {
+    return (WhenBeanReturn<T>) byUnique.get(beanType);
   }
 
-  protected WhenBeanReturn findMatchById(Class<?> beanType, Object id) {
+  @SuppressWarnings("unchecked")
+  protected <T> WhenBeanReturn<T> findMatchById(Class<T> beanType, Object id) {
 
     for (WhenBeanReturn<?> byIdReturn : byId) {
       if (byIdReturn.isMatch(beanType, id)){
-        return byIdReturn;
+        return (WhenBeanReturn<T>) byIdReturn;
       }
     }
 
     for (WhenBeanReturn<?> byIdReturn : byId) {
       if (byIdReturn.isMatch(beanType)){
-        return byIdReturn;
+        return (WhenBeanReturn<T>) byIdReturn;
       }
     }
 
