@@ -1,7 +1,14 @@
 package io.ebean;
 
+import io.ebean.annotation.TxIsolation;
 import io.ebean.backgroundexecutor.ImmediateBackgroundExecutor;
+import io.ebean.bean.BeanCollection;
+import io.ebean.bean.CallStack;
+import io.ebean.bean.EntityBeanIntercept;
+import io.ebean.bean.ObjectGraphNode;
 import io.ebean.cache.ServerCacheManager;
+import io.ebean.config.ServerConfig;
+import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.delegate.DelegateBulkUpdate;
 import io.ebean.delegate.DelegateDelete;
 import io.ebean.delegate.DelegateFind;
@@ -15,19 +22,40 @@ import io.ebean.delegate.InterceptFind;
 import io.ebean.delegate.InterceptFindSqlQuery;
 import io.ebean.delegate.InterceptPublish;
 import io.ebean.delegate.InterceptSave;
+import io.ebean.event.readaudit.ReadAuditLogger;
+import io.ebean.event.readaudit.ReadAuditPrepare;
 import io.ebean.meta.MetaInfoManager;
+import io.ebean.meta.MetricVisitor;
+import io.ebean.plugin.Property;
 import io.ebean.plugin.SpiServer;
 import io.ebean.text.csv.CsvReader;
 import io.ebean.text.json.JsonContext;
+import io.ebeaninternal.api.LoadBeanRequest;
+import io.ebeaninternal.api.LoadManyRequest;
+import io.ebeaninternal.api.SpiDtoQuery;
+import io.ebeaninternal.api.SpiEbeanServer;
+import io.ebeaninternal.api.SpiJsonContext;
 import io.ebeaninternal.api.SpiQuery;
+import io.ebeaninternal.api.SpiTransaction;
+import io.ebeaninternal.api.SpiTransactionManager;
+import io.ebeaninternal.api.TransactionEventTable;
+import io.ebeaninternal.dbmigration.ddlgeneration.DdlHandler;
+import io.ebeaninternal.server.core.SpiResultSet;
+import io.ebeaninternal.server.core.timezone.DataTimeZone;
+import io.ebeaninternal.server.deploy.BeanDescriptor;
+import io.ebeaninternal.server.query.CQuery;
+import io.ebeaninternal.server.transaction.RemoteTransactionEvent;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
+
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -43,7 +71,7 @@ import java.util.function.Predicate;
  * as a test database.
  * </p>
  */
-public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServer, DelegateMethodNames {
+public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanServer, DelegateMethodNames {
 
   /**
    * The list of methods calls made to this server.
@@ -70,7 +98,7 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
    * <p/>
    * This will often be a fully functional EbeanSever that uses H2.
    */
-  protected EbeanServer delegate;
+  protected SpiEbeanServer delegate;
 
   /**
    * Expect ImmediateBackgroundExecutor to be a good default. Can use IgnoreBackgroundExecutor or the delegates one.
@@ -137,7 +165,7 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
    * This delegate will be used on all method calls that are not overwritten.
    */
   public DelegateEbeanServer withDelegate(EbeanServer delegate) {
-    this.delegate = delegate;
+    this.delegate = (SpiEbeanServer) delegate;
     this.delegateQuery = new DelegateQuery(delegate, this);
     this.save = new DelegateSave(delegate);
     this.delete = new DelegateDelete(delegate);
@@ -375,27 +403,27 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   // -- transaction ------------------------
 
   @Override
-  public void execute(TxScope scope, TxRunnable runnable) {
+  public void execute(TxScope scope, Runnable runnable) {
     methodCalls.add(MethodCall.of("bulkUpdate").with("scope", scope, "runnable", runnable));
     delegate.execute(scope, runnable);
   }
 
   @Override
-  public void execute(TxRunnable runnable) {
+  public void execute(Runnable runnable) {
     methodCalls.add(MethodCall.of("bulkUpdate").with("runnable", runnable));
     delegate.execute(runnable);
   }
 
   @Override
-  public <T> T execute(TxScope scope, TxCallable<T> callable) {
+  public <T> T executeCall(TxScope scope, Callable<T> callable) {
     methodCalls.add(MethodCall.of("bulkUpdate").with("scope", scope, "callable", callable));
-    return delegate.execute(scope, callable);
+    return delegate.executeCall(scope, callable);
   }
 
   @Override
-  public <T> T execute(TxCallable<T> callable) {
+  public <T> T executeCall(Callable<T> callable) {
     methodCalls.add(MethodCall.of("bulkUpdate").with("callable", callable));
-    return delegate.execute(callable);
+    return delegate.executeCall(callable);
   }
 
   @Override
@@ -533,9 +561,9 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   @Override
   public <T> T find(Class<T> beanType, Object id) {
     methodCalls.add(MethodCall.of("find").with("beanType", beanType, "id", id));
-    WhenBeanReturn match = whenFind.findMatchById(beanType, id);
+    WhenBeanReturn<T> match = whenFind.findMatchById(beanType, id);
     if (match != null) {
-      return (T)match.val();
+      return match.val();
     }
     return find.find(beanType, id, null);
   }
@@ -543,36 +571,31 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   @Override
   public <T> T find(Class<T> beanType, Object id, Transaction transaction) {
     methodCalls.add(MethodCall.of("find").with("beanType", beanType, "id", id, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchById(beanType, id);
+    WhenBeanReturn<T> match = whenFind.findMatchById(beanType, id);
     if (match != null) {
-      return (T)match.val();
+      return match.val();
     }
     return find.find(beanType, id, transaction);
   }
 
   @Override
-  public <T> T findUnique(Query<T> query, Transaction transaction) {
-    return findOne(query, transaction);
-  }
-
-  @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOne").with("query", query, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
     if (match != null) {
-      return (T)match.val();
+      return match.val();
     }
-    return find.findUnique(query, transaction);
+    return find.findOne(query, transaction);
   }
 
   @Override
   public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOneOrEmpty").with("query", query, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
     if (match != null) {
-      return Optional.ofNullable((T)match.val());
+      return Optional.ofNullable(match.val());
     }
-    return Optional.ofNullable(find.findUnique(query, transaction));
+    return Optional.ofNullable(find.findOne(query, transaction));
   }
 
   @Override
@@ -667,14 +690,9 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
   }
 
   @Override
-  public SqlRow findUnique(SqlQuery sqlQuery, Transaction transaction) {
-    return findOne(sqlQuery, transaction);
-  }
-
-  @Override
   public SqlRow findOne(SqlQuery sqlQuery, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOne").with("sqlQuery", sqlQuery, "transaction", transaction));
-    return findSqlQuery.findUnique(sqlQuery, transaction);
+    return findSqlQuery.findOne(sqlQuery, transaction);
   }
 
   @Override
@@ -1079,4 +1097,268 @@ public class DelegateEbeanServer implements EbeanServer, DelegateAwareEbeanServe
     }
   }
 
+  @Override
+  public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
+    methodCalls.add(MethodCall.of("findDto").with("dtoType", dtoType).with("sql", sql));
+    return delegate.findDto(dtoType, sql);
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean) {
+    methodCalls.add(MethodCall.of("checkUniqueness").with("bean", bean));
+    return delegate.checkUniqueness(bean);
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean, Transaction transaction) {
+    methodCalls.add(MethodCall.of("checkUniqueness").with("bean", bean).with("transaction", transaction));
+    return delegate.checkUniqueness(bean, transaction);
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options) {
+    methodCalls.add(MethodCall.of("merge").with("bean", bean).with("options", options));
+    delegate.merge(bean, options);
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options, Transaction transaction) {
+    methodCalls.add(MethodCall.of("merge").with("bean", bean).with("options", options).with("transaction", transaction));
+    delegate.merge(bean, options);
+  }
+
+  // SpiEbeanServer impl - may be removed later
+  
+  public void loadBean(EntityBeanIntercept ebi) {
+    methodCalls.add(MethodCall.of("loadBean").with("ebi", ebi));
+    delegate.loadBean(ebi);
+  }
+
+  public void loadMany(BeanCollection<?> collection, boolean onlyIds) {
+    methodCalls.add(MethodCall.of("loadMany").with("collection", collection).with("onlyIds", onlyIds));
+    delegate.loadMany(collection, onlyIds);
+  }
+
+  public SpiJsonContext jsonExtended() {
+    methodCalls.add(MethodCall.of("jsonExtended"));
+    return delegate.jsonExtended();
+  }
+
+  public void shutdownManaged() {
+    methodCalls.add(MethodCall.of("shutdownManaged"));
+    delegate.shutdownManaged();
+  }
+
+  public boolean isCollectQueryOrigins() {
+    methodCalls.add(MethodCall.of("isCollectQueryOrigins"));
+    return delegate.isCollectQueryOrigins();
+  }
+
+  public boolean isUpdateAllPropertiesInBatch() {
+    methodCalls.add(MethodCall.of("isUpdateAllPropertiesInBatch"));
+    return delegate.isUpdateAllPropertiesInBatch();
+  }
+
+  public Object currentTenantId() {
+    methodCalls.add(MethodCall.of("currentTenantId"));
+    return delegate.currentTenantId();
+  }
+
+  public ServerConfig getServerConfig() {
+    methodCalls.add(MethodCall.of("getServerConfig"));
+    return delegate.getServerConfig();
+  }
+
+  public DatabasePlatform getDatabasePlatform() {
+    methodCalls.add(MethodCall.of("getDatabasePlatform"));
+    return delegate.getDatabasePlatform();
+  }
+
+  public CallStack createCallStack() {
+    methodCalls.add(MethodCall.of("createCallStack"));
+    return delegate.createCallStack();
+  }
+
+  public PersistenceContextScope getPersistenceContextScope(SpiQuery<?> query) {
+    methodCalls.add(MethodCall.of("getPersistenceContextScope"));
+    return delegate.getPersistenceContextScope(query);
+  }
+
+  public void clearQueryStatistics() {
+    methodCalls.add(MethodCall.of("clearQueryStatistics"));
+    delegate.clearQueryStatistics();
+  }
+
+  public SpiTransactionManager getTransactionManager() {
+    methodCalls.add(MethodCall.of("getTransactionManager"));
+    return delegate.getTransactionManager();
+  }
+
+  public List<BeanDescriptor<?>> getBeanDescriptors() {
+    methodCalls.add(MethodCall.of("getBeanDescriptors"));
+    return delegate.getBeanDescriptors();
+  }
+
+  public <T> BeanDescriptor<T> getBeanDescriptor(Class<T> type) {
+    methodCalls.add(MethodCall.of("getBeanDescriptors").with("type", type));
+    return delegate.getBeanDescriptor(type);
+  }
+
+  public BeanDescriptor<?> getBeanDescriptorById(String className) {
+    methodCalls.add(MethodCall.of("getBeanDescriptorById").with("className", className));
+    return delegate.getBeanDescriptorById(className);
+  }
+
+  public BeanDescriptor<?> getBeanDescriptorByQueueId(String queueId) {
+    methodCalls.add(MethodCall.of("getBeanDescriptorByQueueId").with("queueId", queueId));
+    return delegate.getBeanDescriptorByQueueId(queueId);
+  }
+
+  public List<BeanDescriptor<?>> getBeanDescriptors(String tableName) {
+    methodCalls.add(MethodCall.of("getBeanDescriptors").with("tableName", tableName));
+    return delegate.getBeanDescriptors(tableName);
+  }
+
+  public void externalModification(TransactionEventTable event) {
+    methodCalls.add(MethodCall.of("externalModification").with("event", event));
+    delegate.externalModification(event);
+  }
+
+  public SpiTransaction beginServerTransaction() {
+    methodCalls.add(MethodCall.of("beginServerTransaction"));
+    return delegate.beginServerTransaction();
+  }
+
+  public SpiTransaction currentServerTransaction() {
+    methodCalls.add(MethodCall.of("currentServerTransaction"));
+    return delegate.currentServerTransaction();
+  }
+
+  public SpiTransaction createQueryTransaction(Object tenantId) {
+    methodCalls.add(MethodCall.of("createQueryTransaction").with("tenantId", tenantId));
+    return delegate.createQueryTransaction(tenantId);
+  }
+
+  public void remoteTransactionEvent(RemoteTransactionEvent event) {
+    methodCalls.add(MethodCall.of("remoteTransactionEvent").with("event", event));
+    delegate.remoteTransactionEvent(event);
+  }
+
+  public <T> CQuery<T> compileQuery(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("compileQuery").with("bean", query).with("transaction", transaction));
+    return delegate.compileQuery(query, t);
+  }
+
+  public <A, T> List<A> findIdsWithCopy(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findIdsWithCopy").with("query", query).with("transaction", transaction));
+    return delegate.findIdsWithCopy(query, t);
+  }
+
+  public <T> int findCountWithCopy(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findCountWithCopy").with("query", query).with("transaction", transaction));
+    return delegate.findCountWithCopy(query, t);
+  }
+
+  public void loadBean(LoadBeanRequest loadRequest) {
+    methodCalls.add(MethodCall.of("loadBean").with("loadRequest", loadRequest));
+    delegate.loadBean(loadRequest);
+  }
+
+  public void loadMany(LoadManyRequest loadRequest) {
+    methodCalls.add(MethodCall.of("loadMany").with("loadRequest", loadRequest));
+    delegate.loadMany(loadRequest);
+  }
+
+  public int getLazyLoadBatchSize() {
+    methodCalls.add(MethodCall.of("getLazyLoadBatchSize"));
+    return delegate.getLazyLoadBatchSize();
+  }
+
+  public boolean isSupportedType(Type genericType) {
+    methodCalls.add(MethodCall.of("isSupportedType").with("genericType", genericType));
+    return delegate.isSupportedType(genericType);
+  }
+
+  public void collectQueryStats(ObjectGraphNode objectGraphNode, long loadedBeanCount, long timeMicros) {
+    methodCalls.add(MethodCall.of("collectQueryStats").with("objectGraphNode", objectGraphNode).with("loadedBeanCount", loadedBeanCount).with("timeMicros", timeMicros));
+    delegate.collectQueryStats(objectGraphNode, loadedBeanCount, timeMicros);
+  }
+
+  public ReadAuditLogger getReadAuditLogger() {
+    methodCalls.add(MethodCall.of("getReadAuditLogger"));
+    return delegate.getReadAuditLogger();
+  }
+
+  public ReadAuditPrepare getReadAuditPrepare() {
+    methodCalls.add(MethodCall.of("getReadAuditPrepare"));
+    return delegate.getReadAuditPrepare();
+  }
+
+  public DataTimeZone getDataTimeZone() {
+    methodCalls.add(MethodCall.of("getDataTimeZone"));
+    return delegate.getDataTimeZone();
+  }
+
+  public void slowQueryCheck(long executionTimeMicros, int rowCount, SpiQuery<?> query) {
+    methodCalls.add(MethodCall.of("slowQueryCheck").with("executionTimeMicros", executionTimeMicros).with("rowCount", rowCount).with("query", query));
+    delegate.slowQueryCheck(executionTimeMicros, rowCount, query);
+  }
+
+  public DdlHandler createDdlHandler() {
+    methodCalls.add(MethodCall.of("createDdlHandler"));
+    return delegate.createDdlHandler();
+  }
+
+  public void scopedTransactionEnter(TxScope txScope) {
+    methodCalls.add(MethodCall.of("scopedTransactionEnter").with("txScope", txScope));
+    delegate.scopedTransactionEnter(txScope);
+  }
+
+  public void scopedTransactionExit(Object returnOrThrowable, int opCode) {
+    methodCalls.add(MethodCall.of("scopedTransactionExit").with("returnOrThrowable", returnOrThrowable).with("opCode", opCode));
+    delegate.scopedTransactionExit(returnOrThrowable, opCode);
+  }
+
+  public <T> List<T> findDtoList(SpiDtoQuery<T> query) {
+    methodCalls.add(MethodCall.of("findDtoList").with("query", query));
+    return delegate.findDtoList(query);
+  }
+
+  public <T> T findDtoOne(SpiDtoQuery<T> query) {
+    methodCalls.add(MethodCall.of("findDtoOne").with("query", query));
+    return delegate.findDtoOne(query);
+  }
+
+  public <T> void findDtoEach(SpiDtoQuery<T> query, Consumer<T> consumer) {
+    methodCalls.add(MethodCall.of("findDtoEach").with("query", query).with("consumer", consumer));
+    delegate.findDtoEach(query, consumer);
+  }
+
+  public <T> void findDtoEachWhile(SpiDtoQuery<T> query, Predicate<T> consumer) {
+    methodCalls.add(MethodCall.of("findDtoEachWhile").with("query", query).with("consumer", consumer));
+    delegate.findDtoEachWhile(query, consumer);
+  }
+
+  public <D> DtoQuery<D> findDto(Class<D> dtoType, SpiQuery<?> ormQuery) {
+    methodCalls.add(MethodCall.of("findDto").with("dtoType", dtoType).with("ormQuery", ormQuery));
+    return delegate.findDto(dtoType, ormQuery);
+  }
+
+  public SpiResultSet findResultSet(SpiQuery<?> ormQuery, SpiTransaction transaction) {
+    methodCalls.add(MethodCall.of("findResultSet").with("ormQuery", ormQuery).with("transaction", transaction));
+    return delegate.findResultSet(ormQuery, transaction);
+  }
+
+  public void visitMetrics(MetricVisitor visitor) {
+    methodCalls.add(MethodCall.of("visitMetrics").with("visitor", visitor));
+    delegate.visitMetrics(visitor);
+  }
+
+  public boolean exists(Class<?> beanType, Object beanId, Transaction transaction) {
+    methodCalls.add(MethodCall.of("exists").with("beanType", beanType).with("beanId", beanId).with("transaction", transaction));
+    return delegate.exists(beanType, beanId, transaction);
+  }
+
+
+  
 }

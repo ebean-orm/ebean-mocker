@@ -34,8 +34,8 @@ public class DelegateFindSqlQuery implements InterceptFindSqlQuery {
   }
 
   @Override
-  public SqlRow findUnique(SqlQuery query, Transaction transaction) {
-    return delegate.findUnique(query, transaction);
+  public SqlRow findOne(SqlQuery query, Transaction transaction) {
+    return delegate.findOne(query, transaction);
   }
 
   @Override

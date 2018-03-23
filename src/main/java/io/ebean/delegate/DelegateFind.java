@@ -9,7 +9,6 @@ import io.ebean.Query;
 import io.ebean.QueryIterator;
 import io.ebean.Transaction;
 import io.ebean.Version;
-import io.ebeaninternal.api.SpiQuery;
 
 import java.util.List;
 import java.util.Map;
@@ -47,8 +46,8 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> T findUnique(Query<T> query, Transaction transaction) {
-    return delegate.findUnique(query, transaction);
+  public <T> T findOne(Query<T> query, Transaction transaction) {
+    return delegate.findOne(query, transaction);
   }
 
   @Override

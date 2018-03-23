@@ -1,6 +1,8 @@
 package io.ebean;
 
 import io.ebean.*;
+import io.ebean.annotation.TxIsolation;
+
 import org.example.domain.Customer;
 import org.junit.Test;
 
@@ -40,8 +42,8 @@ public class NoopEbeanServerTest {
   }
 
   @Test
-  public void testFindUnique() throws Exception {
-    server.findUnique((Query) null, null);
+  public void testFindOne() throws Exception {
+    server.findOne((Query) null, null);
   }
 
   @Test

@@ -24,7 +24,7 @@ public interface InterceptFind {
 
   void refreshMany(Object bean, String propertyName);
 
-  <T> T findUnique(Query<T> query, Transaction transaction);
+  <T> T findOne(Query<T> query, Transaction transaction);
 
   <T> T find(Class<T> beanType, Object id, Transaction transaction);
 
