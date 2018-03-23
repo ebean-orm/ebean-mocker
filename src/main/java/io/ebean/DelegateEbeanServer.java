@@ -1246,17 +1246,17 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
 
   public <T> CQuery<T> compileQuery(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("compileQuery").with("bean", query).with("transaction", transaction));
-    return delegate.compileQuery(query, t);
+    return delegate.compileQuery(query, transaction);
   }
 
   public <A, T> List<A> findIdsWithCopy(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findIdsWithCopy").with("query", query).with("transaction", transaction));
-    return delegate.findIdsWithCopy(query, t);
+    return delegate.findIdsWithCopy(query, transaction);
   }
 
   public <T> int findCountWithCopy(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findCountWithCopy").with("query", query).with("transaction", transaction));
-    return delegate.findCountWithCopy(query, t);
+    return delegate.findCountWithCopy(query, transaction);
   }
 
   public void loadBean(LoadBeanRequest loadRequest) {
