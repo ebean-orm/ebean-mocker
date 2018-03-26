@@ -18,8 +18,8 @@ public class MockiEbeanTest {
 
   static {
     logger.debug("... preStart");
-    if (!AgentLoader.loadAgentFromClasspath("avaje-ebeanorm-agent", "debug=1;packages=org.example.**")) {
-      logger.info("avaje-ebeanorm-agent not found in classpath - not dynamically loaded");
+    if (!AgentLoader.loadAgentFromClasspath("ebean-agent", "debug=1;packages=org.example.**")) {
+      logger.info("ebean-agent not found in classpath - not dynamically loaded");
     }
   }
 

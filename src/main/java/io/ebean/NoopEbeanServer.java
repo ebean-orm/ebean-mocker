@@ -1,7 +1,9 @@
 package io.ebean;
 
+import io.ebean.annotation.TxIsolation;
 import io.ebean.cache.ServerCacheManager;
 import io.ebean.meta.MetaInfoManager;
+import io.ebean.plugin.Property;
 import io.ebean.plugin.SpiServer;
 import io.ebean.text.csv.CsvReader;
 import io.ebean.text.json.JsonContext;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -58,11 +61,6 @@ public class NoopEbeanServer implements EbeanServer {
   //-- Methods returning null ---------------------------------------
 
   @Override
-  public <T> T findUnique(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
     return null;
   }
@@ -73,12 +71,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> T execute(TxScope scope, TxCallable<T> c) {
+  public <T> T executeCall(TxScope scope, Callable<T> c) {
     return null;
   }
 
   @Override
-  public <T> T execute(TxCallable<T> c) {
+  public <T> T executeCall(Callable<T> c) {
     return null;
   }
 
@@ -123,7 +121,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public Map<String, ValuePair> diff(Object a, Object b) {
-    return Collections.EMPTY_MAP;
+    return Collections.emptyMap();
   }
 
   @Override
@@ -131,36 +129,43 @@ public class NoopEbeanServer implements EbeanServer {
     return Mockito.mock(type);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> CsvReader<T> createCsvReader(Class<T> beanType) {
     return Mockito.mock(CsvReader.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createQuery(Class<T> beanType, String eql) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> find(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> findNative(Class<T> beanType, String nativeSql) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Filter<T> filter(Class<T> beanType) {
     return Mockito.mock(Filter.class);
@@ -171,6 +176,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
     return Mockito.mock(Update.class);
@@ -276,6 +282,7 @@ public class NoopEbeanServer implements EbeanServer {
     return null;
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
     return Mockito.mock(List.class);
@@ -296,49 +303,52 @@ public class NoopEbeanServer implements EbeanServer {
 
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
     return Mockito.mock(List.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
     return Mockito.mock(FutureRowCount.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction) {
     return Mockito.mock(FutureIds.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
     return Mockito.mock(FutureList.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
     return Mockito.mock(PagedList.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
     return Mockito.mock(Set.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
     return Mockito.mock(Map.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
     return Mockito.mock(List.class);
-  }
-
-  @Override
-  public SqlRow findUnique(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(SqlRow.class);
   }
 
   @Override
@@ -356,6 +366,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
     return Mockito.mock(List.class);
@@ -363,7 +374,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public <T> Set<String> validateQuery(Query<T> query) {
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   @Override
@@ -612,12 +623,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void execute(TxScope scope, TxRunnable r) {
+  public void execute(TxScope scope, Runnable r) {
 
   }
 
   @Override
-  public void execute(TxRunnable r) {
+  public void execute(Runnable r) {
 
   }
 
@@ -634,5 +645,29 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public JsonContext json() {
     return Mockito.mock(JsonContext.class);
+  }
+
+  @SuppressWarnings("unchecked")
+  @Override
+  public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
+    return Mockito.mock(DtoQuery.class);
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean) {
+    return Collections.emptySet();
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean, Transaction transaction) {
+    return Collections.emptySet();
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options) {
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options, Transaction transaction) {
   }
 }

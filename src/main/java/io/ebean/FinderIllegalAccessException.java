@@ -5,6 +5,8 @@ package io.ebean;
  */
 public class FinderIllegalAccessException extends RuntimeException {
 
+  private static final long serialVersionUID = 1L;
+
   public FinderIllegalAccessException(IllegalAccessException e) {
     super(e);
   }

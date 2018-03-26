@@ -3,6 +3,7 @@ package io.ebean.delegate;
 import io.ebean.EbeanServer;
 import io.ebean.ExpressionFactory;
 import io.ebean.Query;
+import io.ebeaninternal.api.SpiEbeanServer;
 import io.ebeaninternal.server.deploy.BeanDescriptor;
 import io.ebeaninternal.server.querydefn.DefaultOrmQuery;
 
@@ -21,7 +22,7 @@ public class DelegateOrmQuery<T> extends DefaultOrmQuery<T> {
   }
 
   public DelegateOrmQuery(BeanDescriptor<T> beanType, EbeanServer server, ExpressionFactory expressionFactory) {
-    super(beanType, server, expressionFactory);
+    super(beanType, (SpiEbeanServer)server, expressionFactory);
   }
 
 }

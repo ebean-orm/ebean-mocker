@@ -15,7 +15,7 @@ public interface InterceptFindSqlQuery {
 
   List<SqlRow> findList(SqlQuery query, Transaction transaction);
 
-  SqlRow findUnique(SqlQuery query, Transaction transaction);
+  SqlRow findOne(SqlQuery query, Transaction transaction);
 
   void findEach(SqlQuery sqlQuery, Consumer<SqlRow> consumer, Transaction transaction);
 
