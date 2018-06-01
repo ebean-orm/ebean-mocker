@@ -25,9 +25,9 @@ import java.util.function.Predicate;
  */
 public class TDEbeanServer implements EbeanServer {
 
-  public List deletedBeans = new ArrayList();
+  public List<Object> deletedBeans = new ArrayList<>();
 
-  public List savedBeans = new ArrayList();
+  public List<Object> savedBeans = new ArrayList<>();
 
   @Override
   public void shutdown(boolean shutdownDataSource, boolean deregisterDriver) {
@@ -307,7 +307,6 @@ public class TDEbeanServer implements EbeanServer {
   public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
     return null;
   }
-
 
   @Override
   public SqlRow findOne(SqlQuery query, Transaction transaction) {

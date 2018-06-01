@@ -121,7 +121,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public Map<String, ValuePair> diff(Object a, Object b) {
-    return Collections.EMPTY_MAP;
+    return Collections.emptyMap();
   }
 
   @Override
@@ -366,7 +366,7 @@ public class NoopEbeanServer implements EbeanServer {
 
   @Override
   public <T> Set<String> validateQuery(Query<T> query) {
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   @Override

@@ -5,6 +5,8 @@ package io.ebean;
  */
 public class FinderFieldNotFoundException extends RuntimeException {
 
+  private static final long serialVersionUID = 1L;
+
   public FinderFieldNotFoundException(NoSuchFieldException e) {
     super(e);
   }

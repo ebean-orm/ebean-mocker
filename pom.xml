@@ -9,14 +9,14 @@
 
   <groupId>io.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>11.17.1</version>
+  <version>11.17.1-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
 
   <scm>
     <developerConnection>scm:git:git@github.com:ebean-orm/ebean-mocker.git</developerConnection>
-    <tag>ebean-mocker-11.17.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
@@ -58,15 +58,36 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>[1,2)</version>
+      <version>1.2.3</version>
       <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.avaje.composite</groupId>
-      <artifactId>avaje-composite-testing-ebean</artifactId>
-      <version>4.1</version>
+      <artifactId>avaje-composite-testing</artifactId>
+      <version>1.1</version>
       <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.avaje</groupId>
+      <artifactId>avaje-agentloader</artifactId>
+      <version>2.1.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.ebean</groupId>
+      <artifactId>ebean-agent</artifactId>
+      <version>11.10.1</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <version>1.4.196</version>
       <scope>test</scope>
     </dependency>
 

@@ -7,7 +7,7 @@ import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class WithStaticFinder_FIND_fieldNameTest {
+public class WithStaticFinder_Product_fieldNameTest {
 
 
   @Test

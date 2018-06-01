@@ -1,27 +1,16 @@
 package io.ebean;
 
 import io.ebeaninternal.server.core.DefaultServer;
-import org.avaje.agentloader.AgentLoader;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.Callable;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class MockiEbeanTest {
-
-  protected static Logger logger = LoggerFactory.getLogger(MockiEbeanTest.class);
-
-  static {
-    logger.debug("... preStart");
-    if (!AgentLoader.loadAgentFromClasspath("avaje-ebeanorm-agent", "debug=1;packages=org.example.**")) {
-      logger.info("avaje-ebeanorm-agent not found in classpath - not dynamically loaded");
-    }
-  }
 
   @Test
   public void testRunWithMock() throws Exception {
@@ -101,15 +90,15 @@ public class MockiEbeanTest {
 
     try {
       long result =
-          io.ebean.MockiEbean.runWithMock(new TDMockServer(), new Callable<Long>() {
-            @Override
-            public Long call() {
-              Object value = Ebean.getServer(null).getBeanId(new Object());
+        io.ebean.MockiEbean.runWithMock(new TDMockServer(), new Callable<Long>() {
+          @Override
+          public Long call() {
+            Object value = Ebean.getServer(null).getBeanId(new Object());
 
-              assertEquals(107L, value);
-              throw new IllegalStateException();
-            }
-          });
+            assertEquals(107L, value);
+            throw new IllegalStateException();
+          }
+        });
 
     } finally {
       // assert that the original EbeanServer has been restored

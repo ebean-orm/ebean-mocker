@@ -582,9 +582,9 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> T find(Class<T> beanType, Object id, Transaction transaction) {
     methodCalls.add(MethodCall.of("find").with("beanType", beanType, "id", id, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchById(beanType, id);
+    WhenBeanReturn<T> match = whenFind.findMatchById(beanType, id);
     if (match != null) {
-      return (T)match.val();
+      return match.val();
     }
     return find.find(beanType, id, transaction);
   }
@@ -592,9 +592,9 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOne").with("query", query, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
     if (match != null) {
-      return (T)match.val();
+      return match.val();
     }
     return find.findOne(query, transaction);
   }
@@ -602,9 +602,9 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOneOrEmpty").with("query", query, "transaction", transaction));
-    WhenBeanReturn match = whenFind.findMatchByUnique(((SpiQuery)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
     if (match != null) {
-      return Optional.ofNullable((T)match.val());
+      return Optional.ofNullable(match.val());
     }
     return Optional.ofNullable(find.findOne(query, transaction));
   }
