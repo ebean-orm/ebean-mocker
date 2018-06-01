@@ -1,10 +1,7 @@
 package io.ebean;
 
-import io.ebeantest.LoggedSql;
 import org.example.domain.Customer;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,8 +25,6 @@ public class MockiEbean_Delegate_persistingTest extends BaseTest {
     // which is means actual saves into our H2 test db
     mock.withPersisting(true);
 
-    LoggedSql.start();
-
     MockiEbean.runWithMock(mock, () -> {
 
       // the beans saved are 'captured' by DelegateEbeanServer by default
@@ -47,15 +42,6 @@ public class MockiEbean_Delegate_persistingTest extends BaseTest {
 
     assertThat(mock.capturedBeans.save).contains(foo, bar, baz);
     assertThat(mock.methodCalls.save()).hasSize(3);
-
-    // in the form of: txn[1003] insert into customer (id, name) values (?,?); --bind(1,foo,)
-    List<String> sqlLogs = LoggedSql.stop();
-
-    for (int i = 0; i < 3; i++) {
-      assertThat(sqlLogs.get(i)).contains("insert into customer (name) values (?)");
-    }
-
-    assertThat(sqlLogs.get(3)).contains("select t0.id, t0.name from customer t0 where t0.id = ?");
   }
 
 }

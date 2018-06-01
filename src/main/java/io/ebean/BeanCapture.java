@@ -19,6 +19,8 @@ public class BeanCapture {
    */
   public List<Object> save = new ArrayList<>();
 
+  public List<Object> merged = new ArrayList<>();
+
   /**
    * The captured beans sent to the insert() methods.
    */
@@ -42,6 +44,11 @@ public class BeanCapture {
    */
   public List<Object> deletePermanent = new ArrayList<>();
 
+  protected void addMerged(Object bean) {
+    if (captureBeans) {
+      merged.add(bean);
+    }
+  }
 
   protected void addSaved(Object bean) {
     if (captureBeans) {

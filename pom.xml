@@ -9,7 +9,7 @@
 
   <groupId>io.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>10.3.2-SNAPSHOT</version>
+  <version>11.17.1-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>io.ebean</groupId>
       <artifactId>ebean</artifactId>
-      <version>10.3.1</version>
+      <version>11.17.1</version>
       <scope>provided</scope>
     </dependency>
 
@@ -50,7 +50,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.12</version>
+      <version>1.7.25</version>
       <scope>provided</scope>
     </dependency>
 
@@ -85,7 +85,7 @@
               <tile>org.avaje.tile:java-compile:1.1</tile>
               <tile>org.avaje.tile:dependency-tree:1.1</tile>
               <tile>org.avaje.tile:pygments-doclet:1.1</tile>
-              <tile>io.ebean.tile:enhancement:2.1</tile>
+              <tile>io.ebean.tile:enhancement:5.6</tile>
             </tiles>
           </configuration>
         </plugin>

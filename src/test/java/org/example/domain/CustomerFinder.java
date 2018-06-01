@@ -12,7 +12,7 @@ public class CustomerFinder extends Finder<Long,Customer> {
 
   public Customer byUniqueName(String name) {
 
-    return query().where().eq("name", name).findUnique();
+    return query().where().eq("name", name).findOne();
   }
 
   public List<Customer> byName(String name) {

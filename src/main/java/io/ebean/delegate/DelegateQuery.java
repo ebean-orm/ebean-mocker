@@ -1,5 +1,6 @@
 package io.ebean.delegate;
 
+import io.ebean.DtoQuery;
 import io.ebean.EbeanServer;
 import io.ebean.Filter;
 import io.ebean.Query;
@@ -70,4 +71,11 @@ public class DelegateQuery {
     return delegate.createNamedQuery(beanType, namedQuery);
   }
 
+  public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
+    return delegate.findDto(dtoType, sql);
+  }
+
+  public <T> DtoQuery<T> createNamedDtoQuery(Class<T> dtoType, String namedQuery) {
+    return delegate.createNamedDtoQuery(dtoType, namedQuery);
+  }
 }

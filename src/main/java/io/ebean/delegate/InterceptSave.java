@@ -1,5 +1,6 @@
 package io.ebean.delegate;
 
+import io.ebean.MergeOptions;
 import io.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
@@ -26,4 +27,5 @@ public interface InterceptSave {
 
   void insertAll(Collection<?> beans, Transaction t);
 
+  void merge(Object bean, MergeOptions options, Transaction t);
 }

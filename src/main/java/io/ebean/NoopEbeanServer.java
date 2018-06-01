@@ -1,7 +1,9 @@
 package io.ebean;
 
+import io.ebean.annotation.TxIsolation;
 import io.ebean.cache.ServerCacheManager;
 import io.ebean.meta.MetaInfoManager;
+import io.ebean.plugin.Property;
 import io.ebean.plugin.SpiServer;
 import io.ebean.text.csv.CsvReader;
 import io.ebean.text.json.JsonContext;
@@ -16,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -58,11 +61,6 @@ public class NoopEbeanServer implements EbeanServer {
   //-- Methods returning null ---------------------------------------
 
   @Override
-  public <T> T findUnique(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
     return null;
   }
@@ -73,12 +71,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> T execute(TxScope scope, TxCallable<T> c) {
+  public <T> T executeCall(TxScope scope, Callable<T> c) {
     return null;
   }
 
   @Override
-  public <T> T execute(TxCallable<T> c) {
+  public <T> T executeCall(Callable<T> c) {
     return null;
   }
 
@@ -337,11 +335,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public SqlRow findUnique(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(SqlRow.class);
-  }
-
-  @Override
   public SqlRow findOne(SqlQuery query, Transaction transaction) {
     return Mockito.mock(SqlRow.class);
   }
@@ -362,8 +355,43 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
+    return null;
+  }
+
+  @Override
+  public <T> DtoQuery<T> createNamedDtoQuery(Class<T> dtoType, String namedQuery) {
+    return null;
+  }
+
+  @Override
   public <T> Set<String> validateQuery(Query<T> query) {
     return Collections.EMPTY_SET;
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean) {
+    return Collections.EMPTY_SET;
+  }
+
+  @Override
+  public Set<Property> checkUniqueness(Object bean, Transaction transaction) {
+    return Collections.EMPTY_SET;
+  }
+
+  @Override
+  public void merge(Object bean) {
+
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options) {
+
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options, Transaction transaction) {
+
   }
 
   @Override
@@ -612,12 +640,12 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void execute(TxScope scope, TxRunnable r) {
+  public void execute(TxScope scope, Runnable r) {
 
   }
 
   @Override
-  public void execute(TxRunnable r) {
+  public void execute(Runnable r) {
 
   }
 

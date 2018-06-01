@@ -1,6 +1,7 @@
 package io.ebean.delegate;
 
 import io.ebean.EbeanServer;
+import io.ebean.MergeOptions;
 import io.ebean.Transaction;
 
 import javax.persistence.OptimisticLockException;
@@ -25,6 +26,11 @@ public class DelegateSave implements InterceptSave {
   @Override
   public Object nextId(Class<?> beanType) {
     return delegate.nextId(beanType);
+  }
+
+  @Override
+  public void merge(Object bean, MergeOptions options, Transaction t) {
+    delegate.merge(bean, options, t);
   }
 
   @Override

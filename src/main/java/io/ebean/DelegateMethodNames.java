@@ -21,6 +21,8 @@ public interface DelegateMethodNames {
 
   String DRAFT_RESTORE = "draftRestore";
 
+  String MERGE = "merge";
+
   String SAVE = "save";
 
   String INSERT = "insert";
