@@ -9,14 +9,14 @@
 
   <groupId>io.ebean</groupId>
   <artifactId>ebean-mocker</artifactId>
-  <version>11.18.1</version>
+  <version>11.18.2-SNAPSHOT</version>
   <name>ebean-mocker</name>
 
   <description>Ability to set a Mockito mock EbeanServer as 'default' EbeanServer</description>
 
   <scm>
     <developerConnection>scm:git:git@github.com:ebean-orm/ebean-mocker.git</developerConnection>
-    <tag>ebean-mocker-11.18.1</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <dependencies>
