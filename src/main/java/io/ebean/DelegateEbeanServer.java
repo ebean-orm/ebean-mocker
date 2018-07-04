@@ -37,6 +37,7 @@ import io.ebeaninternal.api.SpiEbeanServer;
 import io.ebeaninternal.api.SpiJsonContext;
 import io.ebeaninternal.api.SpiLogManager;
 import io.ebeaninternal.api.SpiQuery;
+import io.ebeaninternal.api.SpiSqlQuery;
 import io.ebeaninternal.api.SpiSqlUpdate;
 import io.ebeaninternal.api.SpiTransaction;
 import io.ebeaninternal.api.SpiTransactionManager;
@@ -51,6 +52,7 @@ import io.ebeaninternal.server.transaction.RemoteTransactionEvent;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import java.lang.reflect.Type;
+import java.time.Clock;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -808,7 +810,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public <T> int update(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of(UPDATE).with("query", query).with("transaction", transaction));
     if (persistUpdates) {
-      return delegate.update(query, transaction);
+      return delegate.extended().update(query, transaction);
     }
     return 0;
   }
@@ -1146,6 +1148,45 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     }
   }
 
+  @Override
+  public <T> T findSingleAttribute(SpiSqlQuery query, Class<T> cls) {
+    return spiDelegate().findSingleAttribute(query, cls);
+  }
+
+  @Override
+  public <T> List<T> findSingleAttributeList(SpiSqlQuery query, Class<T> cls) {
+    return spiDelegate().findSingleAttributeList(query, cls);
+  }
+
+  @Override
+  public <T> T findOneMapper(SpiSqlQuery query, RowMapper<T> mapper) {
+    return spiDelegate().findOneMapper(query, mapper);
+  }
+
+  @Override
+  public <T> List<T> findListMapper(SpiSqlQuery query, RowMapper<T> mapper) {
+    return spiDelegate().findListMapper(query, mapper);
+  }
+
+  @Override
+  public void findEachRow(SpiSqlQuery query, RowConsumer consumer) {
+    spiDelegate().findEachRow(query, consumer);
+  }
+
+  @Override
+  public ExtendedServer extended() {
+    return delegate.extended();
+  }
+
+  @Override
+  public long clockNow() {
+    return spiDelegate().clockNow();
+  }
+
+  @Override
+  public void setClock(Clock clock) {
+    spiDelegate().setClock(clock);
+  }
 
   private SpiEbeanServer spiDelegate() {
     return (SpiEbeanServer)delegate;

@@ -35,7 +35,7 @@ public class DelegateDelete implements InterceptDelete {
 
   @Override
   public int delete(Query<?> query, Transaction transaction) throws OptimisticLockException {
-    return delegate.delete(query, transaction);
+    return delegate.extended().delete(query, transaction);
   }
 
   @Override

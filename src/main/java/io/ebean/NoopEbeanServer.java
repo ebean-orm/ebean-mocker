@@ -39,6 +39,11 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
+  public ExtendedServer extended() {
+    return null;
+  }
+
+  @Override
   public String getName() {
     return name;
   }
@@ -59,16 +64,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   //-- Methods returning null ---------------------------------------
-
-  @Override
-  public <T> T findOne(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
-    return null;
-  }
 
   @Override
   public <T> T executeCall(TxScope scope, Callable<T> c) {
@@ -265,96 +260,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> int findCount(Query<T> query, Transaction transaction) {
-    return 0;
-  }
-
-  @Override
-  public <A,T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
-    return Mockito.mock(List.class);
-  }
-
-  @Override
-  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> List<T> findList(Query<T> query, Transaction transaction) {
-    return Mockito.mock(List.class);
-  }
-
-  @Override
-  public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
-    return Mockito.mock(FutureRowCount.class);
-  }
-
-  @Override
-  public <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction) {
-    return Mockito.mock(FutureIds.class);
-  }
-
-  @Override
-  public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
-    return Mockito.mock(FutureList.class);
-  }
-
-  @Override
-  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
-    return Mockito.mock(PagedList.class);
-  }
-
-  @Override
-  public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
-    return Mockito.mock(Set.class);
-  }
-
-  @Override
-  public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
-    return Mockito.mock(Map.class);
-  }
-
-  @Override
-  public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(List.class);
-  }
-
-  @Override
-  public SqlRow findOne(SqlQuery query, Transaction transaction) {
-    return Mockito.mock(SqlRow.class);
-  }
-
-  @Override
-  public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> queryEachConsumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> queryEachWhileConsumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
-    return Mockito.mock(List.class);
-  }
-
-  @Override
   public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
     return null;
   }
@@ -420,18 +325,8 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public <T> int delete(Query<T> query, Transaction transaction) {
-    return 0;
-  }
-
-  @Override
   public <T> UpdateQuery<T> update(Class<T> beanType) {
     return null;
-  }
-
-  @Override
-  public <T> int update(Query<T> query, Transaction transaction) {
-    return 0;
   }
 
   @Override

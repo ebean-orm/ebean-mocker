@@ -30,21 +30,21 @@ public class DelegateFindSqlQuery implements InterceptFindSqlQuery {
 
   @Override
   public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
-    return delegate.findList(query, transaction);
+    return delegate.extended().findList(query, transaction);
   }
 
   @Override
   public SqlRow findOne(SqlQuery query, Transaction transaction) {
-    return delegate.findOne(query, transaction);
+    return delegate.extended().findOne(query, transaction);
   }
 
   @Override
   public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> consumer, Transaction transaction) {
-    delegate.findEach(sqlQuery, consumer, transaction);
+    delegate.extended().findEach(sqlQuery, consumer, transaction);
   }
 
   @Override
   public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> consumer, Transaction transaction) {
-    delegate.findEachWhile(sqlQuery, consumer, transaction);
+    delegate.extended().findEachWhile(sqlQuery, consumer, transaction);
   }
 }

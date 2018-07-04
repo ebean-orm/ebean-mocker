@@ -12,7 +12,7 @@ public class NoopEbeanServerTest {
   private io.ebean.NoopEbeanServer server = new io.ebean.NoopEbeanServer();
 
   @Test
-  public void testCreateEntityBean() throws Exception {
+  public void testCreateEntityBean() {
 
     //Mockito.mock(Customer.class).;
 
@@ -25,298 +25,236 @@ public class NoopEbeanServerTest {
   }
 
   @Test
-  public void testGetName() throws Exception {
+  public void testGetName() {
     server.getName();
   }
 
   @Test
-  public void testGetBeanId() throws Exception {
+  public void testGetBeanId() {
     server.getBeanId(null);
   }
 
   @Test
-  public void testNextId() throws Exception {
+  public void testNextId() {
     assertThat(server.nextId(null)).isEqualTo(server.nextId);
   }
 
   @Test
-  public void testFindOne() throws Exception {
-    server.findOne((Query) null, null);
-  }
-
-  @Test
-  public void testExecute() throws Exception {
+  public void testExecute() {
     server.execute((CallableSql) null);
   }
 
   @Test
-  public void testExecute1() throws Exception {
+  public void testExecute1() {
     server.execute((SqlUpdate) null);
   }
 
   @Test
-  public void testShutdown() throws Exception {
+  public void testShutdown() {
     server.shutdown(false, false);
   }
 
   @Test
-  public void testGetExpressionFactory() throws Exception {
+  public void testGetExpressionFactory() {
     server.getExpressionFactory();
   }
 
   @Test
-  public void testGetMetaInfoManager() throws Exception {
+  public void testGetMetaInfoManager() {
     server.getMetaInfoManager();
   }
 
   @Test
-  public void testGetBeanState() throws Exception {
+  public void testGetBeanState() {
     server.getBeanState(null);
   }
 
   @Test
-  public void testDiff() throws Exception {
+  public void testDiff() {
     assertThat(server.diff(null, null)).isEmpty();
   }
 
   @Test
-  public void testCreateEntityBean1() throws Exception {
+  public void testCreateEntityBean1() {
     Customer customer = server.createEntityBean(Customer.class);
     assertThat(customer).isNotNull();
   }
 
   @Test
-  public void testCreateCsvReader() throws Exception {
+  public void testCreateCsvReader() {
     assertThat(server.createCsvReader(Customer.class)).isNotNull();
   }
 
   @Test
-  public void testCreateQuery() throws Exception {
+  public void testCreateQuery() {
     assertThat(server.createQuery(null)).isNotNull();
   }
 
   @Test
-  public void testFind() throws Exception {
+  public void testFind() {
     assertThat(server.find(null)).isNotNull();
   }
 
   @Test
-  public void testFilter() throws Exception {
+  public void testFilter() {
     assertThat(server.filter(null)).isNotNull();
   }
 
   @Test
-  public void testSort() throws Exception {
+  public void testSort() {
     server.sort(null, null);
   }
 
   @Test
-  public void testCreateUpdate() throws Exception {
+  public void testCreateUpdate() {
     assertThat(server.createUpdate(null, null)).isNotNull();
   }
 
   @Test
-  public void testCreateSqlQuery() throws Exception {
+  public void testCreateSqlQuery() {
     assertThat(server.createSqlQuery(null)).isNotNull();
 
   }
 
   @Test
-  public void testCreateSqlUpdate() throws Exception {
+  public void testCreateSqlUpdate() {
     assertThat(server.createSqlUpdate(null)).isNotNull();
   }
 
   @Test
-  public void testCreateCallableSql() throws Exception {
+  public void testCreateCallableSql() {
     assertThat(server.createCallableSql(null)).isNotNull();
   }
 
   @Test
-  public void testRegister() throws Exception {
+  public void testRegister() {
     server.register(null);
   }
 
   @Test
-  public void testCreateTransaction() throws Exception {
+  public void testCreateTransaction() {
     assertThat(server.createTransaction()).isNotNull();
     assertThat(server.createTransaction(null)).isNotNull();
   }
 
   @Test
-  public void testBeginTransaction() throws Exception {
+  public void testBeginTransaction() {
       assertThat(server.beginTransaction()).isNotNull();
     assertThat(server.beginTransaction((TxScope)null)).isNotNull();
     assertThat(server.beginTransaction((TxIsolation) null)).isNotNull();
   }
 
   @Test
-  public void testCurrentTransaction() throws Exception {
+  public void testCurrentTransaction() {
     assertThat(server.currentTransaction()).isNotNull();
   }
 
   @Test
-  public void testCommitTransaction() throws Exception {
+  public void testCommitTransaction() {
     server.commitTransaction();
   }
 
   @Test
-  public void testRollbackTransaction() throws Exception {
+  public void testRollbackTransaction() {
     server.rollbackTransaction();
   }
 
   @Test
-  public void testEndTransaction() throws Exception {
+  public void testEndTransaction() {
 server.endTransaction();
   }
 
   @Test
-  public void testRefresh() throws Exception {
+  public void testRefresh() {
     server.refresh(null);
   }
 
   @Test
-  public void testRefreshMany() throws Exception {
+  public void testRefreshMany() {
     server.refreshMany(null, null);
   }
 
   @Test
-  public void testFind1() throws Exception {
+  public void testFind1() {
     assertThat(server.find(Customer.class)).isNotNull();
   }
 
   @Test
-  public void testGetReference() throws Exception {
+  public void testGetReference() {
     assertThat(server.getReference(Customer.class, null)).isNotNull();
   }
 
   @Test
-  public void testFindCount() throws Exception {
-    server.findCount(null, null);
-  }
-
-  @Test
-  public void testFindIds() throws Exception {
-    server.findIds(null, null);
-  }
-
-  @Test
-  public void testFindEach() throws Exception {
-    server.findEach((Query<?>)null, null, null);
-  }
-
-  @Test
-  public void testFindEachWhile() throws Exception {
-    server.findEachWhile((Query<?>)null, null, null);
-  }
-
-  @Test
-  public void testFindList() throws Exception {
-    server.findList((Query) null, null);
-    server.findList((SqlQuery) null, null);
-  }
-
-  @Test
-  public void testFindFutureCount() throws Exception {
-    server.findFutureCount(null, null);
-  }
-
-  @Test
-  public void testFindFutureIds() throws Exception {
-    server.findFutureIds(null, null);
-  }
-
-  @Test
-  public void testFindFutureList() throws Exception {
-    server.findFutureList((Query) null, null);
-  }
-
-  @Test
-  public void testFindSet() throws Exception {
-    server.findSet((Query) null, null);
-  }
-
-  @Test
-  public void testFindMap() throws Exception {
-    server.findMap((Query) null, null);
-  }
-
-  @Test
-  public void testFindList1() throws Exception {
-    server.findList((Query) null, null);
-    server.findList((SqlQuery) null, null);
-  }
-
-  @Test
-  public void testExternalModification() throws Exception {
+  public void testExternalModification() {
     server.externalModification(null, true, true, true);
   }
 
   @Test
-  public void testMarkAsDirty() throws Exception {
+  public void testMarkAsDirty() {
     server.markAsDirty(new Customer());
   }
 
   @Test
-  public void testSave() throws Exception {
+  public void testSave() {
   }
 
   @Test
-  public void testDelete() throws Exception {
-
-  }
-
-  @Test
-  public void testUpdate() throws Exception {
+  public void testDelete() {
 
   }
 
   @Test
-  public void testInsert() throws Exception {
+  public void testUpdate() {
 
   }
 
   @Test
-  public void testDeleteManyToManyAssociations() throws Exception {
+  public void testInsert() {
 
   }
 
   @Test
-  public void testDeleteManyToManyAssociations1() throws Exception {
+  public void testDeleteManyToManyAssociations() {
 
   }
 
   @Test
-  public void testSaveManyToManyAssociations() throws Exception {
+  public void testDeleteManyToManyAssociations1() {
 
   }
 
   @Test
-  public void testSaveManyToManyAssociations1() throws Exception {
+  public void testSaveManyToManyAssociations() {
 
   }
 
   @Test
-  public void testSaveAssociation() throws Exception {
+  public void testSaveManyToManyAssociations1() {
 
   }
 
   @Test
-  public void testSaveAssociation1() throws Exception {
+  public void testSaveAssociation() {
 
   }
 
   @Test
-  public void testGetServerCacheManager() throws Exception {
+  public void testSaveAssociation1() {
+
+  }
+
+  @Test
+  public void testGetServerCacheManager() {
     assertThat(server.getServerCacheManager()).isNotNull();
   }
 
   @Test
-  public void testGetBackgroundExecutor() throws Exception {
+  public void testGetBackgroundExecutor() {
     assertThat(server.getBackgroundExecutor()).isNotNull();
   }
 
   @Test
-  public void testJson() throws Exception {
+  public void testJson() {
     assertThat(server.json()).isNotNull();
   }
 }

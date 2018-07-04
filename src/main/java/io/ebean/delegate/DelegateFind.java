@@ -47,7 +47,7 @@ public class DelegateFind implements InterceptFind {
 
   @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
-    return delegate.findOne(query, transaction);
+    return delegate.extended().findOne(query, transaction);
   }
 
   @Override
@@ -57,71 +57,71 @@ public class DelegateFind implements InterceptFind {
 
   @Override
   public <T> int findCount(Query<T> query, Transaction transaction) {
-    return delegate.findCount(query, transaction);
+    return delegate.extended().findCount(query, transaction);
   }
 
   @Override
   public <A> List<A> findIds(Query<?> query, Transaction transaction) {
-    return delegate.findIds(query, transaction);
+    return delegate.extended().findIds(query, transaction);
   }
 
   @Override
   public <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction) {
-    return delegate.findSingleAttributeList(query, transaction);
+    return delegate.extended().findSingleAttributeList(query, transaction);
   }
 
   @Override
   public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    return delegate.findIterate(query, transaction);
+    return delegate.extended().findIterate(query, transaction);
   }
 
   @Override
   public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
-    delegate.findEach(query, consumer, transaction);
+    delegate.extended().findEach(query, consumer, transaction);
   }
 
   @Override
   public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
-    delegate.findEachWhile(query, consumer, transaction);
+    delegate.extended().findEachWhile(query, consumer, transaction);
   }
 
   @Override
   public <T> List<T> findList(Query<T> query, Transaction transaction) {
-    return delegate.findList(query, transaction);
+    return delegate.extended().findList(query, transaction);
   }
 
   @Override
   public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
-    return delegate.findFutureCount(query, transaction);
+    return delegate.extended().findFutureCount(query, transaction);
   }
 
   @Override
   public <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction) {
-    return delegate.findFutureIds(query, transaction);
+    return delegate.extended().findFutureIds(query, transaction);
   }
 
   @Override
   public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
-    return delegate.findFutureList(query, transaction);
+    return delegate.extended().findFutureList(query, transaction);
   }
 
   @Override
   public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
-    return delegate.findPagedList(query, transaction);
+    return delegate.extended().findPagedList(query, transaction);
   }
 
   @Override
   public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
-    return delegate.findSet(query, transaction);
+    return delegate.extended().findSet(query, transaction);
   }
 
   @Override
   public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
-    return delegate.findMap(query, transaction);
+    return delegate.extended().findMap(query, transaction);
   }
 
   @Override
   public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
-    return delegate.findVersions(query, transaction);
+    return delegate.extended().findVersions(query, transaction);
   }
 }

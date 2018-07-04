@@ -35,6 +35,11 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
+  public ExtendedServer extended() {
+    return null;
+  }
+
+  @Override
   public DocumentStore docStore() {
     return null;
   }
@@ -229,104 +234,6 @@ public class TDEbeanServer implements EbeanServer {
     return null;
   }
 
-  @Override
-  public <T> int findCount(Query<T> query, Transaction transaction) {
-    return 0;
-  }
-
-  @Override
-  public <A, T> List<A> findIds(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <A, T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> List<T> findList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> FutureRowCount<T> findFutureCount(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> FutureIds<T> findFutureIds(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> FutureList<T> findFutureList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> PagedList<T> findPagedList(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> Set<T> findSet(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <K, T> Map<K, T> findMap(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public <T> T findOne(Query<T> query, Transaction transaction) {
-    return null;
-  }
-  @Override
-  public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public List<SqlRow> findList(SqlQuery query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public SqlRow findOne(SqlQuery query, Transaction transaction) {
-    return null;
-  }
-
-  @Override
-  public void findEach(SqlQuery sqlQuery, Consumer<SqlRow> queryEachConsumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public void findEachWhile(SqlQuery sqlQuery, Predicate<SqlRow> queryEachWhileConsumer, Transaction transaction) {
-
-  }
-
-  @Override
-  public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
-    return null;
-  }
 
   @Override
   public <T> Set<String> validateQuery(Query<T> query) {
@@ -388,11 +295,6 @@ public class TDEbeanServer implements EbeanServer {
   @Override
   public int deleteAll(Collection<?> c) throws OptimisticLockException {
     deletedBeans.addAll(c);
-    return 0;
-  }
-
-  @Override
-  public <T> int delete(Query<T> query, Transaction transaction) {
     return 0;
   }
 
@@ -550,11 +452,6 @@ public class TDEbeanServer implements EbeanServer {
   @Override
   public <T> UpdateQuery<T> update(Class<T> beanType) {
     return null;
-  }
-
-  @Override
-  public <T> int update(Query<T> query, Transaction transaction) {
-    return 0;
   }
 
   @Override
