@@ -1,6 +1,8 @@
 package io.ebean;
 
 
+import io.ebean.mocker.DelegateAwareEbeanServer;
+
 import java.util.concurrent.Callable;
 
 /**

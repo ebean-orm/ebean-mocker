@@ -15,7 +15,7 @@ import io.ebeaninternal.server.core.DefaultServer;
 
 public class EbeanServerMockTest {
 
-  
+
 
   @Test
   public void testWithoutInitial() {
@@ -43,7 +43,7 @@ public class EbeanServerMockTest {
     EbeanServer restoredServer = Ebean.getServer(null);
     assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
   }
-  
+
   @Test
   public void testWithMockito() {
 
