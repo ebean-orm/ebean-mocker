@@ -1,7 +1,7 @@
 package io.ebean.delegate;
 
+import io.ebean.Database;
 import io.ebean.DtoQuery;
-import io.ebean.EbeanServer;
 import io.ebean.Filter;
 import io.ebean.Query;
 import io.ebean.SqlQuery;
@@ -16,16 +16,16 @@ import java.util.Set;
  */
 public class DelegateQuery {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
-  protected EbeanServer owner;
+  protected Database owner;
 
   /**
    * Construct with a EbeanServer to delegate to by default.
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateQuery(EbeanServer delegate, EbeanServer owner) {
+  public DelegateQuery(Database delegate, Database owner) {
     this.delegate = delegate;
     this.owner = owner;
   }

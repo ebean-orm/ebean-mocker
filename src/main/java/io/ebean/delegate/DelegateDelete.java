@@ -1,6 +1,6 @@
 package io.ebean.delegate;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.Query;
 import io.ebean.Transaction;
 
@@ -12,14 +12,14 @@ import java.util.Collection;
  */
 public class DelegateDelete implements InterceptDelete {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
   /**
    * Construct with a EbeanServer to delegate and using ImmediateBackgroundExecutor.
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateDelete(EbeanServer delegate) {
+  public DelegateDelete(Database delegate) {
     this.delegate = delegate;
   }
 

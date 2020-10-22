@@ -1,6 +1,6 @@
 package io.ebean.delegate;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.FutureIds;
 import io.ebean.FutureList;
 import io.ebean.FutureRowCount;
@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -24,14 +25,14 @@ import java.util.function.Predicate;
  */
 public class DelegateFind implements InterceptFind {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
   /**
    * Construct with a EbeanServer to delegate to by default.
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateFind(EbeanServer delegate) {
+  public DelegateFind(Database delegate) {
     this.delegate = delegate;
   }
 
@@ -123,5 +124,20 @@ public class DelegateFind implements InterceptFind {
   @Override
   public <T> List<Version<T>> findVersions(Query<T> query, Transaction transaction) {
     return delegate.extended().findVersions(query, transaction);
+  }
+
+  @Override
+  public <T> Stream<T> findStream(Query<T> query, Transaction transaction) {
+    return delegate.extended().findStream(query, transaction);
+  }
+
+  @Override
+  public <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction) {
+    return delegate.extended().findLargeStream(query, transaction);
+  }
+
+  @Override
+  public boolean exists(Query<?> query, Transaction transaction) {
+    return delegate.extended().exists(query, transaction);
   }
 }

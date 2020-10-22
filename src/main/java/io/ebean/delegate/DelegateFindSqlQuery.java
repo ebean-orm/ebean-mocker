@@ -1,6 +1,6 @@
 package io.ebean.delegate;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.SqlQuery;
 import io.ebean.SqlRow;
 import io.ebean.Transaction;
@@ -17,14 +17,14 @@ import java.util.function.Predicate;
  */
 public class DelegateFindSqlQuery implements InterceptFindSqlQuery {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
   /**
    * Construct with a EbeanServer to delegate to by default.
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateFindSqlQuery(EbeanServer delegate) {
+  public DelegateFindSqlQuery(Database delegate) {
     this.delegate = delegate;
   }
 

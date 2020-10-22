@@ -1,6 +1,6 @@
 package io.ebean.delegate;
 
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.Query;
 import io.ebean.Transaction;
 
@@ -14,9 +14,9 @@ import java.util.List;
  */
 public class DelegatePublish implements InterceptPublish {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
-  public DelegatePublish(EbeanServer delegate) {
+  public DelegatePublish(Database delegate) {
     this.delegate = delegate;
   }
 

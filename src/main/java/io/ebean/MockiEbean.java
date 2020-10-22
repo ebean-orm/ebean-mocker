@@ -75,15 +75,12 @@ public class MockiEbean {
    * @return The MockiEbean with a {@link #restoreOriginal()} method that can be used to restore the
    * original EbeanServer implementation.
    */
-  public static MockiEbean start(EbeanServer mock) {
-
+  public static MockiEbean start(Database mock) {
     // using $mock as the server name
-    EbeanServer original = Ebean.mock("$mock", mock, true);
-
+    Database original = DB.mock("$mock", mock, true);
     if (mock instanceof DelegateAwareEbeanServer) {
       ((DelegateAwareEbeanServer)mock).withDelegateIfRequired(original);
     }
-
     return new MockiEbean(mock, original);
   }
 
@@ -93,8 +90,7 @@ public class MockiEbean {
    * @param mock the mock instance that becomes the default EbeanServer
    * @param test typically some test code as a runnable
    */
-  public static void runWithMock(EbeanServer mock, Runnable test) {
-
+  public static void runWithMock(Database mock, Runnable test) {
     start(mock).run(test);
   }
 
@@ -104,25 +100,24 @@ public class MockiEbean {
    * @param mock the mock instance that becomes the default EbeanServer
    * @param test typically some test code as a callable
    */
-  public static <V> V runWithMock(EbeanServer mock, Callable<V> test) throws Exception {
-
+  public static <V> V runWithMock(Database mock, Callable<V> test) throws Exception {
     return start(mock).run(test);
   }
 
   /**
    * The 'original' default EbeanServer that the mock is temporarily replacing.
    */
-  protected final EbeanServer original;
+  protected final Database original;
 
   /**
    * The 'mock' EbeanServer that is temporarily replacing the 'original' during the 'run'.
    */
-  protected final EbeanServer mock;
+  protected final Database mock;
 
   /**
    * Construct with the mock and original EbeanServer instances.s
    */
-  protected MockiEbean(EbeanServer mock, EbeanServer original) {
+  protected MockiEbean(Database mock, Database original) {
     this.mock = mock;
     this.original = original;
   }
@@ -133,14 +128,14 @@ public class MockiEbean {
    * This is the implementation that is put back as the default EbeanServer when
    * {@link #restoreOriginal()} is called.
    */
-  public EbeanServer getOriginal() {
+  public Database getOriginal() {
     return original;
   }
 
   /**
    * Return the mock EbeanServer instance that was set as the default EbeanServer.
    */
-  public EbeanServer getMock() {
+  public Database getMock() {
     return mock;
   }
 
@@ -206,7 +201,7 @@ public class MockiEbean {
     }
 
     // restore the original EbeanServer back
-    Ebean.mock(original.getName(), original, true);
+    DB.mock(original.getName(), original, true);
   }
 
 }

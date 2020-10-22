@@ -1,4 +1,4 @@
-avaje-ebeanorm-mocker
-=====================
+ebean mocker
+============
 
-Ability to set a Mockito type mock EbeanServer as the 'default' EbeanServer 
+Ability to set a Mockito type mock Database as the 'default' Database 

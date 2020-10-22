@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Provides an adaption layer for find methods.
@@ -55,4 +56,10 @@ public interface InterceptFind {
   <A> List<A> findSingleAttributeList(Query<?> query, Transaction transaction);
 
   <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction);
+
+  <T> Stream<T> findStream(Query<T> query, Transaction transaction);
+
+  <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction);
+
+  boolean exists(Query<?> query, Transaction transaction);
 }

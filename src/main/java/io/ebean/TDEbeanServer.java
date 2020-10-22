@@ -1,5 +1,6 @@
 package io.ebean;
 
+import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.cache.ServerCacheManager;
 import io.ebean.meta.MetaInfoManager;
@@ -10,20 +11,18 @@ import io.ebean.text.json.JsonContext;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
- * Test double for EbeanServer.
+ * Test double for Database.
  */
-public class TDEbeanServer implements EbeanServer {
+public class TDEbeanServer implements Database {
 
   public List<Object> deletedBeans = new ArrayList<>();
 
@@ -465,11 +464,6 @@ public class TDEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException {
-
-  }
-
-  @Override
   public void updateAll(Collection<?> beans) throws OptimisticLockException {
 
   }
@@ -546,6 +540,56 @@ public class TDEbeanServer implements EbeanServer {
 
   @Override
   public JsonContext json() {
+    return null;
+  }
+
+  @Override
+  public void shutdown() {
+
+  }
+
+  @Override
+  public Platform getPlatform() {
+    return null;
+  }
+
+  @Override
+  public SqlQuery sqlQuery(String sql) {
+    return null;
+  }
+
+  @Override
+  public SqlUpdate sqlUpdate(String sql) {
+    return null;
+  }
+
+  @Override
+  public int saveAll(Object... beans) throws OptimisticLockException {
+    return 0;
+  }
+
+  @Override
+  public ScriptRunner script() {
+    return null;
+  }
+
+  @Override
+  public void truncate(String... tables) {
+
+  }
+
+  @Override
+  public void truncate(Class<?>... tables) {
+
+  }
+
+  @Override
+  public DataSource getDataSource() {
+    return null;
+  }
+
+  @Override
+  public DataSource getReadOnlyDataSource() {
     return null;
   }
 }

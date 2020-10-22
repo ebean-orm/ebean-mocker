@@ -12,7 +12,7 @@ public interface DelegateAwareEbeanServer {
    * This is typically used as part of MockiEbean run in order to support delegating
    * through to the original default ebeanServer.
    */
-  boolean withDelegateIfRequired(EbeanServer delegate);
+  boolean withDelegateIfRequired(Database delegate);
 
   /**
    * Called prior to run and typically used to set test doubles to static finders.

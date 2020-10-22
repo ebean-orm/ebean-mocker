@@ -19,8 +19,6 @@ public interface InterceptSave {
 
   void update(Object bean, Transaction t) throws OptimisticLockException;
 
-  void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException;
-
   void updateAll(Collection<?> beans, Transaction transaction) throws OptimisticLockException;
 
   void insert(Object bean, Transaction t);

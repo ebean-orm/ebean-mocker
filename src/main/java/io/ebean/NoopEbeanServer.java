@@ -1,5 +1,6 @@
 package io.ebean;
 
+import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.cache.ServerCacheManager;
 import io.ebean.meta.MetaInfoManager;
@@ -12,22 +13,20 @@ import org.mockito.Mockito;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
+import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * This is an EbeanServer implementation that does nothing.
  *
  * Uses Mockito to return mocks for most methods.
  */
-public class NoopEbeanServer implements EbeanServer {
+public class NoopEbeanServer implements Database {
 
   protected String name = "noop";
 
@@ -490,11 +489,6 @@ public class NoopEbeanServer implements EbeanServer {
   }
 
   @Override
-  public void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException {
-
-  }
-
-  @Override
   public void updateAll(Collection<?> beans) throws OptimisticLockException {
 
   }
@@ -557,5 +551,55 @@ public class NoopEbeanServer implements EbeanServer {
   @Override
   public JsonContext json() {
     return Mockito.mock(JsonContext.class);
+  }
+
+  @Override
+  public void shutdown() {
+
+  }
+
+  @Override
+  public Platform getPlatform() {
+    return null;
+  }
+
+  @Override
+  public SqlQuery sqlQuery(String sql) {
+    return null;
+  }
+
+  @Override
+  public SqlUpdate sqlUpdate(String sql) {
+    return null;
+  }
+
+  @Override
+  public int saveAll(Object... beans) throws OptimisticLockException {
+    return 0;
+  }
+
+  @Override
+  public ScriptRunner script() {
+    return null;
+  }
+
+  @Override
+  public void truncate(String... tables) {
+
+  }
+
+  @Override
+  public void truncate(Class<?>... tables) {
+
+  }
+
+  @Override
+  public DataSource getDataSource() {
+    return null;
+  }
+
+  @Override
+  public DataSource getReadOnlyDataSource() {
+    return null;
   }
 }

@@ -1,24 +1,21 @@
 package io.ebean.delegate;
 
 import io.ebean.CallableSql;
-import io.ebean.EbeanServer;
+import io.ebean.Database;
 import io.ebean.SqlUpdate;
 import io.ebean.Transaction;
 import io.ebean.Update;
 
-/**
- * Created by rob on 15/07/15.
- */
 public class DelegateBulkUpdate implements InterceptBulkUpdate {
 
-  protected EbeanServer delegate;
+  protected Database delegate;
 
   /**
    * Construct with a EbeanServer to delegate and using ImmediateBackgroundExecutor.
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateBulkUpdate(EbeanServer delegate) {
+  public DelegateBulkUpdate(Database delegate) {
     this.delegate = delegate;
   }
 
@@ -56,25 +53,5 @@ public class DelegateBulkUpdate implements InterceptBulkUpdate {
   public int execute(CallableSql callableSql, Transaction t) {
     return delegate.execute(callableSql, t);
   }
-
-//  @Override
-//  public void bulkUpdate(TxScope scope, TxRunnable r) {
-//    delegate.bulkUpdate(scope, r);
-//  }
-//
-//  @Override
-//  public void bulkUpdate(TxRunnable r) {
-//    delegate.bulkUpdate(r);
-//  }
-//
-//  @Override
-//  public <T> T bulkUpdate(TxScope scope, TxCallable<T> c) {
-//    return delegate.bulkUpdate(scope, c);
-//  }
-//
-//  @Override
-//  public <T> T bulkUpdate(TxCallable<T> c) {
-//    return delegate.bulkUpdate(c);
-//  }
 
 }

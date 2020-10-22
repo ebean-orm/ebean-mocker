@@ -1,13 +1,12 @@
 package io.ebean;
 
+import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.backgroundexecutor.ImmediateBackgroundExecutor;
 import io.ebean.bean.BeanCollection;
-import io.ebean.bean.CallStack;
-import io.ebean.bean.EntityBeanIntercept;
-import io.ebean.bean.ObjectGraphNode;
+import io.ebean.bean.CallOrigin;
 import io.ebean.cache.ServerCacheManager;
-import io.ebean.config.ServerConfig;
+import io.ebean.config.DatabaseConfig;
 import io.ebean.config.dbplatform.DatabasePlatform;
 import io.ebean.delegate.DelegateBulkUpdate;
 import io.ebean.delegate.DelegateDelete;
@@ -37,12 +36,13 @@ import io.ebeaninternal.api.SpiEbeanServer;
 import io.ebeaninternal.api.SpiJsonContext;
 import io.ebeaninternal.api.SpiLogManager;
 import io.ebeaninternal.api.SpiQuery;
+import io.ebeaninternal.api.SpiQueryBindCapture;
+import io.ebeaninternal.api.SpiQueryPlan;
 import io.ebeaninternal.api.SpiSqlQuery;
 import io.ebeaninternal.api.SpiSqlUpdate;
 import io.ebeaninternal.api.SpiTransaction;
 import io.ebeaninternal.api.SpiTransactionManager;
 import io.ebeaninternal.api.TransactionEventTable;
-import io.ebeaninternal.dbmigration.ddlgeneration.DdlHandler;
 import io.ebeaninternal.server.core.SpiResultSet;
 import io.ebeaninternal.server.core.timezone.DataTimeZone;
 import io.ebeaninternal.server.deploy.BeanDescriptor;
@@ -51,8 +51,10 @@ import io.ebeaninternal.server.transaction.RemoteTransactionEvent;
 
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
+import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.time.Clock;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +63,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 /**
  * Wraps an underlying EbeanServer.
@@ -101,7 +104,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
    * <p/>
    * This will often be a fully functional EbeanSever that uses H2.
    */
-  protected EbeanServer delegate;
+  protected Database delegate;
 
   /**
    * Expect ImmediateBackgroundExecutor to be a good default. Can use IgnoreBackgroundExecutor or the delegates one.
@@ -167,7 +170,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
    * <p>
    * This delegate will be used on all method calls that are not overwritten.
    */
-  public DelegateEbeanServer withDelegate(EbeanServer delegate) {
+  public DelegateEbeanServer withDelegate(Database delegate) {
     this.delegate = delegate;
     this.delegateQuery = new DelegateQuery(delegate, this);
     this.save = new DelegateSave(delegate);
@@ -229,7 +232,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
    * <p/>
    * Return true if the underling ebeanServer was set.
    */
-  public boolean withDelegateIfRequired(EbeanServer delegate) {
+  public boolean withDelegateIfRequired(Database delegate) {
     if (this.delegate == null) {
       withDelegate(delegate);
       return true;
@@ -278,6 +281,66 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public DocumentStore docStore() {
     methodCalls.add(MethodCall.of("docStore"));
     return delegate.docStore();
+  }
+
+  @Override
+  public Platform getPlatform() {
+    methodCalls.add(MethodCall.of("getPlatform"));
+    return delegate.getPlatform();
+  }
+
+  @Override
+  public ScriptRunner script() {
+    methodCalls.add(MethodCall.of("script"));
+    return delegate.script();
+  }
+
+  @Override
+  public DataSource getDataSource() {
+    methodCalls.add(MethodCall.of("getDataSource"));
+    return delegate.getDataSource();
+  }
+
+  @Override
+  public DataSource getReadOnlyDataSource() {
+    methodCalls.add(MethodCall.of("getReadOnlyDataSource"));
+    return delegate.getReadOnlyDataSource();
+  }
+
+  @Override
+  public boolean isDisableL2Cache() {
+    methodCalls.add(MethodCall.of("isDisableL2Cache"));
+    return spiDelegate().isDisableL2Cache();
+  }
+
+  @Override
+  public void clearServerTransaction() {
+    methodCalls.add(MethodCall.of("clearServerTransaction"));
+    spiDelegate().clearServerTransaction();
+  }
+
+  @Override
+  public SpiTransaction createReadOnlyTransaction(Object tenantId) {
+    methodCalls.add(MethodCall.of("createReadOnlyTransaction"));
+    return spiDelegate().createReadOnlyTransaction(tenantId);
+  }
+
+  @Override
+  public SpiQueryBindCapture createQueryBindCapture(SpiQueryPlan queryPlan) {
+    methodCalls.add(MethodCall.of("createQueryBindCapture"));
+    return spiDelegate().createQueryBindCapture(queryPlan);
+  }
+
+  @Override
+  public void truncate(String... tables) {
+    methodCalls.add(MethodCall.of("truncate"));
+    delegate.truncate(tables);
+  }
+
+  @Override
+  public void truncate(Class<?>... tables) {
+    methodCalls.add(MethodCall.of("truncate"));
+    delegate.truncate(tables);
   }
 
   /**
@@ -382,7 +445,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     delegate.markAsDirty(bean);
   }
 
-
   // -- create updates ------------------------
 
   @Override
@@ -395,6 +457,13 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public SqlUpdate createSqlUpdate(String sql) {
     methodCalls.add(MethodCall.of("createSqlUpdate").with("sql", sql));
     return delegate.createSqlUpdate(sql);
+  }
+
+
+  @Override
+  public SqlUpdate sqlUpdate(String sql) {
+    methodCalls.add(MethodCall.of("sqlUpdate").with("sql", sql));
+    return delegate.sqlUpdate(sql);
   }
 
   @Override
@@ -552,6 +621,12 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public SqlQuery createSqlQuery(String sql) {
     methodCalls.add(MethodCall.of("createSqlQuery").with("sql", sql));
+    return delegateQuery.createSqlQuery(sql);
+  }
+
+  @Override
+  public SqlQuery sqlQuery(String sql) {
+    methodCalls.add(MethodCall.of("sqlQuery").with("sql", sql));
     return delegateQuery.createSqlQuery(sql);
   }
 
@@ -720,6 +795,24 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     findSqlQuery.findEachWhile(sqlQuery, consumer, transaction);
   }
 
+  @Override
+  public <T> boolean exists(Query<?> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("exists").with("query", query, "transaction", transaction));
+    return find.exists(query, transaction);
+  }
+
+  @Override
+  public <T> Stream<T> findStream(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findStream").with("query", query, "transaction", transaction));
+    return find.findStream(query, transaction);
+  }
+
+  @Override
+  public <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findLargeStream").with("query", query, "transaction", transaction));
+    return find.findLargeStream(query, transaction);
+  }
+
   // -- save ------------------------
 
   @Override
@@ -777,12 +870,18 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
+  public int saveAll(Object... beans) throws OptimisticLockException {
+    methodCalls.add(MethodCall.of(SAVE_ALL).with("beans", beans));
+    capturedBeans.addSavedAll(Arrays.asList(beans));
+    return !persistSaves ? 0 : save.saveAll(Arrays.asList(beans), null);
+  }
+
+  @Override
   public int saveAll(Collection<?> beans) throws OptimisticLockException {
     methodCalls.add(MethodCall.of(SAVE_ALL).with("beans", beans));
     capturedBeans.addSavedAll(beans);
     return !persistSaves ? 0 : save.saveAll(beans, null);
   }
-
 
   @Override
   public void save(Object bean, Transaction transaction) throws OptimisticLockException {
@@ -833,14 +932,14 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     }
   }
 
-  @Override
-  public void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException {
-    methodCalls.add(MethodCall.of(UPDATE).with("bean", bean, "transaction", transaction, "deleteMissingChildren", deleteMissingChildren));
-    capturedBeans.addUpdated(bean);
-    if (persistUpdates) {
-      save.update(bean, transaction, deleteMissingChildren);
-    }
-  }
+//  @Override
+//  public void update(Object bean, Transaction transaction, boolean deleteMissingChildren) throws OptimisticLockException {
+//    methodCalls.add(MethodCall.of(UPDATE).with("bean", bean, "transaction", transaction, "deleteMissingChildren", deleteMissingChildren));
+//    capturedBeans.addUpdated(bean);
+//    if (persistUpdates) {
+//      save.update(bean, transaction, deleteMissingChildren);
+//    }
+//  }
 
   @Override
   public void updateAll(Collection<?> beans) throws OptimisticLockException {
@@ -1099,6 +1198,11 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
 
   // -- bulkUpdate bulkUpdates ------------------------
 
+  @Override
+  public int executeNow(SpiSqlUpdate sqlUpdate) {
+    methodCalls.add(MethodCall.of("bulkUpdate").with("executeNow", sqlUpdate));
+    return !persistBulkUpdates ? 0 : bulkUpdate.execute(sqlUpdate);
+  }
 
   @Override
   public int execute(SqlUpdate sqlUpdate) {
@@ -1203,13 +1307,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public void shutdownManaged() {
-    spiDelegate().shutdownManaged();
-  }
-
-  @Override
-  public boolean isCollectQueryOrigins() {
-    return spiDelegate().isCollectQueryOrigins();
+  public void shutdown() {
+    spiDelegate().shutdown();
   }
 
   @Override
@@ -1223,7 +1322,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public ServerConfig getServerConfig() {
+  public DatabaseConfig getServerConfig() {
     return spiDelegate().getServerConfig();
   }
 
@@ -1233,8 +1332,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public CallStack createCallStack() {
-    return spiDelegate().createCallStack();
+  public CallOrigin createCallOrigin() {
+    return spiDelegate().createCallOrigin();
   }
 
   @Override
@@ -1293,11 +1392,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public SpiTransaction createQueryTransaction(Object tenantId) {
-    return spiDelegate().createQueryTransaction(tenantId);
-  }
-
-  @Override
   public void remoteTransactionEvent(RemoteTransactionEvent event) {
     spiDelegate().remoteTransactionEvent(event);
   }
@@ -1338,11 +1432,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public void collectQueryStats(ObjectGraphNode objectGraphNode, long loadedBeanCount, long timeMicros) {
-    spiDelegate().collectQueryStats(objectGraphNode, loadedBeanCount, timeMicros);
-  }
-
-  @Override
   public ReadAuditLogger getReadAuditLogger() {
     return spiDelegate().getReadAuditLogger();
   }
@@ -1360,11 +1449,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public void slowQueryCheck(long executionTimeMicros, int rowCount, SpiQuery<?> query) {
     spiDelegate().slowQueryCheck(executionTimeMicros, rowCount, query);
-  }
-
-  @Override
-  public DdlHandler createDdlHandler() {
-    return spiDelegate().createDdlHandler();
   }
 
   @Override
@@ -1432,8 +1516,4 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     spiDelegate().loadMany(collection, onlyIds);
   }
 
-  @Override
-  public void loadBean(EntityBeanIntercept ebi) {
-    spiDelegate().loadBean(ebi);
-  }
 }
