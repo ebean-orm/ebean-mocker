@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MockiEbean_Delegate_persistingTest extends BaseTest {
 
   @Test
-  public void save_withPersistingTrue() throws Exception {
+  public void save_withPersistingTrue() {
 
     final Customer foo = new Customer("foo");
     final Customer bar = new Customer("bar");

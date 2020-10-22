@@ -17,21 +17,17 @@ public class MockiEbean_Delegate_whenFind_byIdTest extends BaseTest {
   final Customer foo = new Customer("foo");
 
   @Test
-  public void byId() throws Exception {
+  public void byId() {
 
     DelegateEbeanServer mock = new DelegateEbeanServer();
 
     mock.whenFind().byId(Customer.class).thenReturn(foo);
 
-    MockiEbean.runWithMock(mock, new Runnable() {
+    MockiEbean.runWithMock(mock, () -> {
 
-      @Override
-      public void run() {
-
-        // Note: id value does not need to match here
-        Customer found = Customer.find.byId(123L);
-        assertThat(found).isSameAs(foo);
-      }
+      // Note: id value does not need to match here
+      Customer found = Customer.find.byId(123L);
+      assertThat(found).isSameAs(foo);
     });
   }
 

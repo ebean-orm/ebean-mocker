@@ -1,5 +1,6 @@
 package io.ebean.mocker;
 
+import io.ebean.DB;
 import io.ebean.Ebean;
 import io.ebean.MockiEbean;
 import org.example.domain.Customer;
@@ -11,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MockiEbean_Delegate_saveCaptureTest extends BaseTest {
 
   @Test
-  public void save_capture() throws Exception {
+  public void save_capture() {
 
     final Customer foo = new Customer("foo");
     final Customer bar = new Customer("bar");
@@ -26,21 +27,17 @@ public class MockiEbean_Delegate_saveCaptureTest extends BaseTest {
     DelegateEbeanServer mock = new DelegateEbeanServer();
     //mock.withPersisting(true);
 
-    MockiEbean.runWithMock(mock, new Runnable() {
+    MockiEbean.runWithMock(mock, () -> {
 
-      @Override
-      public void run() {
+      // these are actually not saved to underlying db
+      // but instead just captured in 'savedBeans'
+      // save() -> capturedBeans.save
+      foo.save();
+      bar.save();
+      baz.save();
 
-        // these are actually not saved to underlying db
-        // but instead just captured in 'savedBeans'
-        // save() -> capturedBeans.save
-        foo.save();
-        bar.save();
-        baz.save();
-
-        Ebean.save(buz);
-        Ebean.getDefaultServer().save(boz);
-      }
+      DB.save(buz);
+      DB.getDefault().save(boz);
     });
 
     assertThat(mock.capturedBeans.save).contains(foo, bar, baz, buz, boz);
@@ -48,7 +45,7 @@ public class MockiEbean_Delegate_saveCaptureTest extends BaseTest {
   }
 
   @Test
-  public void insert_capture() throws Exception {
+  public void insert_capture() {
 
     final Customer foo = new Customer("foo");
     final Customer bar = new Customer("bar");
@@ -60,18 +57,14 @@ public class MockiEbean_Delegate_saveCaptureTest extends BaseTest {
 
     DelegateEbeanServer mock = new DelegateEbeanServer();
 
-    MockiEbean.runWithMock(mock, new Runnable() {
+    MockiEbean.runWithMock(mock, () -> {
 
-      @Override
-      public void run() {
+      // insert() -> capturedBeans.insert
+      foo.insert();
+      bar.insert();
 
-        // insert() -> capturedBeans.insert
-        foo.insert();
-        bar.insert();
-
-        // save() -> capturedBeans.save
-        baz.save();
-      }
+      // save() -> capturedBeans.save
+      baz.save();
     });
 
     assertThat(mock.capturedBeans.insert).contains(foo, bar);

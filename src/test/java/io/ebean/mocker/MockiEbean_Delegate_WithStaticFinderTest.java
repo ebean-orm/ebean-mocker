@@ -14,22 +14,16 @@ public class MockiEbean_Delegate_WithStaticFinderTest extends BaseTest {
   final Customer baz = new Customer(99L, "baz");
 
   @Test
-  public void test() throws Exception {
-
+  public void test() {
 
     DelegateEbeanServer mock = new DelegateEbeanServer();
 
     mock.withFinder(Customer.class).as(new TDCustomerFinder());
 
-    MockiEbean.runWithMock(mock, new Runnable() {
+    MockiEbean.runWithMock(mock, () -> {
 
-      @Override
-      public void run() {
-
-        Customer found = Customer.find.byUniqueName("foo");
-
-        assertThat(found).isSameAs(foo);
-      }
+      Customer found = Customer.find.byUniqueName("foo");
+      assertThat(found).isSameAs(foo);
     });
 
   }

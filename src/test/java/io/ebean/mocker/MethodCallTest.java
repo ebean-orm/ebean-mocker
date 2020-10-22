@@ -1,6 +1,5 @@
 package io.ebean.mocker;
 
-import io.ebean.mocker.MethodCall;
 import org.junit.Test;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MethodCallTest {
 
   @Test
-  public void testAddArgs() throws Exception {
+  public void testAddArgs() {
 
     MethodCall methodCall = MethodCall.of("test");
 
@@ -19,7 +18,7 @@ public class MethodCallTest {
   }
 
   @Test
-  public void testAddArgs1() throws Exception {
+  public void testAddArgs1() {
 
 
     MethodCall methodCall = MethodCall.of("test1").with("name", "Jim");
@@ -30,7 +29,7 @@ public class MethodCallTest {
   }
 
   @Test
-  public void testAddArgs2() throws Exception {
+  public void testAddArgs2() {
 
     MethodCall methodCall = MethodCall.of("test1").with("name", "Jim", "age", 43L);
 
@@ -42,7 +41,7 @@ public class MethodCallTest {
   }
 
   @Test
-  public void testAddArgs3() throws Exception {
+  public void testAddArgs3() {
 
     MethodCall methodCall = MethodCall.of("test1").with("name", "Jim", "age", 43L, "status", CascadeType.ALL);
 

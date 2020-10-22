@@ -1,6 +1,5 @@
 package io.ebean.mocker;
 
-import io.ebean.mocker.WithStaticFinder;
 import org.example.domain.MyBean;
 import org.example.domain.MyBeanFinder;
 import org.junit.Test;
@@ -9,8 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class WithStaticFinder_custom_fieldNameTest {
-
-
 
   @Test
   public void testCustomStaticFinderFieldName() {

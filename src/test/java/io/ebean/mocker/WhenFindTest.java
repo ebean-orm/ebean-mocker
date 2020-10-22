@@ -1,7 +1,5 @@
 package io.ebean.mocker;
 
-import io.ebean.mocker.WhenFind;
-import io.ebean.mocker.WhenBeanReturn;
 import org.example.domain.Customer;
 import org.example.domain.MyBean;
 import org.junit.Test;
@@ -17,7 +15,7 @@ public class WhenFindTest {
   Customer bar = new Customer(78L, "bar");
 
   @Test
-  public void testById_idValueSpecified() throws Exception {
+  public void testById_idValueSpecified() {
 
     WhenFind whenFind = new WhenFind();
     whenFind.byId(Customer.class, 42L).thenReturn(foo);
@@ -37,7 +35,7 @@ public class WhenFindTest {
   }
 
   @Test
-  public void testById_noIdValue() throws Exception {
+  public void testById_noIdValue() {
 
     WhenFind whenFind = new WhenFind();
     whenFind.byId(Customer.class).thenReturn(foo);
@@ -58,7 +56,7 @@ public class WhenFindTest {
 
 
   @Test
-  public void testById_matchMostSpecific() throws Exception {
+  public void testById_matchMostSpecific() {
 
     WhenFind whenFind = new WhenFind();
     whenFind.byId(Customer.class).thenReturn(foo);//general

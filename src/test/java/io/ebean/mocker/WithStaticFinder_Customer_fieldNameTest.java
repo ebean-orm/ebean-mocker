@@ -1,6 +1,5 @@
 package io.ebean.mocker;
 
-import io.ebean.mocker.WithStaticFinder;
 import org.example.domain.Customer;
 import org.example.domain.CustomerFinder;
 import org.junit.Test;
@@ -9,7 +8,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class WithStaticFinder_Customer_fieldNameTest {
-
 
   @Test
   public void testAsUseTestDoubleRestoreOriginal() {
