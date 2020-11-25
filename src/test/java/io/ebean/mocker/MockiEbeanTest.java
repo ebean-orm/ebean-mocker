@@ -96,7 +96,7 @@ public class MockiEbeanTest {
   /**
    * Test double EbeanServer.
    */
-  class TDMockServer extends TDEbeanServer {
+  class TDMockServer extends TDDatabase {
 
     @Override
     public Object getBeanId(Object bean) {

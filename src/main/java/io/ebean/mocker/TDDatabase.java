@@ -43,7 +43,7 @@ import java.util.concurrent.Callable;
 /**
  * Test double for Database.
  */
-public class TDEbeanServer implements Database {
+public class TDDatabase implements Database {
 
   public List<Object> deletedBeans = new ArrayList<>();
 
