@@ -33,6 +33,8 @@ import io.ebean.ValuePair;
 import io.ebean.Version;
 import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
+import io.ebean.bean.BeanLoader;
+import io.ebean.bean.EntityBeanIntercept;
 import io.ebean.mocker.backgroundexecutor.ImmediateBackgroundExecutor;
 import io.ebean.mocker.delegate.DelegateBulkUpdate;
 import io.ebean.mocker.delegate.DelegateFind;
@@ -56,6 +58,7 @@ import io.ebean.event.readaudit.ReadAuditLogger;
 import io.ebean.event.readaudit.ReadAuditPrepare;
 import io.ebean.meta.MetaInfoManager;
 import io.ebean.meta.MetricVisitor;
+import io.ebean.plugin.BeanType;
 import io.ebean.plugin.Property;
 import io.ebean.plugin.SpiServer;
 import io.ebean.text.csv.CsvReader;
@@ -297,15 +300,15 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public SpiServer getPluginApi() {
-    methodCalls.add(MethodCall.of("getPluginApi"));
-    return delegate.getPluginApi();
+  public SpiServer pluginApi() {
+    methodCalls.add(MethodCall.of("pluginApi"));
+    return delegate.pluginApi();
   }
 
   @Override
-  public AutoTune getAutoTune() {
-    methodCalls.add(MethodCall.of("getAutoTune"));
-    return delegate.getAutoTune();
+  public AutoTune autoTune() {
+    methodCalls.add(MethodCall.of("autoTune"));
+    return delegate.autoTune();
   }
 
   @Override
@@ -315,9 +318,9 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public Platform getPlatform() {
-    methodCalls.add(MethodCall.of("getPlatform"));
-    return delegate.getPlatform();
+  public Platform platform() {
+    methodCalls.add(MethodCall.of("platform"));
+    return delegate.platform();
   }
 
   @Override
@@ -327,15 +330,15 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public DataSource getDataSource() {
-    methodCalls.add(MethodCall.of("getDataSource"));
-    return delegate.getDataSource();
+  public DataSource dataSource() {
+    methodCalls.add(MethodCall.of("dataSource"));
+    return delegate.dataSource();
   }
 
   @Override
-  public DataSource getReadOnlyDataSource() {
-    methodCalls.add(MethodCall.of("getReadOnlyDataSource"));
-    return delegate.getReadOnlyDataSource();
+  public DataSource readOnlyDataSource() {
+    methodCalls.add(MethodCall.of("readOnlyDataSource"));
+    return delegate.readOnlyDataSource();
   }
 
   @Override
@@ -381,15 +384,15 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
    * Defaults to use ImmediateBackgroundExecutor, use IgnoreBackgroundExecutor if desired.
    */
   @Override
-  public BackgroundExecutor getBackgroundExecutor() {
-    methodCalls.add(MethodCall.of("getBackgroundExecutor"));
+  public BackgroundExecutor backgroundExecutor() {
+    methodCalls.add(MethodCall.of("backgroundExecutor"));
     return backgroundExecutor;
   }
 
   @Override
-  public ServerCacheManager getServerCacheManager() {
-    methodCalls.add(MethodCall.of("getServerCacheManager"));
-    return delegate.getServerCacheManager();
+  public ServerCacheManager cacheManager() {
+    methodCalls.add(MethodCall.of("cacheManager"));
+    return delegate.cacheManager();
   }
 
   @Override
@@ -405,39 +408,39 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public String getName() {
-    methodCalls.add(MethodCall.of("getName"));
-    return delegate.getName();
+  public String name() {
+    methodCalls.add(MethodCall.of("name"));
+    return delegate.name();
   }
 
   @Override
-  public ExpressionFactory getExpressionFactory() {
-    methodCalls.add(MethodCall.of("getExpressionFactory"));
-    return delegate.getExpressionFactory();
+  public ExpressionFactory expressionFactory() {
+    methodCalls.add(MethodCall.of("expressionFactory"));
+    return delegate.expressionFactory();
   }
 
   @Override
-  public MetaInfoManager getMetaInfoManager() {
-    methodCalls.add(MethodCall.of("getMetaInfoManager"));
-    return delegate.getMetaInfoManager();
+  public MetaInfoManager metaInfo() {
+    methodCalls.add(MethodCall.of("metaInfo"));
+    return delegate.metaInfo();
   }
 
   @Override
-  public BeanState getBeanState(Object bean) {
-    methodCalls.add(MethodCall.of("getBeanState").with("bean", bean));
-    return delegate.getBeanState(bean);
+  public BeanState beanState(Object bean) {
+    methodCalls.add(MethodCall.of("beanState").with("bean", bean));
+    return delegate.beanState(bean);
   }
 
   @Override
-  public Object getBeanId(Object bean) {
-    methodCalls.add(MethodCall.of("getBeanId").with("bean", bean));
-    return delegate.getBeanId(bean);
+  public Object beanId(Object bean) {
+    methodCalls.add(MethodCall.of("beanId").with("bean", bean));
+    return delegate.beanId(bean);
   }
 
   @Override
-  public Object setBeanId(Object bean, Object id) {
-    methodCalls.add(MethodCall.of("setBeanId").with("bean", bean).with("id", id));
-    return delegate.setBeanId(bean, id);
+  public Object beanId(Object bean, Object id) {
+    methodCalls.add(MethodCall.of("beanId").with("bean", bean).with("id", id));
+    return delegate.beanId(bean, id);
   }
 
   @Override
@@ -483,13 +486,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     methodCalls.add(MethodCall.of("createUpdate").with("beanType", beanType, "ormUpdate", ormUpdate));
     return delegate.createUpdate(beanType, ormUpdate);
   }
-
-  @Override
-  public SqlUpdate createSqlUpdate(String sql) {
-    methodCalls.add(MethodCall.of("createSqlUpdate").with("sql", sql));
-    return delegate.createSqlUpdate(sql);
-  }
-
 
   @Override
   public SqlUpdate sqlUpdate(String sql) {
@@ -598,9 +594,9 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   // -- delegateQuery ------------------------
 
   @Override
-  public <T> T getReference(Class<T> beanType, Object id) {
-    methodCalls.add(MethodCall.of("getReference").with("beanType", beanType, "id", id));
-    return delegateQuery.getReference(beanType, id);
+  public <T> T reference(Class<T> beanType, Object id) {
+    methodCalls.add(MethodCall.of("reference").with("beanType", beanType, "id", id));
+    return delegateQuery.reference(beanType, id);
   }
 
   @Override
@@ -628,6 +624,11 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
+  public void lock(Object o) {
+
+  }
+
+  @Override
   public <T> DtoQuery<T> findDto(Class<T> dtoType, String sql) {
     return delegateQuery.findDto(dtoType, sql);
   }
@@ -647,12 +648,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public <T> Query<T> findNative(Class<T> beanType, String nativeSql) {
     methodCalls.add(MethodCall.of("findNative").with("beanType", beanType).with("nativeSql", nativeSql));
     return delegateQuery.findNative(beanType, nativeSql);
-  }
-
-  @Override
-  public SqlQuery createSqlQuery(String sql) {
-    methodCalls.add(MethodCall.of("createSqlQuery").with("sql", sql));
-    return delegateQuery.createSqlQuery(sql);
   }
 
   @Override
@@ -747,6 +742,12 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
+  public <T> void findEach(Query<T> query, int i, Consumer<List<T>> consumer, Transaction transaction) {
+    methodCalls.add(MethodCall.of("findEach").with("query", query, "i", i, "consumer", consumer, "transaction", transaction));
+    find.findEach(query, i, consumer, transaction);
+  }
+
+  @Override
   public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
     methodCalls.add(MethodCall.of("findEachWhile").with("query", query, "consumer", consumer, "transaction", transaction));
     find.findEachWhile(query, consumer, transaction);
@@ -827,7 +828,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public <T> boolean exists(Query<?> query, Transaction transaction) {
+  public <T> boolean exists(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("exists").with("query", query, "transaction", transaction));
     return find.exists(query, transaction);
   }
@@ -836,12 +837,6 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public <T> Stream<T> findStream(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findStream").with("query", query, "transaction", transaction));
     return find.findStream(query, transaction);
-  }
-
-  @Override
-  public <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction) {
-    methodCalls.add(MethodCall.of("findLargeStream").with("query", query, "transaction", transaction));
-    return find.findLargeStream(query, transaction);
   }
 
   // -- save ------------------------
@@ -1294,6 +1289,11 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
+  public <T> void findSingleAttributeEach(SpiSqlQuery spiSqlQuery, Class<T> aClass, Consumer<T> consumer) {
+    spiDelegate().findSingleAttributeEach(spiSqlQuery, aClass, consumer);
+  }
+
+  @Override
   public <T> T findOneMapper(SpiSqlQuery query, RowMapper<T> mapper) {
     return spiDelegate().findOneMapper(query, mapper);
   }
@@ -1306,6 +1306,16 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public void findEachRow(SpiSqlQuery query, RowConsumer consumer) {
     spiDelegate().findEachRow(query, consumer);
+  }
+
+  @Override
+  public <T> QueryIterator<T> findDtoIterate(SpiDtoQuery<T> spiDtoQuery) {
+    return spiDelegate().findDtoIterate(spiDtoQuery);
+  }
+
+  @Override
+  public <T> Stream<T> findDtoStream(SpiDtoQuery<T> spiDtoQuery) {
+    return spiDelegate().findDtoStream(spiDtoQuery);
   }
 
   @Override
@@ -1353,13 +1363,53 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public DatabaseConfig getServerConfig() {
-    return spiDelegate().getServerConfig();
+  public DatabaseConfig config() {
+    return spiDelegate().config();
   }
 
   @Override
-  public DatabasePlatform getDatabasePlatform() {
-    return spiDelegate().getDatabasePlatform();
+  public DatabasePlatform databasePlatform() {
+    return spiDelegate().databasePlatform();
+  }
+
+  @Override
+  public List<? extends BeanType<?>> beanTypes() {
+    return spiDelegate().beanTypes();
+  }
+
+  @Override
+  public <T> BeanType<T> beanType(Class<T> aClass) {
+    return spiDelegate().beanType(aClass);
+  }
+
+  @Override
+  public List<? extends BeanType<?>> beanTypes(String s) {
+    return spiDelegate().beanTypes(s);
+  }
+
+  @Override
+  public BeanType<?> beanTypeForQueueId(String s) {
+    return spiDelegate().beanTypeForQueueId(s);
+  }
+
+  @Override
+  public BeanLoader beanLoader() {
+    return spiDelegate().beanLoader();
+  }
+
+  @Override
+  public void loadBeanRef(EntityBeanIntercept entityBeanIntercept) {
+    spiDelegate().loadBeanRef(entityBeanIntercept);
+  }
+
+  @Override
+  public void loadBeanL2(EntityBeanIntercept entityBeanIntercept) {
+    spiDelegate().loadBeanL2(entityBeanIntercept);
+  }
+
+  @Override
+  public void loadBean(EntityBeanIntercept entityBeanIntercept) {
+
   }
 
   @Override
@@ -1368,8 +1418,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public PersistenceContextScope getPersistenceContextScope(SpiQuery<?> query) {
-    return spiDelegate().getPersistenceContextScope(query);
+  public PersistenceContextScope persistenceContextScope(SpiQuery<?> query) {
+    return spiDelegate().persistenceContextScope(query);
   }
 
   @Override
@@ -1378,33 +1428,33 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public SpiTransactionManager getTransactionManager() {
-    return spiDelegate().getTransactionManager();
+  public SpiTransactionManager transactionManager() {
+    return spiDelegate().transactionManager();
   }
 
   @Override
-  public List<BeanDescriptor<?>> getBeanDescriptors() {
-    return spiDelegate().getBeanDescriptors();
+  public List<BeanDescriptor<?>> descriptors() {
+    return spiDelegate().descriptors();
   }
 
   @Override
-  public <T> BeanDescriptor<T> getBeanDescriptor(Class<T> type) {
-    return spiDelegate().getBeanDescriptor(type);
+  public <T> BeanDescriptor<T> descriptor(Class<T> type) {
+    return spiDelegate().descriptor(type);
   }
 
   @Override
-  public BeanDescriptor<?> getBeanDescriptorById(String className) {
-    return spiDelegate().getBeanDescriptorById(className);
+  public BeanDescriptor<?> descriptorById(String className) {
+    return spiDelegate().descriptorById(className);
   }
 
   @Override
-  public BeanDescriptor<?> getBeanDescriptorByQueueId(String queueId) {
-    return spiDelegate().getBeanDescriptorByQueueId(queueId);
+  public BeanDescriptor<?> descriptorByQueueId(String queueId) {
+    return spiDelegate().descriptorByQueueId(queueId);
   }
 
   @Override
-  public List<BeanDescriptor<?>> getBeanDescriptors(String tableName) {
-    return spiDelegate().getBeanDescriptors(tableName);
+  public List<BeanDescriptor<?>> descriptors(String tableName) {
+    return spiDelegate().descriptors(tableName);
   }
 
   @Override
@@ -1428,8 +1478,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public <T> CQuery<T> compileQuery(Query<T> query, Transaction t) {
-    return spiDelegate().compileQuery(query, t);
+  public <T> CQuery<T> compileQuery(SpiQuery.Type type, Query<T> query, Transaction transaction) {
+    return spiDelegate().compileQuery(type, query, transaction);
   }
 
   @Override
@@ -1453,8 +1503,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public int getLazyLoadBatchSize() {
-    return spiDelegate().getLazyLoadBatchSize();
+  public int lazyLoadBatchSize() {
+    return spiDelegate().lazyLoadBatchSize();
   }
 
   @Override
@@ -1463,18 +1513,18 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public ReadAuditLogger getReadAuditLogger() {
-    return spiDelegate().getReadAuditLogger();
+  public ReadAuditLogger readAuditLogger() {
+    return spiDelegate().readAuditLogger();
   }
 
   @Override
-  public ReadAuditPrepare getReadAuditPrepare() {
-    return spiDelegate().getReadAuditPrepare();
+  public ReadAuditPrepare readAuditPrepare() {
+    return spiDelegate().readAuditPrepare();
   }
 
   @Override
-  public DataTimeZone getDataTimeZone() {
-    return spiDelegate().getDataTimeZone();
+  public DataTimeZone dataTimeZone() {
+    return spiDelegate().dataTimeZone();
   }
 
   @Override
@@ -1505,6 +1555,11 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> void findDtoEach(SpiDtoQuery<T> query, Consumer<T> consumer) {
     spiDelegate().findDtoEach(query, consumer);
+  }
+
+  @Override
+  public <T> void findDtoEach(SpiDtoQuery<T> spiDtoQuery, int i, Consumer<List<T>> consumer) {
+    spiDelegate().findDtoEach(spiDtoQuery, i, consumer);
   }
 
   @Override

@@ -65,42 +65,40 @@ public class TDDatabase implements Database {
   }
 
   @Override
-  public SpiServer getPluginApi() {
+  public SpiServer pluginApi() {
     return null;
   }
 
   @Override
-  public AutoTune getAutoTune() {
+  public AutoTune autoTune() { return null; }
+
+  @Override
+  public String name() {
     return null;
   }
 
   @Override
-  public String getName() {
+  public ExpressionFactory expressionFactory() {
     return null;
   }
 
   @Override
-  public ExpressionFactory getExpressionFactory() {
+  public MetaInfoManager metaInfo() {
     return null;
   }
 
   @Override
-  public MetaInfoManager getMetaInfoManager() {
+  public BeanState beanState(Object bean) {
     return null;
   }
 
   @Override
-  public BeanState getBeanState(Object bean) {
+  public Object beanId(Object bean) {
     return null;
   }
 
   @Override
-  public Object getBeanId(Object bean) {
-    return null;
-  }
-
-  @Override
-  public Object setBeanId(Object bean, Object id) {
+  public Object beanId(Object bean, Object id) {
     return id;
   }
 
@@ -161,16 +159,6 @@ public class TDDatabase implements Database {
 
   @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
-    return null;
-  }
-
-  @Override
-  public SqlQuery createSqlQuery(String sql) {
-    return null;
-  }
-
-  @Override
-  public SqlUpdate createSqlUpdate(String sql) {
     return null;
   }
 
@@ -250,7 +238,7 @@ public class TDDatabase implements Database {
   }
 
   @Override
-  public <T> T getReference(Class<T> beanType, Object id) {
+  public <T> T reference(Class<T> beanType, Object id) {
     return null;
   }
 
@@ -258,6 +246,11 @@ public class TDDatabase implements Database {
   @Override
   public <T> Set<String> validateQuery(Query<T> query) {
     return null;
+  }
+
+  @Override
+  public void lock(Object o) {
+
   }
 
   @Override
@@ -550,12 +543,12 @@ public class TDDatabase implements Database {
   }
 
   @Override
-  public ServerCacheManager getServerCacheManager() {
+  public ServerCacheManager cacheManager() {
     return null;
   }
 
   @Override
-  public BackgroundExecutor getBackgroundExecutor() {
+  public BackgroundExecutor backgroundExecutor() {
     return null;
   }
 
@@ -570,7 +563,7 @@ public class TDDatabase implements Database {
   }
 
   @Override
-  public Platform getPlatform() {
+  public Platform platform() {
     return null;
   }
 
@@ -605,12 +598,12 @@ public class TDDatabase implements Database {
   }
 
   @Override
-  public DataSource getDataSource() {
+  public DataSource dataSource() {
     return null;
   }
 
   @Override
-  public DataSource getReadOnlyDataSource() {
+  public DataSource readOnlyDataSource() {
     return null;
   }
 }

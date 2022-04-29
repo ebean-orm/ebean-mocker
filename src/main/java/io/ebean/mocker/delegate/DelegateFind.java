@@ -132,11 +132,6 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
-  public <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction) {
-    return delegate.extended().findLargeStream(query, transaction);
-  }
-
-  @Override
   public boolean exists(Query<?> query, Transaction transaction) {
     return delegate.extended().exists(query, transaction);
   }
