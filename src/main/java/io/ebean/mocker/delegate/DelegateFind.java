@@ -82,6 +82,11 @@ public class DelegateFind implements InterceptFind {
   }
 
   @Override
+  public <T> void findEach(Query<T> query, int i, Consumer<List<T>> consumer, Transaction transaction) {
+    delegate.extended().findEach(query, i, consumer, transaction);
+  }
+
+  @Override
   public <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction) {
     delegate.extended().findEachWhile(query, consumer, transaction);
   }

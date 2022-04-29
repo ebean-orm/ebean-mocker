@@ -51,7 +51,7 @@ public class DelegateQuery {
     return delegate.filter(beanType);
   }
 
-  public SqlQuery createSqlQuery(String sql) {
+  public SqlQuery sqlQuery(String sql) {
     return delegate.sqlQuery(sql);
   }
 

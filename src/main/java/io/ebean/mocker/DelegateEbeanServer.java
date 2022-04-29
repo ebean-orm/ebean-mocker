@@ -653,7 +653,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public SqlQuery sqlQuery(String sql) {
     methodCalls.add(MethodCall.of("sqlQuery").with("sql", sql));
-    return delegateQuery.createSqlQuery(sql);
+    return delegateQuery.sqlQuery(sql);
   }
 
   // -- refresh ------------------------
