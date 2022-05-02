@@ -55,8 +55,8 @@ public class WithStaticFinder<T> {
          * Therefor, running this as a privileged action.
          */
         AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-            modifiersField.setAccessible(true);
-            return null;
+          modifiersField.setAccessible(true);
+          return null;
         });
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
       } catch (NoSuchFieldException e) {

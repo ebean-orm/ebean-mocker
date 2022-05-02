@@ -5,7 +5,6 @@ import java.util.List;
 
 /**
  * Manages the set of WithStaticFinder.
- *
  */
 public class WithStaticFinders {
 

@@ -1,26 +1,6 @@
 package io.ebean.mocker;
 
-import io.ebean.AutoTune;
-import io.ebean.BackgroundExecutor;
-import io.ebean.BeanState;
-import io.ebean.CallableSql;
-import io.ebean.Database;
-import io.ebean.DocumentStore;
-import io.ebean.DtoQuery;
-import io.ebean.ExpressionFactory;
-import io.ebean.ExtendedServer;
-import io.ebean.Filter;
-import io.ebean.MergeOptions;
-import io.ebean.Query;
-import io.ebean.ScriptRunner;
-import io.ebean.SqlQuery;
-import io.ebean.SqlUpdate;
-import io.ebean.Transaction;
-import io.ebean.TransactionCallback;
-import io.ebean.TxScope;
-import io.ebean.Update;
-import io.ebean.UpdateQuery;
-import io.ebean.ValuePair;
+import io.ebean.*;
 import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.cache.ServerCacheManager;
@@ -35,16 +15,12 @@ import org.mockito.Mockito;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 
 /**
  * This is an EbeanServer implementation that does nothing.
- *
+ * <p>
  * Uses Mockito to return mocks for most methods.
  */
 public class NoopEbeanServer implements Database {

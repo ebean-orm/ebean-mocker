@@ -42,13 +42,13 @@ public class WhenFind {
   protected <T> WhenBeanReturn<T> findMatchById(Class<T> beanType, Object id) {
 
     for (WhenBeanReturn<?> byIdReturn : byId) {
-      if (byIdReturn.isMatch(beanType, id)){
+      if (byIdReturn.isMatch(beanType, id)) {
         return (WhenBeanReturn<T>) byIdReturn;
       }
     }
 
     for (WhenBeanReturn<?> byIdReturn : byId) {
-      if (byIdReturn.isMatch(beanType)){
+      if (byIdReturn.isMatch(beanType)) {
         return (WhenBeanReturn<T>) byIdReturn;
       }
     }

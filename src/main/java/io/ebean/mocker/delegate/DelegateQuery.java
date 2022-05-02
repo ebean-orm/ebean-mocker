@@ -1,10 +1,6 @@
 package io.ebean.mocker.delegate;
 
-import io.ebean.Database;
-import io.ebean.DtoQuery;
-import io.ebean.Filter;
-import io.ebean.Query;
-import io.ebean.SqlQuery;
+import io.ebean.*;
 
 import java.util.Set;
 

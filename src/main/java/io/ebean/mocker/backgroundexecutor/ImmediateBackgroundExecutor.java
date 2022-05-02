@@ -16,10 +16,14 @@ import java.util.concurrent.TimeUnit;
 public class ImmediateBackgroundExecutor implements BackgroundExecutor {
 
   @Override
-  public <T> Future<T> submit(Callable<T> callable) { return null; }
+  public <T> Future<T> submit(Callable<T> callable) {
+    return null;
+  }
 
   @Override
-  public Future<?> submit(Runnable runnable) { return null; }
+  public Future<?> submit(Runnable runnable) {
+    return null;
+  }
 
   @Override
   public void execute(Runnable r) {
@@ -27,10 +31,14 @@ public class ImmediateBackgroundExecutor implements BackgroundExecutor {
   }
 
   @Override
-  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable runnable, long l, long l1, TimeUnit timeUnit) { return null; }
+  public ScheduledFuture<?> scheduleWithFixedDelay(Runnable runnable, long l, long l1, TimeUnit timeUnit) {
+    return null;
+  }
 
   @Override
-  public ScheduledFuture<?> scheduleAtFixedRate(Runnable runnable, long l, long l1, TimeUnit timeUnit) { return null; }
+  public ScheduledFuture<?> scheduleAtFixedRate(Runnable runnable, long l, long l1, TimeUnit timeUnit) {
+    return null;
+  }
 
   @Override
   public ScheduledFuture<?> schedule(Runnable r, long delay, TimeUnit unit) {

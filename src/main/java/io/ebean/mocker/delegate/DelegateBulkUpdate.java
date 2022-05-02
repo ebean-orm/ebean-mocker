@@ -1,10 +1,6 @@
 package io.ebean.mocker.delegate;
 
-import io.ebean.CallableSql;
-import io.ebean.Database;
-import io.ebean.SqlUpdate;
-import io.ebean.Transaction;
-import io.ebean.Update;
+import io.ebean.*;
 
 public class DelegateBulkUpdate implements InterceptBulkUpdate {
 

@@ -1,82 +1,27 @@
 package io.ebean.mocker;
 
-import io.ebean.AutoTune;
-import io.ebean.BackgroundExecutor;
-import io.ebean.BeanState;
-import io.ebean.CallableSql;
-import io.ebean.Database;
-import io.ebean.DocumentStore;
-import io.ebean.DtoQuery;
-import io.ebean.ExpressionFactory;
-import io.ebean.ExtendedServer;
-import io.ebean.Filter;
-import io.ebean.FutureIds;
-import io.ebean.FutureList;
-import io.ebean.FutureRowCount;
-import io.ebean.MergeOptions;
-import io.ebean.PagedList;
-import io.ebean.PersistenceContextScope;
-import io.ebean.Query;
-import io.ebean.QueryIterator;
-import io.ebean.RowConsumer;
-import io.ebean.RowMapper;
-import io.ebean.ScriptRunner;
-import io.ebean.SqlQuery;
-import io.ebean.SqlRow;
-import io.ebean.SqlUpdate;
-import io.ebean.Transaction;
-import io.ebean.TransactionCallback;
-import io.ebean.TxScope;
-import io.ebean.Update;
-import io.ebean.UpdateQuery;
-import io.ebean.ValuePair;
-import io.ebean.Version;
+import io.ebean.*;
 import io.ebean.annotation.Platform;
 import io.ebean.annotation.TxIsolation;
-import io.ebean.bean.BeanLoader;
-import io.ebean.bean.EntityBeanIntercept;
-import io.ebean.mocker.backgroundexecutor.ImmediateBackgroundExecutor;
-import io.ebean.mocker.delegate.DelegateBulkUpdate;
-import io.ebean.mocker.delegate.DelegateFind;
-import io.ebean.mocker.delegate.DelegatePublish;
-import io.ebean.mocker.delegate.InterceptBulkUpdate;
-import io.ebean.mocker.delegate.InterceptDelete;
-import io.ebean.mocker.delegate.InterceptPublish;
 import io.ebean.bean.BeanCollection;
+import io.ebean.bean.BeanLoader;
 import io.ebean.bean.CallOrigin;
+import io.ebean.bean.EntityBeanIntercept;
 import io.ebean.cache.ServerCacheManager;
 import io.ebean.config.DatabaseConfig;
 import io.ebean.config.dbplatform.DatabasePlatform;
-import io.ebean.mocker.delegate.DelegateDelete;
-import io.ebean.mocker.delegate.DelegateFindSqlQuery;
-import io.ebean.mocker.delegate.DelegateQuery;
-import io.ebean.mocker.delegate.DelegateSave;
-import io.ebean.mocker.delegate.InterceptFind;
-import io.ebean.mocker.delegate.InterceptFindSqlQuery;
-import io.ebean.mocker.delegate.InterceptSave;
 import io.ebean.event.readaudit.ReadAuditLogger;
 import io.ebean.event.readaudit.ReadAuditPrepare;
 import io.ebean.meta.MetaInfoManager;
 import io.ebean.meta.MetricVisitor;
+import io.ebean.mocker.backgroundexecutor.ImmediateBackgroundExecutor;
+import io.ebean.mocker.delegate.*;
 import io.ebean.plugin.BeanType;
 import io.ebean.plugin.Property;
 import io.ebean.plugin.SpiServer;
 import io.ebean.text.csv.CsvReader;
 import io.ebean.text.json.JsonContext;
-import io.ebeaninternal.api.LoadBeanRequest;
-import io.ebeaninternal.api.LoadManyRequest;
-import io.ebeaninternal.api.SpiDtoQuery;
-import io.ebeaninternal.api.SpiEbeanServer;
-import io.ebeaninternal.api.SpiJsonContext;
-import io.ebeaninternal.api.SpiLogManager;
-import io.ebeaninternal.api.SpiQuery;
-import io.ebeaninternal.api.SpiQueryBindCapture;
-import io.ebeaninternal.api.SpiQueryPlan;
-import io.ebeaninternal.api.SpiSqlQuery;
-import io.ebeaninternal.api.SpiSqlUpdate;
-import io.ebeaninternal.api.SpiTransaction;
-import io.ebeaninternal.api.SpiTransactionManager;
-import io.ebeaninternal.api.TransactionEventTable;
+import io.ebeaninternal.api.*;
 import io.ebeaninternal.server.core.SpiResultSet;
 import io.ebeaninternal.server.core.timezone.DataTimeZone;
 import io.ebeaninternal.server.deploy.BeanDescriptor;
@@ -88,12 +33,7 @@ import javax.persistence.PersistenceException;
 import javax.sql.DataSource;
 import java.lang.reflect.Type;
 import java.time.Clock;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -273,7 +213,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     }
     if (this.delegate instanceof DelegateAwareEbeanServer) {
       // probably using ProxyEbeanServer to capture method calls etc
-      return ((DelegateAwareEbeanServer)this.delegate).withDelegateIfRequired(delegate);
+      return ((DelegateAwareEbeanServer) this.delegate).withDelegateIfRequired(delegate);
     }
     // delegate was not set
     return false;
@@ -379,7 +319,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
 
   /**
    * Return the BackgroundExecutor.
-   *
+   * <p>
    * Typically for testing we either want these to run immediately or not at all.
    * Defaults to use ImmediateBackgroundExecutor, use IgnoreBackgroundExecutor if desired.
    */
@@ -677,7 +617,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
     methodCalls.add(MethodCall.of("find").with("beanType", beanType, "id", id));
     WhenBeanReturn match = whenFind.findMatchById(beanType, id);
     if (match != null) {
-      return (T)match.val();
+      return (T) match.val();
     }
     return find.find(beanType, id, null);
   }
@@ -695,7 +635,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> T findOne(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOne").with("query", query, "transaction", transaction));
-    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>) query).getBeanType());
     if (match != null) {
       return match.val();
     }
@@ -705,7 +645,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   @Override
   public <T> Optional<T> findOneOrEmpty(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findOneOrEmpty").with("query", query, "transaction", transaction));
-    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>)query).getBeanType());
+    WhenBeanReturn<T> match = whenFind.findMatchByUnique(((SpiQuery<T>) query).getBeanType());
     if (match != null) {
       return Optional.ofNullable(match.val());
     }
@@ -719,15 +659,16 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   @Override
-  public <A,T> List<A> findIds(Query<T> query, Transaction transaction) {
+  public <A, T> List<A> findIds(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findIds").with("query", query, "transaction", transaction));
     return find.findIds(query, transaction);
   }
 
   @Override
-  public <A,T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
+  public <A, T> List<A> findSingleAttributeList(Query<T> query, Transaction transaction) {
     methodCalls.add(MethodCall.of("findSingleAttributeList").with("query", query, "transaction", transaction));
-    return find.findSingleAttributeList(query, transaction);  }
+    return find.findSingleAttributeList(query, transaction);
+  }
 
   @Override
   public <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction) {
@@ -1270,8 +1211,8 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   public void externalModification(String tableName, boolean inserted, boolean updated, boolean deleted) {
 
     methodCalls.add(MethodCall.of("externalModification")
-        .with("tableName", tableName)
-        .with("inserted", inserted, "updated", updated, "deleted", deleted));
+      .with("tableName", tableName)
+      .with("inserted", inserted, "updated", updated, "deleted", deleted));
 
     if (persistBulkUpdates) {
       bulkUpdate.externalModification(tableName, inserted, updated, deleted);
@@ -1334,7 +1275,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
   }
 
   private SpiEbeanServer spiDelegate() {
-    return (SpiEbeanServer)delegate;
+    return (SpiEbeanServer) delegate;
   }
 
   @Override
@@ -1574,7 +1515,7 @@ public class DelegateEbeanServer implements SpiEbeanServer, DelegateAwareEbeanSe
 
   @Override
   public SpiResultSet findResultSet(SpiQuery<?> ormQuery, SpiTransaction transaction) {
-    return spiDelegate().findResultSet( ormQuery, transaction);
+    return spiDelegate().findResultSet(ormQuery, transaction);
   }
 
   @Override
