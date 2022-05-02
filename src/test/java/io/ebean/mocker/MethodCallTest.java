@@ -36,8 +36,8 @@ public class MethodCallTest {
     assertThat(methodCall.name).isEqualTo("test1");
     assertThat(methodCall.args).hasSize(2);
     assertThat(methodCall.args)
-        .containsEntry("name", "Jim")
-        .containsEntry("age", 43L);
+      .containsEntry("name", "Jim")
+      .containsEntry("age", 43L);
   }
 
   @Test
@@ -48,9 +48,9 @@ public class MethodCallTest {
     assertThat(methodCall.name).isEqualTo("test1");
     assertThat(methodCall.args).hasSize(3);
     assertThat(methodCall.args)
-        .containsEntry("name", "Jim")
-        .containsEntry("age", 43L)
-        .containsEntry("status", CascadeType.ALL);
+      .containsEntry("name", "Jim")
+      .containsEntry("age", 43L)
+      .containsEntry("status", CascadeType.ALL);
 
   }
 

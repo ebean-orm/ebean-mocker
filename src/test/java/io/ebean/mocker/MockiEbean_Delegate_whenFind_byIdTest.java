@@ -32,17 +32,6 @@ public class MockiEbean_Delegate_whenFind_byIdTest extends BaseTest {
   }
 
 
-
-
-
-
-
-
-
-
-
-
-
   @Test
   public void byId_withValue() throws Exception {
 

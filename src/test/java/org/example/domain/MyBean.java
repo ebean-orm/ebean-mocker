@@ -1,18 +1,18 @@
 package org.example.domain;
 
+import io.ebean.Model;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
-
-import io.ebean.Model;
 
 @Entity
 public class MyBean extends Model {
 
   public static final MyBeanFinder OTHER = new MyBeanFinder();
 
-  @Id 
+  @Id
   Long id;
-  
+
   String name;
 
   public Long getId() {
@@ -30,5 +30,5 @@ public class MyBean extends Model {
   public void setName(String name) {
     this.name = name;
   }
-  
+
 }

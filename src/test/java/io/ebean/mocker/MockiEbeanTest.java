@@ -79,12 +79,12 @@ public class MockiEbeanTest {
     assertThatThrownBy(() -> {
       try {
         long result =
-                MockiEbean.runWithMock(new TDMockServer(), () -> {
-                  Object value = DB.beanId(new Object());
+          MockiEbean.runWithMock(new TDMockServer(), () -> {
+            Object value = DB.beanId(new Object());
 
-                  assertThat(value).isEqualTo(107L);
-                  throw new IllegalStateException();
-                });
+            assertThat(value).isEqualTo(107L);
+            throw new IllegalStateException();
+          });
 
       } finally {
         // assert that the original EbeanServer has been restored

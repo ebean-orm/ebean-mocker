@@ -4,7 +4,6 @@ import io.ebean.CallableSql;
 import io.ebean.SqlUpdate;
 import io.ebean.TxScope;
 import io.ebean.annotation.TxIsolation;
-import io.ebean.mocker.NoopEbeanServer;
 import org.example.domain.Customer;
 import org.junit.jupiter.api.Test;
 
@@ -143,8 +142,8 @@ public class NoopEbeanServerTest {
 
   @Test
   public void testBeginTransaction() {
-      assertThat(server.beginTransaction()).isNotNull();
-    assertThat(server.beginTransaction((TxScope)null)).isNotNull();
+    assertThat(server.beginTransaction()).isNotNull();
+    assertThat(server.beginTransaction((TxScope) null)).isNotNull();
     assertThat(server.beginTransaction((TxIsolation) null)).isNotNull();
   }
 
@@ -165,7 +164,7 @@ public class NoopEbeanServerTest {
 
   @Test
   public void testEndTransaction() {
-server.endTransaction();
+    server.endTransaction();
   }
 
   @Test

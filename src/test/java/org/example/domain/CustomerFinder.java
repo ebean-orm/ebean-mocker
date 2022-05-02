@@ -4,7 +4,7 @@ import io.ebean.Finder;
 
 import java.util.List;
 
-public class CustomerFinder extends Finder<Long,Customer> {
+public class CustomerFinder extends Finder<Long, Customer> {
 
   public CustomerFinder() {
     super(Customer.class);

@@ -28,7 +28,7 @@ public class Customer extends Model {
   }
 
   public String toString() {
-    return "<Customer id:"+id+" name:"+name+">";
+    return "<Customer id:" + id + " name:" + name + ">";
   }
 
   public Long getId() {

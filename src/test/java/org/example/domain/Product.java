@@ -10,9 +10,9 @@ public class Product extends Model {
 
   public static final ProductFinder FIND = new ProductFinder();
 
-  @Id 
+  @Id
   Long id;
-  
+
   String name;
 
   public Long getId() {
@@ -30,5 +30,5 @@ public class Product extends Model {
   public void setName(String name) {
     this.name = name;
   }
-  
+
 }

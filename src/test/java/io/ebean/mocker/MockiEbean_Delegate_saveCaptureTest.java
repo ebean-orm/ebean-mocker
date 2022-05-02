@@ -1,7 +1,6 @@
 package io.ebean.mocker;
 
 import io.ebean.DB;
-import io.ebean.Ebean;
 import io.ebean.MockiEbean;
 import org.example.domain.Customer;
 import org.junit.jupiter.api.Test;
