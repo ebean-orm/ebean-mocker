@@ -35,6 +35,8 @@ public interface InterceptFind {
 
   <T> void findEach(Query<T> query, Consumer<T> consumer, Transaction transaction);
 
+  <T> void findEach(Query<T> query, int i, Consumer<List<T>> consumer, Transaction transaction);
+
   <T> void findEachWhile(Query<T> query, Predicate<T> consumer, Transaction transaction);
 
   <T> List<T> findList(Query<T> query, Transaction transaction);
@@ -58,8 +60,6 @@ public interface InterceptFind {
   <T> QueryIterator<T> findIterate(Query<T> query, Transaction transaction);
 
   <T> Stream<T> findStream(Query<T> query, Transaction transaction);
-
-  <T> Stream<T> findLargeStream(Query<T> query, Transaction transaction);
 
   boolean exists(Query<?> query, Transaction transaction);
 }

@@ -198,12 +198,12 @@ public class MockiEbean {
     if (original == null) {
       throw new IllegalStateException("Original EbeanServer instance is null");
     }
-    if (original.getName() == null) {
+    if (original.name() == null) {
       throw new IllegalStateException("Original EbeanServer name is null");
     }
 
     // restore the original EbeanServer back
-    DB.mock(original.getName(), original, true);
+    DB.mock(original.name(), original, true);
   }
 
 }

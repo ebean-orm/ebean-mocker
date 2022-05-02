@@ -19,10 +19,10 @@ public class MockiEbeanTest {
     // Setup
     final Long magicBeanId = Long.valueOf(47L);
     Database mock = Mockito.mock(Database.class);
-    when(mock.getBeanId(null)).thenReturn(magicBeanId);
+    when(mock.beanId(null)).thenReturn(magicBeanId);
 
     MockiEbean.runWithMock(mock, () -> {
-      Object value = DB.getBeanId(null);
+      Object value = DB.beanId(null);
       assertEquals(value, magicBeanId);
     });
 
@@ -37,11 +37,11 @@ public class MockiEbeanTest {
     // Setup with Mockito
     final Long magicBeanId = Long.valueOf(47L);
     Database mock = Mockito.mock(Database.class);
-    when(mock.getBeanId(null)).thenReturn(magicBeanId);
+    when(mock.beanId(null)).thenReturn(magicBeanId);
 
     try {
       MockiEbean.runWithMock(mock, (Runnable) () -> {
-        Object value = DB.getBeanId(null);
+        Object value = DB.beanId(null);
         assertEquals(value, magicBeanId);
         throw new IllegalStateException();
       });
@@ -60,7 +60,7 @@ public class MockiEbeanTest {
 
     long result =
       MockiEbean.runWithMock(new TDMockServer(), () -> {
-        Object value = DB.getBeanId(new Object());
+        Object value = DB.beanId(new Object());
         assertEquals(107L, value);
         return 142L;
       });
@@ -80,7 +80,7 @@ public class MockiEbeanTest {
     try {
       long result =
         MockiEbean.runWithMock(new TDMockServer(), () -> {
-          Object value = DB.getBeanId(new Object());
+          Object value = DB.beanId(new Object());
 
           assertEquals(107L, value);
           throw new IllegalStateException();

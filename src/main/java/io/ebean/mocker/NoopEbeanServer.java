@@ -64,17 +64,17 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public String getName() {
+  public String name() {
     return name;
   }
 
   @Override
-  public Object getBeanId(Object bean) {
+  public Object beanId(Object bean) {
     return beanId;
   }
 
   @Override
-  public Object setBeanId(Object bean, Object id) {
+  public Object beanId(Object bean, Object id) {
     return beanId;
   }
 
@@ -110,27 +110,27 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public SpiServer getPluginApi() {
+  public SpiServer pluginApi() {
     return null;
   }
 
   @Override
-  public AutoTune getAutoTune() {
+  public AutoTune autoTune() {
     return null;
   }
 
   @Override
-  public ExpressionFactory getExpressionFactory() {
+  public ExpressionFactory expressionFactory() {
     return Mockito.mock(ExpressionFactory.class);
   }
 
   @Override
-  public MetaInfoManager getMetaInfoManager() {
+  public MetaInfoManager metaInfo() {
     return Mockito.mock(MetaInfoManager.class);
   }
 
   @Override
-  public BeanState getBeanState(Object bean) {
+  public BeanState beanState(Object bean) {
     return Mockito.mock(BeanState.class);
   }
 
@@ -190,12 +190,12 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public SqlQuery createSqlQuery(String sql) {
+  public SqlQuery sqlQuery(String sql) {
     return Mockito.mock(SqlQuery.class);
   }
 
   @Override
-  public SqlUpdate createSqlUpdate(String sql) {
+  public SqlUpdate sqlUpdate(String sql) {
     return Mockito.mock(SqlUpdate.class);
   }
 
@@ -275,7 +275,7 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public <T> T getReference(Class<T> beanType, Object id) {
+  public <T> T reference(Class<T> beanType, Object id) {
     return Mockito.mock(beanType);
   }
 
@@ -292,6 +292,11 @@ public class NoopEbeanServer implements Database {
   @Override
   public <T> Set<String> validateQuery(Query<T> query) {
     return Collections.emptySet();
+  }
+
+  @Override
+  public void lock(Object o) {
+
   }
 
   @Override
@@ -560,12 +565,12 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public ServerCacheManager getServerCacheManager() {
+  public ServerCacheManager cacheManager() {
     return Mockito.mock(ServerCacheManager.class);
   }
 
   @Override
-  public BackgroundExecutor getBackgroundExecutor() {
+  public BackgroundExecutor backgroundExecutor() {
     return Mockito.mock(BackgroundExecutor.class);
   }
 
@@ -580,17 +585,7 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public Platform getPlatform() {
-    return null;
-  }
-
-  @Override
-  public SqlQuery sqlQuery(String sql) {
-    return null;
-  }
-
-  @Override
-  public SqlUpdate sqlUpdate(String sql) {
+  public Platform platform() {
     return null;
   }
 
@@ -615,12 +610,12 @@ public class NoopEbeanServer implements Database {
   }
 
   @Override
-  public DataSource getDataSource() {
+  public DataSource dataSource() {
     return null;
   }
 
   @Override
-  public DataSource getReadOnlyDataSource() {
+  public DataSource readOnlyDataSource() {
     return null;
   }
 }

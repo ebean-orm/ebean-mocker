@@ -51,12 +51,12 @@ public class DelegateQuery {
     return delegate.filter(beanType);
   }
 
-  public SqlQuery createSqlQuery(String sql) {
-    return delegate.createSqlQuery(sql);
+  public SqlQuery sqlQuery(String sql) {
+    return delegate.sqlQuery(sql);
   }
 
-  public <T> T getReference(Class<T> beanType, Object id) {
-    return delegate.getReference(beanType, id);
+  public <T> T reference(Class<T> beanType, Object id) {
+    return delegate.reference(beanType, id);
   }
 
   public <T> Set<String> validateQuery(Query<T> query) {
