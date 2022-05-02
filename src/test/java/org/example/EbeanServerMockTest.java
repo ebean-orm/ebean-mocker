@@ -4,12 +4,13 @@ import io.ebean.DB;
 import io.ebean.Database;
 import io.ebean.MockiEbean;
 import io.ebeaninternal.server.core.DefaultServer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 public class EbeanServerMockTest {
@@ -20,7 +21,7 @@ public class EbeanServerMockTest {
     // Setup
     Long magicBeanId = Long.valueOf(47L);
     Database mock = Mockito.mock(Database.class);
-    when(mock.getBeanId(null)).thenReturn(magicBeanId);
+    when(mock.beanId(null)).thenReturn(magicBeanId);
 
     // Start mock Ebean session
     MockiEbean mockiEbean = MockiEbean.start(mock);
@@ -28,7 +29,7 @@ public class EbeanServerMockTest {
 
       // So using the Ebean singleton returns the mock instance
       Database server = DB.getDefault();
-      Object beanId = server.getBeanId(null);
+      Object beanId = server.beanId(null);
 
       assertEquals(magicBeanId, beanId);
 
@@ -38,27 +39,27 @@ public class EbeanServerMockTest {
     }
 
     Database restoredServer = DB.getDefault();
-    assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
+    assertThat(restoredServer).isInstanceOf(DefaultServer.class);
   }
 
   @Test
   public void testWithMockito() {
 
     Database defaultServer = DB.getDefault();
-    assertNotNull("server starts", defaultServer);
-    assertTrue("is a real EbeanServer", defaultServer instanceof DefaultServer);
+    assertNotNull(defaultServer);
+    assertThat(defaultServer).isInstanceOf(DefaultServer.class);
 
     Long magicBeanId = Long.valueOf(47L);
 
     Database mock = Mockito.mock(Database.class);
-    when(mock.getBeanId(null)).thenReturn(magicBeanId);
+    when(mock.beanId(null)).thenReturn(magicBeanId);
 
     MockiEbean mockiEbean = MockiEbean.start(mock);
     try {
 
       // So using the Ebean singleton returns the mock instance
       Database server = DB.getDefault();
-      Object beanId = server.getBeanId(null);
+      Object beanId = server.beanId(null);
 
       assertEquals(magicBeanId, beanId);
 
@@ -67,7 +68,7 @@ public class EbeanServerMockTest {
     }
 
     Database restoredServer = DB.getDefault();
-    assertTrue("is a real Database", restoredServer instanceof DefaultServer);
+    assertThat(restoredServer).isInstanceOf(DefaultServer.class);
   }
 
 }

@@ -5,9 +5,8 @@ import io.ebean.SqlUpdate;
 import io.ebean.TxScope;
 import io.ebean.annotation.TxIsolation;
 import io.ebean.mocker.NoopEbeanServer;
-import org.assertj.core.api.StrictAssertions;
 import org.example.domain.Customer;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
@@ -31,12 +30,12 @@ public class NoopEbeanServerTest {
 
   @Test
   public void testGetName() {
-    server.getName();
+    server.name();
   }
 
   @Test
   public void testGetBeanId() {
-    server.getBeanId(null);
+    server.beanId(null);
   }
 
   @Test
@@ -61,17 +60,17 @@ public class NoopEbeanServerTest {
 
   @Test
   public void testGetExpressionFactory() {
-    server.getExpressionFactory();
+    server.expressionFactory();
   }
 
   @Test
   public void testGetMetaInfoManager() {
-    server.getMetaInfoManager();
+    server.metaInfo();
   }
 
   @Test
   public void testGetBeanState() {
-    server.getBeanState(null);
+    server.beanState(null);
   }
 
   @Test
@@ -117,13 +116,13 @@ public class NoopEbeanServerTest {
 
   @Test
   public void testCreateSqlQuery() {
-    assertThat(server.createSqlQuery(null)).isNotNull();
+    assertThat(server.sqlQuery(null)).isNotNull();
 
   }
 
   @Test
   public void testCreateSqlUpdate() {
-    assertThat(server.createSqlUpdate(null)).isNotNull();
+    assertThat(server.sqlUpdate(null)).isNotNull();
   }
 
   @Test
@@ -145,7 +144,7 @@ public class NoopEbeanServerTest {
   @Test
   public void testBeginTransaction() {
       assertThat(server.beginTransaction()).isNotNull();
-    StrictAssertions.assertThat(server.beginTransaction((TxScope)null)).isNotNull();
+    assertThat(server.beginTransaction((TxScope)null)).isNotNull();
     assertThat(server.beginTransaction((TxIsolation) null)).isNotNull();
   }
 
@@ -186,7 +185,7 @@ server.endTransaction();
 
   @Test
   public void testGetReference() {
-    assertThat(server.getReference(Customer.class, null)).isNotNull();
+    assertThat(server.reference(Customer.class, null)).isNotNull();
   }
 
   @Test
@@ -250,12 +249,12 @@ server.endTransaction();
 
   @Test
   public void testGetServerCacheManager() {
-    assertThat(server.getServerCacheManager()).isNotNull();
+    assertThat(server.cacheManager()).isNotNull();
   }
 
   @Test
   public void testGetBackgroundExecutor() {
-    assertThat(server.getBackgroundExecutor()).isNotNull();
+    assertThat(server.backgroundExecutor()).isNotNull();
   }
 
   @Test

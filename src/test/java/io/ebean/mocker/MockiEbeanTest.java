@@ -2,13 +2,13 @@ package io.ebean.mocker;
 
 import io.ebean.DB;
 import io.ebean.Database;
-import io.ebeaninternal.server.core.DefaultServer;
 import io.ebean.MockiEbean;
-import org.junit.Test;
+import io.ebeaninternal.server.core.DefaultServer;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 public class MockiEbeanTest {
@@ -23,34 +23,35 @@ public class MockiEbeanTest {
 
     MockiEbean.runWithMock(mock, () -> {
       Object value = DB.beanId(null);
-      assertEquals(value, magicBeanId);
+      assertThat(value).isEqualTo(magicBeanId);
     });
 
     // assert that the original EbeanServer has been restored
     Database restoredServer = DB.getDefault();
-    assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
+    assertThat(restoredServer).isInstanceOf(DefaultServer.class);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testRunWithMock_when_exceptionThrow_should_restoreServer() {
 
     // Setup with Mockito
     final Long magicBeanId = Long.valueOf(47L);
     Database mock = Mockito.mock(Database.class);
     when(mock.beanId(null)).thenReturn(magicBeanId);
+    assertThatThrownBy(() -> {
+      try {
+        MockiEbean.runWithMock(mock, (Runnable) () -> {
+          Object value = DB.beanId(null);
+          assertThat(value).isEqualTo(magicBeanId);
+          throw new IllegalStateException();
+        });
 
-    try {
-      MockiEbean.runWithMock(mock, (Runnable) () -> {
-        Object value = DB.beanId(null);
-        assertEquals(value, magicBeanId);
-        throw new IllegalStateException();
-      });
-
-    } finally {
-      // assert that the original EbeanServer has been restored
-      Database restoredServer = DB.getDefault();
-      assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
-    }
+      } finally {
+        // assert that the original EbeanServer has been restored
+        Database restoredServer = DB.getDefault();
+        assertThat(restoredServer).isInstanceOf(DefaultServer.class);
+      }
+    }).isInstanceOf(IllegalStateException.class);
   }
 
   @Test
@@ -61,36 +62,36 @@ public class MockiEbeanTest {
     long result =
       MockiEbean.runWithMock(new TDMockServer(), () -> {
         Object value = DB.beanId(new Object());
-        assertEquals(107L, value);
+        assertThat(value).isEqualTo(107L);
         return 142L;
       });
 
-    assertEquals(142L, result);
+    assertThat(result).isEqualTo(142L);
 
     // assert that the original EbeanServer has been restored
     Database restoredServer = DB.getDefault();
-    assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
+    assertThat(restoredServer).isInstanceOf(DefaultServer.class);
   }
 
-  @Test(expected = IllegalStateException.class)
+  @Test
   public void testRunCallableWithMock_when_exceptionThrow_should_restoreServer() throws Exception {
-
     // Using a test double rather than a Mockito mock
+    assertThatThrownBy(() -> {
+      try {
+        long result =
+                MockiEbean.runWithMock(new TDMockServer(), () -> {
+                  Object value = DB.beanId(new Object());
 
-    try {
-      long result =
-        MockiEbean.runWithMock(new TDMockServer(), () -> {
-          Object value = DB.beanId(new Object());
+                  assertThat(value).isEqualTo(107L);
+                  throw new IllegalStateException();
+                });
 
-          assertEquals(107L, value);
-          throw new IllegalStateException();
-        });
-
-    } finally {
-      // assert that the original EbeanServer has been restored
-      Database restoredServer = DB.getDefault();
-      assertTrue("is a real EbeanServer", restoredServer instanceof DefaultServer);
-    }
+      } finally {
+        // assert that the original EbeanServer has been restored
+        Database restoredServer = DB.getDefault();
+        assertThat(restoredServer).isInstanceOf(DefaultServer.class);
+      }
+    }).isInstanceOf(IllegalStateException.class);
   }
 
   /**
@@ -99,7 +100,7 @@ public class MockiEbeanTest {
   class TDMockServer extends TDDatabase {
 
     @Override
-    public Object getBeanId(Object bean) {
+    public Object beanId(Object bean) {
       return 107L;
     }
   }

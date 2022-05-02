@@ -2,7 +2,7 @@ package io.ebean.mocker;
 
 import org.example.domain.Product;
 import org.example.domain.ProductFinder;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

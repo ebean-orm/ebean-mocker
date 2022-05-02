@@ -1,6 +1,6 @@
 package io.ebean.mocker;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import javax.persistence.CascadeType;
 

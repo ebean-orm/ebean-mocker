@@ -44,15 +44,12 @@ public class WithStaticFinder<T> {
    * Note that the test double instance is not set until <code>useTestDouble()</code> is called.
    */
   public WithStaticFinder<T> as(Object testDouble) throws FinderFieldNotFoundException {
-
     try {
       this.testDouble = testDouble;
-
       this.field = findField();
       this.field.setAccessible(true);
       try {
         Field modifiersField = Field.class.getDeclaredField("modifiers");
-
         /**
          * If the project using this library has a SecurityManager set up, permission may be denied.
          * Therefor, running this as a privileged action.
@@ -61,10 +58,10 @@ public class WithStaticFinder<T> {
             modifiersField.setAccessible(true);
             return null;
         });
-
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
       } catch (NoSuchFieldException e) {
-        throw new RuntimeException(e);
+        // this fails with Java 17
+        throw new RuntimeException("Unable to turn off final field flag for " + field, e);
       }
 
       this.original = field.get(null);
