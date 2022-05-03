@@ -14,7 +14,7 @@ public class WithStaticFinder_Customer_fieldNameTest {
 
     TDCustomerFinder testDouble = new TDCustomerFinder();
 
-    WithStaticFinder staticFinder = new WithStaticFinder(Customer.class);
+    WithStaticFinder<Customer> staticFinder = new WithStaticFinder<>(Customer.class);
     staticFinder.as(testDouble);
 
     Object original = staticFinder.original;

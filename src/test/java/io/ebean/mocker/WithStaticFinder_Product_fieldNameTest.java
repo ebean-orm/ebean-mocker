@@ -14,7 +14,7 @@ public class WithStaticFinder_Product_fieldNameTest {
 
     TDProductFinder testDouble = new TDProductFinder();
 
-    WithStaticFinder staticFinder = new WithStaticFinder(Product.class);
+    WithStaticFinder<Product> staticFinder = new WithStaticFinder<>(Product.class);
     staticFinder.as(testDouble);
 
     Object original = staticFinder.original;

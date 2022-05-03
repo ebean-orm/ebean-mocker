@@ -120,36 +120,43 @@ public class NoopEbeanServer implements Database {
     return Mockito.mock(type);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> CsvReader<T> createCsvReader(Class<T> beanType) {
     return Mockito.mock(CsvReader.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createNamedQuery(Class<T> beanType, String namedQuery) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createQuery(Class<T> beanType, String eql) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> createQuery(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> find(Class<T> beanType) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Query<T> findNative(Class<T> beanType, String nativeSql) {
     return Mockito.mock(Query.class);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Filter<T> filter(Class<T> beanType) {
     return Mockito.mock(Filter.class);
@@ -160,6 +167,7 @@ public class NoopEbeanServer implements Database {
 
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> Update<T> createUpdate(Class<T> beanType, String ormUpdate) {
     return Mockito.mock(Update.class);
@@ -277,12 +285,12 @@ public class NoopEbeanServer implements Database {
 
   @Override
   public Set<Property> checkUniqueness(Object bean) {
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   @Override
   public Set<Property> checkUniqueness(Object bean, Transaction transaction) {
-    return Collections.EMPTY_SET;
+    return Collections.emptySet();
   }
 
   @Override

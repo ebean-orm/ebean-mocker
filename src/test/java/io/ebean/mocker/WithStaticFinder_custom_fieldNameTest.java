@@ -14,7 +14,7 @@ public class WithStaticFinder_custom_fieldNameTest {
 
     TDMyBeanFinder testDouble = new TDMyBeanFinder();
 
-    WithStaticFinder staticFinder = new WithStaticFinder(MyBean.class, "OTHER");
+    WithStaticFinder<MyBean> staticFinder = new WithStaticFinder<>(MyBean.class, "OTHER");
     staticFinder.as(testDouble);
 
     staticFinder.useTestDouble();
