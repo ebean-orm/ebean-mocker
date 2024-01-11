@@ -1,9 +1,8 @@
 package io.ebean.mocker;
 
+import sun.misc.Unsafe;
+
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
 
 /**
  * Used to replace a "Finder" that is located as a static field (typically on an Model entity bean).
@@ -22,6 +21,14 @@ public class WithStaticFinder<T> {
   Object original;
 
   Object testDouble;
+
+  Field unsafeField;
+
+  Unsafe unsafe;
+
+  Object staticFieldBase;
+
+  long staticFieldOffset;
 
   /**
    * Construct with a given bean type.
@@ -48,25 +55,20 @@ public class WithStaticFinder<T> {
       this.testDouble = testDouble;
       this.field = findField();
       this.field.setAccessible(true);
+
       try {
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        /**
-         * If the project using this library has a SecurityManager set up, permission may be denied.
-         * Therefor, running this as a privileged action.
-         */
-        AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
-          modifiersField.setAccessible(true);
-          return null;
-        });
-        modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+        unsafeField = Unsafe.class.getDeclaredField("theUnsafe");
+        unsafeField.setAccessible(true);
+        unsafe = (Unsafe) unsafeField.get(null);
+
+        staticFieldBase = unsafe.staticFieldBase(this.field);
+        staticFieldOffset = unsafe.staticFieldOffset(this.field);
       } catch (NoSuchFieldException e) {
-        // this fails with Java 17
         throw new RuntimeException("Unable to turn off final field flag for " + field, e);
       }
-
       this.original = field.get(null);
-      return this;
 
+      return this;
     } catch (IllegalAccessException e) {
       throw new RuntimeException(e);
     }
@@ -79,23 +81,14 @@ public class WithStaticFinder<T> {
    * After this the test double will be used by calling code.
    */
   public void useTestDouble() {
-    try {
-      this.field.set(null, testDouble);
-    } catch (IllegalAccessException e) {
-      throw new FinderIllegalAccessException(e);
-    }
+    unsafe.putObject(staticFieldBase, staticFieldOffset, testDouble);
   }
 
   /**
    * Restore the original implementation using reflection.
    */
   public void restoreOriginal() {
-
-    try {
-      this.field.set(null, original);
-    } catch (IllegalAccessException e) {
-      throw new FinderIllegalAccessException(e);
-    }
+    unsafe.putObject(staticFieldBase, staticFieldOffset, original);
   }
 
   /**
